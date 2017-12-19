@@ -1,3 +1,4 @@
+foo
 django-project-template
 =======================
 
