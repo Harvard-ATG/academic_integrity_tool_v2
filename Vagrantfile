@@ -9,8 +9,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
 
-  # Our EC2 instances run ubuntu 14.04 (trusty)
-  config.vm.box = "ubuntu/trusty64"
+  # Use ubuntu-16.04 (xenial)
+  config.vm.box = "bento/ubuntu-16.04"
 
   config.vm.provider "virtualbox" do |v|
     # Seems to be required for Ubuntu
