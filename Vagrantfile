@@ -50,6 +50,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
 
+  # Install puppet in this ubuntu xenial box
+  config.vm.provision "shell", inline: "apt-get -y update"
+  config.vm.provision "shell", inline: "apt-get -y install puppet"
+
   # Provisioning
   # -------------
   # Add stdlib so we can use file_line module
