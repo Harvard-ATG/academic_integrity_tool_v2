@@ -45,19 +45,19 @@ package {'build-essential':
     require => Exec['apt-get-update'],
 }
 
-package {'python-dev':
+package {'python3-dev':
     ensure => installed,
     require => Exec['apt-get-update']
 }
 
 package {'python-pip':
     ensure => installed,
-    require => Package['python-dev']
+    require => Package['python3-dev']
 }
 
 package {'python-setuptools':
     ensure => installed,
-    require => Package['python-dev']
+    require => Package['python3-dev']
 }
 
 package {'git':
