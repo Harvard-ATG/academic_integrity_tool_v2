@@ -168,6 +168,14 @@ exec {'create-project-db':
     logoutput => true,
 }
 
+# Generate secure.py
+exec {'generate-secure.py':
+    provider => 'shell',
+    user => 'vagrant',
+    group => 'vagrant',
+	  command => 'cp /home/vagrant/academic_integrity_tool_v2/academic_integrity_tool_v2/settings/secure.py.example /home/vagrant/academic_integrity_tool_v2/academic_integrity_tool_v2/settings/secure.py',
+}
+
 # Ensure github.com ssh public key is in the .ssh/known_hosts file so
 # pip won't try to prompt on the terminal to accept it
 file {'/home/vagrant/.ssh':
