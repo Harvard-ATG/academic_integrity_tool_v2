@@ -15,10 +15,10 @@ Including another URLconf
 from django.conf.urls import url
 from django.conf import settings
 from django.urls import include, path
-# from django.contrib import admin
+from django.contrib import admin
 
 urlpatterns = [
-    #  url(r'^admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
 ]
 
 if settings.DEBUG:
