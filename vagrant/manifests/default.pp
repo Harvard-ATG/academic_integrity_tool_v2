@@ -49,7 +49,6 @@ package {'python3-dev':
     ensure => installed,
     require => Exec['apt-get-update']
 }
-
 package {'python-pip':
     ensure => installed,
     require => Package['python3-dev']
@@ -135,9 +134,15 @@ package {'libpq-dev':
 }
 
 # Set up Postgres DB/user for project
-
-exec {'drop-existing-project-user':
+exec {'drop-project-db':
     require => Package['postgresql'],
+    command => 'psql -d postgres -c "DROP DATABASE IF EXISTS academic_integrity_tool_v2"',
+    user => 'postgres',
+    group => 'postgres',
+    logoutput => true,
+}
+exec {'drop-existing-project-user':
+    require => Exec['drop-project-db'],
     command => 'psql -d postgres -c "DROP USER IF EXISTS academic_integrity_tool_v2"',
     user => 'postgres',
     group => 'postgres',
@@ -151,17 +156,8 @@ exec {'create-project-user':
     group => 'postgres',
     logoutput => true,
 }
-
-exec {'drop-project-db':
-    require => Exec['create-project-user'],
-    command => 'psql -d postgres -c "DROP DATABASE IF EXISTS academic_integrity_tool_v2"',
-    user => 'postgres',
-    group => 'postgres',
-    logoutput => true,
-}
-
 exec {'create-project-db':
-    require => Exec['drop-project-db'],
+    require => Exec['create-project-user'],
     command => 'psql -d postgres -c "CREATE DATABASE academic_integrity_tool_v2 WITH OWNER academic_integrity_tool_v2"',
     user => 'postgres',
     group => 'postgres',
@@ -192,14 +188,16 @@ file {'/home/vagrant/.ssh/known_hosts':
 
 # install virtualenv and virtualenvwrapper - depends on pip
 
+# Note, hardcoding version of pip packages because of the following error:
+#Error: /Stage[main]/Main/Package[virtualenv]/ensure: change from 15.1.0 to latest failed: Could not get latest version: HTTP-Error: 403 Must access using HTTPS instead of HTTP
 package {'virtualenv':
-    ensure => latest,
+    ensure => '15.1.0',
     provider => 'pip',
     require => [ Package['python-pip'], ],
 }
 
 package {'virtualenvwrapper':
-    ensure => latest,
+    ensure => '4.8.2',
     provider => 'pip',
     require => [ Package['python-pip'], ],
 }
@@ -222,7 +220,7 @@ exec {'create-virtualenv':
     provider => 'shell',
     user => 'vagrant',
     group => 'vagrant',
-    require => [ Package['virtualenvwrapper'], File['/home/vagrant/academic_integrity_tool_v2'], Exec['known_hosts'], Exec['drop-project-db']],
+    require => [ Package['virtualenvwrapper'], File['/home/vagrant/academic_integrity_tool_v2'], Exec['known_hosts'], Exec['create-project-db']],
     environment => ["HOME=/home/vagrant","WORKON_HOME=/home/vagrant/.virtualenvs"],
     command => '/vagrant/vagrant/venv_bootstrap.sh',
     creates => '/home/vagrant/.virtualenvs/academic_integrity_tool_v2',
@@ -247,8 +245,8 @@ file_line {'add DJANGO_SETTINGS_MODULE env to postdeactivate':
 file {'/home/vagrant/.bash_profile':
     owner => 'vagrant',
     content => '
-echo "Activating python virtual environment \"{ project_name }\""
-workon project_name
+echo "Activating python virtual environment \"academic_integrity_tool_v2\""
+workon academic_integrity_tool_v2
         
 # Show git repo branch at bash prompt
 parse_git_branch() {
