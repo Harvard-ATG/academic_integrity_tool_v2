@@ -138,7 +138,7 @@ package {'libpq-dev':
 
 exec {'drop-existing-project-user':
     require => Package['postgresql'],
-    command => 'psql -d postgres -c "DROP USER IF EXISTS AcademicIntegrityToolV2"',
+    command => 'psql -d postgres -c "DROP USER IF EXISTS academic_integrity_tool_v2"',
     user => 'postgres',
     group => 'postgres',
     logoutput => true,
@@ -146,7 +146,7 @@ exec {'drop-existing-project-user':
 
 exec {'create-project-user':
     require => Exec['drop-existing-project-user'],
-    command => 'psql -d postgres -c "CREATE USER AcademicIntegrityToolV2 WITH PASSWORD \'AcademicIntegrityToolV2\'"',
+    command => 'psql -d postgres -c "CREATE USER academic_integrity_tool_v2 WITH PASSWORD \'academic_integrity_tool_v2\'"',
     user => 'postgres',
     group => 'postgres',
     logoutput => true,
@@ -154,7 +154,7 @@ exec {'create-project-user':
 
 exec {'drop-project-db':
     require => Exec['create-project-user'],
-    command => 'psql -d postgres -c "DROP DATABASE IF EXISTS AcademicIntegrityToolV2"',
+    command => 'psql -d postgres -c "DROP DATABASE IF EXISTS academic_integrity_tool_v2"',
     user => 'postgres',
     group => 'postgres',
     logoutput => true,
@@ -162,7 +162,7 @@ exec {'drop-project-db':
 
 exec {'create-project-db':
     require => Exec['drop-project-db'],
-    command => 'psql -d postgres -c "CREATE DATABASE AcademicIntegrityToolV2 WITH OWNER AcademicIntegrityToolV2"',
+    command => 'psql -d postgres -c "CREATE DATABASE academic_integrity_tool_v2 WITH OWNER academic_integrity_tool_v2"',
     user => 'postgres',
     group => 'postgres',
     logoutput => true,
@@ -211,35 +211,35 @@ file {'/etc/profile.d/venvwrapper.sh':
     require => Package['virtualenvwrapper'],
 }
 
-# Create a symlink from ~/AcademicIntegrityToolV2 to /vagrant as a convenience for the developer
-file {'/home/vagrant/AcademicIntegrityToolV2':
+# Create a symlink from ~/academic_integrity_tool_v2 to /vagrant as a convenience for the developer
+file {'/home/vagrant/academic_integrity_tool_v2':
     ensure => link,
     target => '/vagrant',
 }
 
-# Create a virtualenv for AcademicIntegrityToolV2
+# Create a virtualenv for academic_integrity_tool_v2
 exec {'create-virtualenv':
     provider => 'shell',
     user => 'vagrant',
     group => 'vagrant',
-    require => [ Package['virtualenvwrapper'], File['/home/vagrant/AcademicIntegrityToolV2'], Exec['known_hosts'], Exec['drop-project-db']],
+    require => [ Package['virtualenvwrapper'], File['/home/vagrant/academic_integrity_tool_v2'], Exec['known_hosts'], Exec['drop-project-db']],
     environment => ["HOME=/home/vagrant","WORKON_HOME=/home/vagrant/.virtualenvs"],
     command => '/vagrant/vagrant/venv_bootstrap.sh',
-    creates => '/home/vagrant/.virtualenvs/AcademicIntegrityToolV2',
+    creates => '/home/vagrant/.virtualenvs/academic_integrity_tool_v2',
 }
 
 # set the DJANGO_SETTINGS_MODULE environment variable
 file_line {'add DJANGO_SETTINGS_MODULE env to postactivate':
     ensure => present,
-    line => 'export DJANGO_SETTINGS_MODULE=AcademicIntegrityToolV2.settings.local',
-    path => '/home/vagrant/.virtualenvs/AcademicIntegrityToolV2/bin/postactivate',
+    line => 'export DJANGO_SETTINGS_MODULE=academic_integrity_tool_v2.settings.local',
+    path => '/home/vagrant/.virtualenvs/academic_integrity_tool_v2/bin/postactivate',
     require => Exec['create-virtualenv'],
 }
 
 file_line {'add DJANGO_SETTINGS_MODULE env to postdeactivate':
     ensure => present,
     line => 'unset DJANGO_SETTINGS_MODULE',
-    path => '/home/vagrant/.virtualenvs/AcademicIntegrityToolV2/bin/postdeactivate',
+    path => '/home/vagrant/.virtualenvs/academic_integrity_tool_v2/bin/postdeactivate',
     require => Exec['create-virtualenv'],
 }
 

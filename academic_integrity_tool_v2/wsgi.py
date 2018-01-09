@@ -1,5 +1,5 @@
 """
-WSGI config for AcademicIntegrityToolV2 project.
+WSGI config for academic_integrity_tool_v2 project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "AcademicIntegrityToolV2.settings.aws")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "academic_integrity_tool_v2.settings.aws")
 
 application = get_wsgi_application()

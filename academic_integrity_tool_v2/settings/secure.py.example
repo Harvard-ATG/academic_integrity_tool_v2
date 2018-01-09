@@ -7,7 +7,7 @@
 SECURE_SETTINGS = {
     'enable_debug': True,
     'django_secret_key': '1@7&11tb*l1c84uco-9=%(u#mb)_dl6%%++rihgnl&r)wmldrc',
-    'db_default_name': 'AcademicIntegrityToolV2',
-    'db_default_user': 'AcademicIntegrityToolV2',
-    'db_default_password': 'AcademicIntegrityToolV2',
+    'db_default_name': 'academic_integrity_tool_v2',
+    'db_default_user': 'academic_integrity_tool_v2',
+    'db_default_password': 'academic_integrity_tool_v2',
 }

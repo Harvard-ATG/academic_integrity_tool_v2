@@ -1,4 +1,4 @@
-"""AcademicIntegrityToolV2 URL Configuration
+"""academic_integrity_tool_v2 URL Configuration
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.10/topics/http/urls/
 Examples:

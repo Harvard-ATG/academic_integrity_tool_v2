@@ -4,7 +4,7 @@ from .local import *
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'AcademicIntegrityToolV2',
+        'NAME': 'academic_integrity_tool_v2',
     },
 }
 
