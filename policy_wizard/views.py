@@ -8,6 +8,10 @@ from .forms import NewPolicyForm
 from .models import PolicyTemplates, Policies
 
 # Create your views here.
+def admin_level_template_view(request):
+    templates = PolicyTemplates.objects.all()
+    return render(request, 'admin_level_template_list.html', {'templates': templates})
+
 class PolicyTemplateListView(ListView):
     model = PolicyTemplates
     template_name = 'policy_template_list.html'
@@ -16,7 +20,7 @@ class PolicyTemplateUpdateView(UpdateView):
     model = PolicyTemplates
     fields = ['name', 'body']
     template_name = 'policy_template_edit.html'
-    success_url = reverse_lazy('policy_template_list')
+    success_url = reverse_lazy('admin_level_template_list')
 
 def policy_edit_view(request, pk):
     policyTemplate = get_object_or_404(PolicyTemplates, pk=pk)

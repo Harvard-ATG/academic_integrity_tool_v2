@@ -1,0 +1,8 @@
+{% block content %}
+    {% for template in templates %}
+        <div>
+            <h2><a href="{% url 'policy_template_edit' template.pk %}">{{ template.name }}</a></h2>
+            <p>{{ template.body }}</p>
+        </div>
+    {% endfor %}
+{% endblock content %}
