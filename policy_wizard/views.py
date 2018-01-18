@@ -11,13 +11,12 @@ from .models import PolicyTemplates, Policies
 class PolicyTemplateListView(ListView):
     model = PolicyTemplates
     template_name = 'policy_template_list.html'
-"""
+
 class PolicyTemplateUpdateView(UpdateView):
     model = PolicyTemplates
     fields = ['name', 'body']
     template_name = 'policy_template_edit.html'
     success_url = reverse_lazy('policy_template_list')
-"""
 
 def policy_edit_view(request, pk):
     policyTemplate = get_object_or_404(PolicyTemplates, pk=pk)
@@ -26,12 +25,6 @@ def policy_edit_view(request, pk):
     if request.method == 'POST':
         form = NewPolicyForm(request.POST)
         if form.is_valid():
-            #form.save()
-            #editedPolicy = form.save(commit=False)
-            #editedPolicy.is_published = True
-            #editedPolicy.published_by = user
-            #editedPolicy.related_template = policyTemplate
-            #editedPolicy.save()
             finalPolicy = Policies.objects.create(
                 body=form.cleaned_data.get('body'),
                 related_template = policyTemplate,
@@ -48,13 +41,5 @@ def published_policy(request, pk):
     publishedPolicy = Policies.objects.get(pk=pk)
     return render(request, 'published_policy.html', {'publishedPolicy': publishedPolicy})
 
-
-
-"""
-def about_company(request):
-    # do something else...
-    # return some data along with the view...
-    return render(request, 'about_company.html', {'company_name': 'Simple Complex'})
-"""
 
 
