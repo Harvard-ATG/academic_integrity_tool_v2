@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import UpdateView, CreateView
 from django.urls import reverse_lazy
+from django.contrib.auth.models import User
+from .forms import NewPolicyForm
 
 from .models import PolicyTemplates, Policies
 
@@ -18,8 +20,28 @@ class PolicyTemplateUpdateView(UpdateView):
 """
 
 def policy_edit_view(request, pk):
-    policy=PolicyTemplates.objects.get(pk=pk)
-    return render(request, 'policy_edit.html', {'policy': policy})
+    policyTemplate = get_object_or_404(PolicyTemplates, pk=pk)
+    user = User.objects.first()
+
+    if request.method == 'POST':
+        form = NewPolicyForm(request.POST)
+        if form.is_valid():
+            form.save()
+            #editedPolicy = form.save(commit=False)
+            #editedPolicy.is_published = True
+            #editedPolicy.published_by = user
+            #editedPolicy.related_template = policyTemplate
+            #editedPolicy.save()
+            Policies.objects.create(
+                body=form.cleaned_data.get('body'),
+                related_template = policyTemplate,
+                published_by = user,
+                is_published = True,
+            )
+            return redirect('policy_template_list')
+    else:
+        form = NewPolicyForm()
+    return render(request, 'policy_edit.html', {'policyTemplate': policyTemplate, 'form': form})
 
 
 """
