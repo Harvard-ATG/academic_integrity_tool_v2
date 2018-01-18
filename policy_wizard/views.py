@@ -40,7 +40,7 @@ def policy_edit_view(request, pk):
             )
             return redirect('policy_template_list')
     else:
-        form = NewPolicyForm()
+        form = NewPolicyForm(initial={'body': policyTemplate.body})
     return render(request, 'policy_edit.html', {'policyTemplate': policyTemplate, 'form': form})
 
 
