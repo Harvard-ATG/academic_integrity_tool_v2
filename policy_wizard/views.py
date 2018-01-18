@@ -32,27 +32,22 @@ def policy_edit_view(request, pk):
             #editedPolicy.published_by = user
             #editedPolicy.related_template = policyTemplate
             #editedPolicy.save()
-            Policies.objects.create(
+            finalPolicy = Policies.objects.create(
                 body=form.cleaned_data.get('body'),
                 related_template = policyTemplate,
                 published_by = user,
                 is_published = True,
             )
-            return redirect('policy_template_list')
+
+            return redirect('published_policy', pk=finalPolicy.pk)
     else:
         form = NewPolicyForm(initial={'body': policyTemplate.body})
     return render(request, 'policy_edit.html', {'policyTemplate': policyTemplate, 'form': form})
 
+def published_policy(request, pk):
+    publishedPolicy = Policies.objects.get(pk=pk)
+    return render(request, 'published_policy.html', {'publishedPolicy': publishedPolicy})
 
-"""
-class PublishedPolicyView()
-policy_template_id = models.IntegerField()
-    is_published = models.BooleanField()
-    published_by = models.CharField(max_length=255)
-    body = models.TextField()
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
-"""
 
 
 """
