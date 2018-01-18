@@ -26,7 +26,7 @@ def policy_edit_view(request, pk):
     if request.method == 'POST':
         form = NewPolicyForm(request.POST)
         if form.is_valid():
-            form.save()
+            #form.save()
             #editedPolicy = form.save(commit=False)
             #editedPolicy.is_published = True
             #editedPolicy.published_by = user
