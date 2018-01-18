@@ -24,6 +24,8 @@ class PolicyTemplateUpdateView(UpdateView):
 
 def policy_edit_view(request, pk):
     policyTemplate = get_object_or_404(PolicyTemplates, pk=pk)
+
+    #Arbitrary user selection
     user = User.objects.first()
 
     if request.method == 'POST':
@@ -44,6 +46,19 @@ def policy_edit_view(request, pk):
 def published_policy(request, pk):
     publishedPolicy = Policies.objects.get(pk=pk)
     return render(request, 'published_policy.html', {'publishedPolicy': publishedPolicy})
+
+def published_policy_to_display_view(request):
+
+    """
+    Code that determines the published policy to display based on course
+    student is taking ...
+    """
+
+    # Arbitrary policy selection
+    publishedPolicy = Policies.objects.first()
+
+    return render(request, 'published_policy.html', {'publishedPolicy': publishedPolicy})
+
 
 
 
