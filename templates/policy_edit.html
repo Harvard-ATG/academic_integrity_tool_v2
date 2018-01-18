@@ -1,0 +1,24 @@
+{% block content %}
+    <h1>Edit Policy Template</h1>
+    <form action="" method="post">{% csrf_token %}
+        <input type="hidden" name="policy_template_id" value="{{ policy.pk }}">
+        <input type="hidden" name="is_published" value=False>
+        <input type="hidden" name="policy_template_id" value="{{ policy.pk }}">
+        <input type="hidden" name="policy_template_id" value="{{ policy.pk }}">
+        <input type="text" name="body" value="{{ policy.body }}"><br><br>
+        <input type="hidden" name="created_at" value="{{ policy.pk }}">
+        <input type="hidden" name="updated_at" value="{{ policy.pk }}">
+        <input type="submit" value="Publish" />
+    </form>
+{% endblock content %}
+
+
+
+
+class Policies(models.Model):
+    policy_template_id = models.IntegerField()
+    is_published = models.BooleanField()
+    published_by = models.CharField(max_length=255)
+    body = models.TextField()
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()

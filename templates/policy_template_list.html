@@ -1,7 +1,7 @@
 {% block content %}
     {% for object in object_list %}
         <div>
-            <h2><a href="{% url 'policy_template_edit' object.pk %}">{{ object.name }}</a></h2>
+            <h2><a href="{% url 'policy_edit' object.pk %}">{{ object.name }}</a></h2>
             <p>{{ object.body }}</p>
         </div>
     {% endfor %}
