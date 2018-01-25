@@ -43,7 +43,7 @@ MIDDLEWARE = [
 
 # Django defaults are below, but will need to be customized if using something
 # other than the built-in Django auth, such as PIN, LTI, etc.
-# AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)
+AUTHENTICATION_BACKENDS = ('lti_provider.auth.LTIBackend',)
 # LOGIN_URL = '/accounts/login'
 
 ROOT_URLCONF = 'academic_integrity_tool_v2.urls'
