@@ -197,3 +197,11 @@ LTI_TOOL_CONFIGURATION = {
     'description': 'An LTI-compliant tool that enables instructors and administrators to easily create, edit, and publish academic policies.',
     'launch_url': 'lti/',
 }
+
+PYLTI_CONFIG = {
+    'consumers': {
+        SECURE_SETTINGS['CONSUMER_KEY']: {
+            'secret': SECURE_SETTINGS['LTI_SECRET']
+        }
+    }
+}
