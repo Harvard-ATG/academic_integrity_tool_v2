@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'policy_wizard',
+    'lti_provider',
 ]
 
 MIDDLEWARE = [
