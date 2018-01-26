@@ -16,10 +16,11 @@ from django.conf.urls import url
 from django.conf import settings
 from django.urls import include, path
 from django.contrib import admin
+from policy_wizard import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('lti/', include('policy_wizard.urls')),
+    path('lti/', views.determine_role_view, name='determine_role'),
     #path('', include('policy_wizard.urls')),
 ]
 
