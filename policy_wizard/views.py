@@ -8,6 +8,11 @@ from .forms import NewPolicyForm
 from .models import PolicyTemplates, Policies
 
 # Create your views here.
+def determine_role_view(request):
+    if request.method=='POST':
+        if request.POST.get('roles')=='Instructor':
+            return redirect('policy_template_list')
+
 def admin_level_template_view(request):
     templates = PolicyTemplates.objects.all()
     return render(request, 'admin_level_template_list.html', {'templates': templates})

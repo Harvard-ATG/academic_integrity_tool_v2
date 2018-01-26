@@ -19,8 +19,8 @@ from django.contrib import admin
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('lti/', include('lti_provider.urls')),
-    path('', include('policy_wizard.urls')),
+    path('lti/', include('policy_wizard.urls')),
+    #path('', include('policy_wizard.urls')),
 ]
 
 """
