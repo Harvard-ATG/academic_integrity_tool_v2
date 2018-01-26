@@ -197,14 +197,7 @@ LTI_TOOL_CONFIGURATION = {
     'description': 'An LTI-compliant tool that enables instructors and administrators to easily create, edit, and publish academic policies.',
     'launch_url': 'lti/',
     'embed_url': '',
-    'embed_icon_url': '',
-    'embed_tool_id': '',
-    'landing_url': 'policy_template_list',
-    'course_aware': False,
-    'course_navigation': True,
-    'new_tab': True,
-    'frame_width': 600,
-    'frame_height': 600,
+    'navigation': True,
 }
 
 PYLTI_CONFIG = {
