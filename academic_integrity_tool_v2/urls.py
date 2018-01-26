@@ -20,8 +20,8 @@ from policy_wizard import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('lti/', views.determine_role_view, name='determine_role'),
-    #path('', include('policy_wizard.urls')),
+    #path('lti/', views.determine_role_view, name='determine_role'),
+    path('', include('policy_wizard.urls')),
 ]
 
 """
