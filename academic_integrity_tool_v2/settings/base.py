@@ -43,7 +43,10 @@ MIDDLEWARE = [
 
 # Django defaults are below, but will need to be customized if using something
 # other than the built-in Django auth, such as PIN, LTI, etc.
-AUTHENTICATION_BACKENDS = ('lti_provider.auth.LTIBackend',)
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'lti_provider.auth.LTIBackend',
+)
 # LOGIN_URL = '/accounts/login'
 
 ROOT_URLCONF = 'academic_integrity_tool_v2.urls'
@@ -195,7 +198,7 @@ LOGGING = {
 LTI_TOOL_CONFIGURATION = {
     'title': 'Academic Integrity Tool',
     'description': 'An LTI-compliant tool that enables instructors and administrators to easily create, edit, and publish academic policies.',
-    'launch_url': 'lti/',
+    'launch_url': 'lti/launch',
     'embed_url': '',
     'navigation': True,
 }
