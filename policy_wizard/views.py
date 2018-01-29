@@ -6,12 +6,17 @@ from django.contrib.auth.models import User
 from .forms import NewPolicyForm
 
 from .models import PolicyTemplates, Policies
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
+@csrf_exempt
 def determine_role_view(request):
     if request.method=='POST':
         if request.POST.get('roles')=='Instructor':
             return redirect('policy_template_list')
+    else:
+        return HttpResponse("Not working")
 
 def admin_level_template_view(request):
     templates = PolicyTemplates.objects.all()
