@@ -16,19 +16,22 @@ from django.conf.urls import url
 from django.conf import settings
 from django.urls import include, path
 from django.contrib import admin
+from lti_provider import views as lti_views
 from policy_wizard import views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #path('lti/', views.determine_role_view, name='determine_role'),
+    path('lti/launch', views.determine_role_view, name='determine_role'),
+    path('lti/config.xml', lti_views.LTIConfigView.as_view(), name="get_lti_xml"),
     path('', include('policy_wizard.urls')),
 ]
 
-"""
+
 if settings.DEBUG:
     import debug_toolbar
 
     urlpatterns += [
         path('__debug__/', include(debug_toolbar.urls)),
     ]
-"""
+
