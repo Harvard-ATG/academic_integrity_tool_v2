@@ -203,10 +203,4 @@ LTI_TOOL_CONFIGURATION = {
     'navigation': True,
 }
 
-PYLTI_CONFIG = {
-    'consumers': {
-        '12345': {
-            'secret': '67890'
-        }
-    }
-}
+
