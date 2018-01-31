@@ -19,17 +19,16 @@ def determine_role_view(request):
     # validate LTI request
     def validate_request(request):
         consumer_key = settings.SECURE_SETTINGS['CONSUMER_KEY']
-        request_key = request.POST.get('oauth_consumer_key', None)
-
         shared_secret = settings.SECURE_SETTINGS['LTI_SECRET']
 
         if consumer_key is None or shared_secret is None:
             raise ImproperlyConfigured("Unable to validate LTI launch. Missing setting: CONSUMER_KEY or LTI_SECRET")
 
-        #boolean that tells whether the consumer key and the request key match
-        keys_match = consumer_key==request_key
+        #Instantiate an LTI object with an 'initial' request type and 'any' role type
+        lti_object = LTI('initial', 'any')
 
-        return keys_match
+        #return True if request is valid or False if otherwise
+        return lti_object._verify_request(request)
 
     is_basic_lti_launch = request.method=='POST' and request.POST.get('lti_message_type')=='basic-lti-launch-request'
 
