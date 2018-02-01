@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
+from django.core.exceptions import PermissionDenied
 from lti_provider.lti import LTI
 
 def role_identifier(ext_roles_text):
@@ -12,16 +13,39 @@ def role_identifier(ext_roles_text):
     # E.g., transform 'urn:lti:role:ims/lis/Student,urn:lti:sysrole:ims/lis/User'
     # to [urn:lti:role:ims/lis/Student, urn:lti:sysrole:ims/lis/User]
     ext_roles_text_as_list = ext_roles_text.split(",")
-    # E.g., from [urn:lti:role:ims/lis/Student, urn:lti:sysrole:ims/lis/User]
-    # obtain 'urn:lti:role:ims/lis/Student'
-    relevant_role_component = ext_roles_text_as_list[-2]
-    # E.g., transform 'urn:lti:role:ims/lis/Student' to [urn:lti:role:ims, lis, Student]
-    relevant_role_component_as_list = relevant_role_component.split("/")
-    # E.g., from [urn:lti:role:ims, lis, Student], obtain 'Student'
-    actual_role = relevant_role_component_as_list[-1]
 
-    # E.g., 'Student', or 'Instructor', or 'Administrator', e.t.c.
-    return actual_role
+    # Store the context roles in context_roles and the non-context roles (institution and system roles) in non_context_roles
+    # For context/institution/system role reference, see https://www.imsglobal.org/specs/ltiv1p1/implementation-guide#toc-29
+    context_roles = []
+    non_context_roles = []
+    for role in ext_roles_text_as_list:
+        if 'lti:role' in role:
+            context_roles.append(role)
+        else:
+            non_context_roles.append(role)
+
+    #Determine the 'policy_role', i.e. the role to use in this app, by mapping from context/non_context roles
+    # to the 3 role types (Administrator, Instructor, and Student) in this policy app
+    if not bool(context_roles):#if context_roles list is empty, i.e. if there are no context roles...
+        # Process the institutional and system roles
+        for non_context_role in non_context_roles:
+            if ('Administrator' or 'ContentDeveloper') in non_context_role:
+                policy_role = 'Administrator'
+                break
+            else:
+                raise PermissionDenied
+    else: #if context_roles list is not empty
+        context_roles_as_string = ''.join(context_roles) #convert context_roles to string
+        if ('Administrator' in context_roles_as_string) or ('ContentDeveloper' in context_roles_as_string):
+            policy_role = 'Administrator'
+        elif ('Instructor' in context_roles_as_string) or ('Mentor' in context_roles_as_string):
+            policy_role = 'Instructor'
+        elif ('Learner' in context_roles_as_string) or ('NonCreditLearner' in context_roles_as_string) or ('TeachingAssistant' in context_roles_as_string):
+            policy_role = 'Student'
+        else:
+            raise PermissionDenied
+
+    return policy_role
 
 
 # validates LTI request
@@ -37,3 +61,4 @@ def validate_request(request):
 
     # return True if request is valid or False if otherwise
     return lti_object._verify_request(request)
+

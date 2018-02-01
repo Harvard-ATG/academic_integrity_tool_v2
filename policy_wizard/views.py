@@ -22,11 +22,11 @@ def determine_role_view(request):
     role = role_identifier(request.POST.get('ext_roles'))
 
     if is_basic_lti_launch and request_is_valid:
-        if role=='Instructor' or role=='Mentor':
+        if role=='Instructor':
             return redirect('policy_template_list')
         elif role=='Student':
             return redirect('published_policy_to_display')
-        elif role=='Technologist' or role=='Administrator':
+        elif role=='Administrator':
             return redirect('admin_level_template_list')
     else:
         raise PermissionDenied
