@@ -16,7 +16,30 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 @csrf_exempt
 def determine_role_view(request):
-    # validate LTI request
+
+
+    def role_identifier(ext_roles_text):
+        """
+        :param ext_roles_text: This will be the value of the 'ext_roles' attribute in the POST request lti forms.
+        It is a string, like 'urn:lti:role:ims/lis/Student,urn:lti:sysrole:ims/lis/User'
+        :return: A one word string, namely, the actual role. E.g. 'Student'
+        """
+
+        #E.g., transform 'urn:lti:role:ims/lis/Student,urn:lti:sysrole:ims/lis/User'
+        # to [urn:lti:role:ims/lis/Student, urn:lti:sysrole:ims/lis/User]
+        ext_roles_text_as_list = ext_roles_text.split(",")
+        #E.g., from [urn:lti:role:ims/lis/Student, urn:lti:sysrole:ims/lis/User]
+        # obtain 'urn:lti:role:ims/lis/Student'
+        relevant_role_component = ext_roles_text_as_list[-2]
+        #E.g., transform 'urn:lti:role:ims/lis/Student' to [urn:lti:role:ims, lis, Student]
+        relevant_role_component_as_list = relevant_role_component.split("/")
+        #E.g., from [urn:lti:role:ims, lis, Student], obtain 'Student'
+        actual_role = relevant_role_component_as_list[-1]
+
+        #E.g., 'Student', or 'Instructor', or 'Administrator', e.t.c.
+        return actual_role
+
+    # validates LTI request
     def validate_request(request):
         consumer_key = settings.SECURE_SETTINGS['CONSUMER_KEY']
         shared_secret = settings.SECURE_SETTINGS['LTI_SECRET']
@@ -30,17 +53,19 @@ def determine_role_view(request):
         #return True if request is valid or False if otherwise
         return lti_object._verify_request(request)
 
+
     is_basic_lti_launch = request.method=='POST' and request.POST.get('lti_message_type')=='basic-lti-launch-request'
 
     request_is_valid = validate_request(request)
 
+    role = role_identifier(request.POST.get('ext_roles'))
 
     if is_basic_lti_launch and request_is_valid:
-        if request.POST.get('roles')=='Instructor':
+        if role=='Instructor' or role=='Mentor':
             return redirect('policy_template_list')
-        elif request.POST.get('roles')=='Student':
+        elif role=='Student':
             return redirect('published_policy_to_display')
-        elif request.POST.get('roles')=='Technologist':
+        elif role=='Technologist' or role=='Administrator':
             return redirect('admin_level_template_list')
     else:
         raise PermissionDenied
