@@ -1,0 +1,35 @@
+{% block content %}
+
+    <div>
+
+        <h2>I. Collaboration Permitted</h2>
+        <h3>a. Written Work</h3>
+        <p>{{ written_work_policy_template.body }}</p>
+        <button><a href="{% url 'instructor_level_policy_edit' written_work_policy_template.pk %}">Choose This Template</a></button>
+
+        <h3>b. Problem Sets</h3>
+        <p>{{ problem_sets_policy_template.body }}</p>
+        <button><a href=" {% url 'instructor_level_policy_edit' problem_sets_policy_template.pk %}">Choose This Template</a></button>
+
+        <h2>II. Collaboration Prohibited</h2>
+        <p>{{ collaboration_prohibited_policy_template.body }}</p>
+        <button><a href="{% url 'instructor_level_policy_edit' collaboration_prohibited_policy_template.pk %}">Choose This Template</a></button>
+
+
+    </div>
+
+{% endblock content %}
+
+
+
+
+{% comment %}
+{% block content %}
+    {% for object in object_list %}
+        <div>
+            <h2><a href="{% url 'policy_edit' object.pk %}">{{ object.name }}</a></h2>
+            <p>{{ object.body }}</p>
+        </div>
+    {% endfor %}
+{% endblock content %}
+{% endcomment %}

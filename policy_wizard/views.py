@@ -23,30 +23,42 @@ def determine_role_view(request):
 
     if is_basic_lti_launch and request_is_valid:
         if role=='Instructor':
-            return redirect('policy_template_list')
+            return redirect('policy_templates_list', role='Instructor')
         elif role=='Student':
             return redirect('published_policy_to_display')
         elif role=='Administrator':
-            return redirect('admin_level_template_list')
+            return redirect('policy_templates_list', role='Administrator')
     else:
         raise PermissionDenied
 
 
-def admin_level_template_view(request):
-    templates = PolicyTemplates.objects.all()
-    return render(request, 'admin_level_template_list.html', {'templates': templates})
+def policy_templates_list_view(request, role):
 
-class PolicyTemplateListView(ListView):
-    model = PolicyTemplates
-    template_name = 'policy_template_list.html'
+    written_work_policy_template = PolicyTemplates.objects.get(name="Collaboration Permitted: Written Work")
+    problem_sets_policy_template = PolicyTemplates.objects.get(name="Collaboration Permitted: Problem Sets")
+    collaboration_prohibited_policy_template = PolicyTemplates.objects.get(name="Collaboration Prohibited")
 
-class PolicyTemplateUpdateView(UpdateView):
+    if role=='Administrator':
+        template_to_use = 'admin_level_template_list.html'
+    else: #role=='Instructor'
+        template_to_use = 'instructor_level_template_list.html'
+
+    return render(
+        request,
+        template_to_use,
+        {
+            'written_work_policy_template': written_work_policy_template,
+            'problem_sets_policy_template': problem_sets_policy_template,
+            'collaboration_prohibited_policy_template': collaboration_prohibited_policy_template
+        })
+
+class AdminLevelTemplateUpdateView(UpdateView):
     model = PolicyTemplates
     fields = ['name', 'body']
-    template_name = 'policy_template_edit.html'
+    template_name = 'admin_level_template_edit.html'
     success_url = reverse_lazy('admin_level_template_list')
 
-def policy_edit_view(request, pk):
+def instructor_level_policy_edit_view(request, pk):
     policyTemplate = get_object_or_404(PolicyTemplates, pk=pk)
 
     #Arbitrary user selection
@@ -65,11 +77,11 @@ def policy_edit_view(request, pk):
             return redirect('published_policy', pk=finalPolicy.pk)
     else:
         form = NewPolicyForm(initial={'body': policyTemplate.body})
-    return render(request, 'policy_edit.html', {'policyTemplate': policyTemplate, 'form': form})
+    return render(request, 'instructor_level_policy_edit.html', {'policyTemplate': policyTemplate, 'form': form})
 
 def published_policy(request, pk):
     publishedPolicy = Policies.objects.get(pk=pk)
-    return render(request, 'published_policy.html', {'publishedPolicy': publishedPolicy})
+    return render(request, 'instructor_published_policy.html', {'publishedPolicy': publishedPolicy})
 
 def published_policy_to_display_view(request):
 
@@ -81,7 +93,7 @@ def published_policy_to_display_view(request):
     # Arbitrary policy selection
     publishedPolicy = Policies.objects.first()
 
-    return render(request, 'published_policy.html', {'publishedPolicy': publishedPolicy})
+    return render(request, 'instructor_published_policy.html', {'publishedPolicy': publishedPolicy})
 
 
 
