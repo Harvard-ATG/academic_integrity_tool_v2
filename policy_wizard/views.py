@@ -37,6 +37,7 @@ def policy_templates_list_view(request, role):
     written_work_policy_template = PolicyTemplates.objects.get(name="Collaboration Permitted: Written Work")
     problem_sets_policy_template = PolicyTemplates.objects.get(name="Collaboration Permitted: Problem Sets")
     collaboration_prohibited_policy_template = PolicyTemplates.objects.get(name="Collaboration Prohibited")
+    custom_policy_template = PolicyTemplates.objects.get(name="Custom Policy")
 
     if role=='Administrator':
         template_to_use = 'admin_level_template_list.html'
@@ -49,14 +50,15 @@ def policy_templates_list_view(request, role):
         {
             'written_work_policy_template': written_work_policy_template,
             'problem_sets_policy_template': problem_sets_policy_template,
-            'collaboration_prohibited_policy_template': collaboration_prohibited_policy_template
+            'collaboration_prohibited_policy_template': collaboration_prohibited_policy_template,
+            'custom_policy_template': custom_policy_template
         })
 
 class AdminLevelTemplateUpdateView(UpdateView):
     model = PolicyTemplates
     fields = ['name', 'body']
     template_name = 'admin_level_template_edit.html'
-    success_url = reverse_lazy('admin_level_template_list')
+    success_url = reverse_lazy('policy_templates_list', kwargs={'role': 'Administrator'})
 
 def instructor_level_policy_edit_view(request, pk):
     policyTemplate = get_object_or_404(PolicyTemplates, pk=pk)
@@ -91,9 +93,23 @@ def published_policy_to_display_view(request):
     """
 
     # Arbitrary policy selection
-    publishedPolicy = Policies.objects.first()
+    publishedPolicy = Policies.objects.get(pk=8)
 
-    return render(request, 'instructor_published_policy.html', {'publishedPolicy': publishedPolicy})
+    return render(request, 'student_published_policy.html', {'publishedPolicy': publishedPolicy})
+
+def edit_published_policy(request, pk):
+    policyToEdit = Policies.objects.get(pk=pk)
+    user = User.objects.first()
+
+    form = NewPolicyForm(request.POST)
+    if form.is_valid():
+        editedPolicy = Policies.objects.create(
+            body=policyToEdit.body,
+            published_by=user,
+            is_published=True,
+        )
+
+        return redirect('instructor_published_policy', pk=editedPolicy.pk)
 
 
 
