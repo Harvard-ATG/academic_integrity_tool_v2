@@ -56,7 +56,8 @@ def policy_templates_list_view(request, role):
 
 class AdminLevelTemplateUpdateView(UpdateView):
     model = PolicyTemplates
-    fields = ['name', 'body']
+    #fields = ['name', 'body']
+    fields = ['body']
     template_name = 'admin_level_template_edit.html'
     success_url = reverse_lazy('policy_templates_list', kwargs={'role': 'Administrator'})
 
@@ -76,12 +77,12 @@ def instructor_level_policy_edit_view(request, pk):
                 is_published = True,
             )
 
-            return redirect('published_policy', pk=finalPolicy.pk)
+            return redirect('instructor_published_policy', pk=finalPolicy.pk)
     else:
         form = NewPolicyForm(initial={'body': policyTemplate.body})
     return render(request, 'instructor_level_policy_edit.html', {'policyTemplate': policyTemplate, 'form': form})
 
-def published_policy(request, pk):
+def instructor_published_policy(request, pk):
     publishedPolicy = Policies.objects.get(pk=pk)
     return render(request, 'instructor_published_policy.html', {'publishedPolicy': publishedPolicy})
 
@@ -99,17 +100,17 @@ def published_policy_to_display_view(request):
 
 def edit_published_policy(request, pk):
     policyToEdit = Policies.objects.get(pk=pk)
-    user = User.objects.first()
+    if request.method == 'POST':
+        form = NewPolicyForm(request.POST)
+        if form.is_valid():
+            policyToEdit.body = form.cleaned_data.get('body')
+            policyToEdit.save()
+            return redirect('instructor_published_policy', pk=policyToEdit.pk)
+    else:
+        form = NewPolicyForm(initial={'body': policyToEdit.body})
+    return render(request, 'instructor_level_policy_edit.html', {'policyTemplate': policyToEdit, 'form': form}) #body=123 -> 12345
 
-    form = NewPolicyForm(request.POST)
-    if form.is_valid():
-        editedPolicy = Policies.objects.create(
-            body=policyToEdit.body,
-            published_by=user,
-            is_published=True,
-        )
 
-        return redirect('instructor_published_policy', pk=editedPolicy.pk)
 
 
 
