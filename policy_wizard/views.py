@@ -38,29 +38,6 @@ def process_lti_launch_request_view(request):
     else:
         raise PermissionDenied
 
-
-'''
-def determine_role_view(request):
-
-    is_basic_lti_launch = request.method=='POST' and request.POST.get('lti_message_type')=='basic-lti-launch-request'
-
-    request_is_valid = validate_request(request)
-
-    role = role_identifier(request.POST.get('ext_roles'))
-
-    if is_basic_lti_launch and request_is_valid:
-        if role=='Instructor':
-            return redirect('policy_templates_list', role='Instructor')
-        elif role=='Student':
-            return redirect('published_policy_to_display')
-        elif role=='Administrator':
-            return redirect('policy_templates_list', role='Administrator')
-    else:
-        raise PermissionDenied
-
-'''
-
-
 def policy_templates_list_view(request, role):
 
     written_work_policy_template = PolicyTemplates.objects.get(name="Collaboration Permitted: Written Work")
@@ -117,14 +94,6 @@ def instructor_published_policy(request, pk):
     return render(request, 'instructor_published_policy.html', {'publishedPolicy': publishedPolicy})
 
 def student_published_policy_view(request):
-
-    """
-    Code that determines the published policy to display based on course
-    student is taking ...
-    """
-
-    # Arbitrary policy selection
-
     try:
         publishedPolicy = Policies.objects.get(context_id=lti_launch_params_dict['context_id'])
     except ObjectDoesNotExist:
