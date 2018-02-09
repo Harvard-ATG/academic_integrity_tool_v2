@@ -2,6 +2,6 @@
     <div>
         <p>{{ publishedPolicy.body }}</p>
         <button><a href="{% url 'edit_published_policy' publishedPolicy.pk %}">Edit This Policy</a></button>
-        <button><a href="{% url 'policy_templates_list' role='Instructor'%}">Back to List of Policy Templates</a></button>
+        <button><a href="{% url 'instructor_delete_old_publish_new' publishedPolicy.pk %}">Publish New Policy From Templates</a></button>
     </div>
 {% endblock content %}

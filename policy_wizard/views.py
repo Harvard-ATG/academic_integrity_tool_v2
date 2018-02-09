@@ -40,6 +40,13 @@ def process_lti_launch_request_view(request):
 
 def policy_templates_list_view(request, role):
 
+    if role=='Instructor':
+        try:
+            publishedPolicy = Policies.objects.get(context_id=lti_launch_params_dict['context_id'])
+            return render(request, 'instructor_published_policy.html', {'publishedPolicy': publishedPolicy})
+        except ObjectDoesNotExist:
+            pass
+
     written_work_policy_template = PolicyTemplates.objects.get(name="Collaboration Permitted: Written Work")
     problem_sets_policy_template = PolicyTemplates.objects.get(name="Collaboration Permitted: Problem Sets")
     collaboration_prohibited_policy_template = PolicyTemplates.objects.get(name="Collaboration Prohibited")
@@ -112,6 +119,16 @@ def edit_published_policy(request, pk):
     else:
         form = NewPolicyForm(initial={'body': policyToEdit.body})
     return render(request, 'instructor_level_policy_edit.html', {'policyTemplate': policyToEdit, 'form': form}) #body=123 -> 12345
+
+def instructor_delete_old_publish_new_view(request, pk):
+    #Delete old policy
+    Policies.objects.filter(pk=pk).delete()
+    #Redirect to list of templates
+    return redirect('policy_templates_list', role='Instructor')
+
+
+
+
 
 
 

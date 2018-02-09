@@ -12,4 +12,5 @@ urlpatterns = [
     path('published_policy/<int:pk>/', views.instructor_published_policy, name='instructor_published_policy'),
     path('<str:role>', views.policy_templates_list_view, name='policy_templates_list'),
     path('edit_published_policy/<int:pk>/', views.edit_published_policy, name='edit_published_policy'),
+    path('instructor_delete_old_publish_new/<int:pk>/', views.instructor_delete_old_publish_new_view, name='instructor_delete_old_publish_new'),
 ]
