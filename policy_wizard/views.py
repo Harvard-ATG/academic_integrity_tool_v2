@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.core.exceptions import ObjectDoesNotExist
 from .forms import NewPolicyForm
 from .models import PolicyTemplates, Policies
 from .middleware import role_identifier, validate_request, lti_launch_params_dict
@@ -31,7 +32,7 @@ def process_lti_launch_request_view(request):
         if role=='Instructor':
             return redirect('policy_templates_list', role='Instructor')
         elif role=='Student':
-            return redirect('published_policy_to_display')
+            return redirect('student_published_policy')
         elif role=='Administrator':
             return redirect('policy_templates_list', role='Administrator')
     else:
@@ -115,7 +116,7 @@ def instructor_published_policy(request, pk):
     publishedPolicy = Policies.objects.get(pk=pk)
     return render(request, 'instructor_published_policy.html', {'publishedPolicy': publishedPolicy})
 
-def published_policy_to_display_view(request):
+def student_published_policy_view(request):
 
     """
     Code that determines the published policy to display based on course
@@ -123,7 +124,11 @@ def published_policy_to_display_view(request):
     """
 
     # Arbitrary policy selection
-    publishedPolicy = Policies.objects.get(pk=8)
+
+    try:
+        publishedPolicy = Policies.objects.get(context_id=lti_launch_params_dict['context_id'])
+    except ObjectDoesNotExist:
+        return HttpResponse("There is no published academic integrity policy in record for this course.")
 
     return render(request, 'student_published_policy.html', {'publishedPolicy': publishedPolicy})
 
