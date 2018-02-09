@@ -18,14 +18,16 @@ from django.urls import include, path
 from django.contrib import admin
 from lti_provider import views as lti_views
 from policy_wizard import views
+from lti_provider import views as lti_views
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     #path('lti/launch', views.determine_role_view, name='determine_role'),
-    path('lti/launch', views.process_lti_launch_request_view, name='process_lti_launch_request'),
+    #path('lti/launch', views.process_lti_launch_request_view, name='process_lti_launch_request'),
+    path('lti/launch', include('policy_wizard.urls')),
     path('lti/config.xml', lti_views.LTIConfigView.as_view(), name="get_lti_xml"),
-    path('', include('policy_wizard.urls')),
+    #path('', include('policy_wizard.urls')),
 ]
 
 
