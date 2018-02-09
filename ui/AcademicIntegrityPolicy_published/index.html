@@ -1,10 +1,17 @@
-
+<!--There are 7 UI comments on this commit-->
 <html>
     <head>
         <title>Academic Integrity Policy</title>
+
         <link data-turbolinks-track="true" href="/assets/application-f2426e026c85d83f4d4ec5be1c26ee81.css" media="all" rel="stylesheet">
+
+<!--UI comment #1 - I am leaving here the scripts and meta tags from Canvas. Aside from the Bootstrap and Fontawesome links I added, I am bnot sure we need these what I added-->
         <script data-turbolinks-track="true" src="/assets/application-2671af1f4fe139755faa78265733f653.js"></script>
         <script src="/js/tinymce/tinymce.min.js" type="text/javascript"></script>
+<!-- UI comment #2 - Font Awesome-->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<!-- UI comment #3 - Bootstrap core CSS. I also added Boostrap LS by the end of the body tag -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
 
         <meta content="authenticity_token" name="csrf-param">
@@ -14,19 +21,36 @@
 
         <h1>Academic Integrity Policy</h1>
 
-        <p id="notice">Policy was successfully updated.</p>
+        <h2>Collaboration Permitted - Written Work Policy</h2>
 
-        <p></p>
+<!--UI comment #4 - using Bootstrap alert-->
+        <div class="alert alert-success" role="alert">Policy was successfully updated.</div>
 
-        <p>
-            Discussion and the exchange of ideas are essential to academic work. For assignments in this course, you are encouraged to consult with your classmates on the choice of paper topics and to share sources. You may find it useful to discuss your chosen topic with your peers, particularly if you are working on the same topic as a classmate. However, you should ensure that any written work you submit for evaluation is the result of your own research and writing and that it reflects your own approach to the topic. You must also adhere to standard citation practices in this discipline and properly cite any books, articles, websites, lectures, etc. that have helped you with your work. If you received any help with your writing (feedback on drafts, etc), you must also acknowledge this assistance.
-        </p>
+<!--UI comment #5 - removing paragraphs used as padding-->
 
-        <p></p>
+<!--UI comment #6 - Using Bootstrap grid -->
+       <div class="row">
+            <div class="col-sm-12">
+                Discussion and the exchange of ideas are essential to academic work. For assignments in this course, you are encouraged to consult with your classmates on the choice of paper topics and to share sources. You may find it useful to discuss your chosen topic with your peers, particularly if you are working on the same topic as a classmate. However, you should ensure that any written work you submit for evaluation is the result of your own research and writing and that it reflects your own approach to the topic. You must also adhere to standard citation practices in this discipline and properly cite any books, articles, websites, lectures, etc. that have helped you with your work. If you received any help with your writing (feedback on drafts, etc), you must also acknowledge this assistance.
+            </div>
+    </div>
 
-        <p>
-          As an instructor, you may <a href="/policies/2333/edit">edit this policy</a>.
-        </p>
+<!--UI comment #7 - Using a heading for visual relevance-->
+        <div class="col-sm-12">
+            <hr>
+            <h5>
+              As an instructor, you may edit this policy.
+            </h5>
+        </div>
+
+        <div class="col-sm-12" style="margin-top: 1em">
+            <a class="btn btn-primary pull-right" href="link/to/policy/edit/page" role="button">
+                Edit Written Work policy
+            </a>
+            <a class="btn btn-default" href="Link/back/to/list/of/policy/templates" role="button">
+                Back to list of policy templates
+            </a>
+        </div>
 
     </body>
 
