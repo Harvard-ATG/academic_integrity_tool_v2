@@ -1,0 +1,59 @@
+{% block content %}
+
+    <div>
+
+        <h1>Academic Integrity Policy</h1>
+        <h2>Instructions for Faculty</h2>
+        <p>As stated in <a>Information for Faculty</a>: “It is essential that instructors set out carefully in writing
+            and at the outset of a course or course assignment the extent of permissible student collaboration
+            in the preparation of papers, computer programs, or examinations. Students must assume that collaboration
+            in the completion of assignments is permitted unless explicitly prohibited by the instructor. Students
+            should be reminded that they are expected to acknowledge any collaboration and its extent in all
+            submitted work.”</p>
+
+        <p>Reviewing the the <a>Honor Code website</a> may be of assistance as you determine your policy,
+            particularly the sections on the <a>Affirmation</a> and <a>Teaching With Integrity</a>.</p>
+
+        <p>Please select the relevant description below, or you may customize your policy on collaboration for
+            this class.</p>
+
+        <h2>I. Collaboration Permitted</h2>
+        <h3>a. Written Work</h3>
+        <p>{{ written_work_policy_template.body }}</p>
+        <button><a href="{% url 'instructor_level_policy_edit' written_work_policy_template.pk %}">Choose This Template</a></button>
+
+        <h3>b. Problem Sets</h3>
+        <p>{{ problem_sets_policy_template.body }}</p>
+        <button><a href=" {% url 'instructor_level_policy_edit' problem_sets_policy_template.pk %}">Choose This Template</a></button>
+
+        <h2>II. Collaboration Prohibited</h2>
+        <p>{{ collaboration_prohibited_policy_template.body }}</p>
+        <button><a href="{% url 'instructor_level_policy_edit' collaboration_prohibited_policy_template.pk %}">Choose This Template</a></button>
+
+        <h2>Instructions for Customizing Collaboration Policy</h2>
+        <p>If you choose to write your own policy on collaboration, keep the following guidelines in mind.</p>
+        <ol>
+            <li>You should outline explicitly what students may or may not discuss with their classmates outside the classroom and how best to capture those discussions on formal work submitted for course credit.</li>
+            <li>You may want to include citation resources for students including the Harvard Guide to Using Sources.</li>
+            <li>You may want to include information about conforming to the College’s policies on academic integrity found in the Harvard College Handbook for Students.</li>
+        </ol>
+        <button><a href="{% url 'instructor_level_policy_edit' custom_policy_template.pk %}">Create A Custom Policy</a></button>
+
+
+    </div>
+
+{% endblock content %}
+
+
+
+
+{% comment %}
+{% block content %}
+    {% for object in object_list %}
+        <div>
+            <h2><a href="{% url 'policy_edit' object.pk %}">{{ object.name }}</a></h2>
+            <p>{{ object.body }}</p>
+        </div>
+    {% endfor %}
+{% endblock content %}
+{% endcomment %}
