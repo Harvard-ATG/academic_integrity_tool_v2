@@ -38,9 +38,9 @@ def role_identifier(ext_roles_text):
         context_roles_as_string = ''.join(context_roles) #convert context_roles to string
         if ('Administrator' in context_roles_as_string) or ('ContentDeveloper' in context_roles_as_string):
             policy_role = 'Administrator'
-        elif ('Instructor' in context_roles_as_string):
+        elif ('Instructor' in context_roles_as_string) or ('Mentor' in context_roles_as_string):
             policy_role = 'Instructor'
-        elif ('Learner' in context_roles_as_string) or ('NonCreditLearner' in context_roles_as_string) or ('TeachingAssistant' in context_roles_as_string) or ('Mentor' in context_roles_as_string):
+        elif ('Learner' in context_roles_as_string) or ('NonCreditLearner' in context_roles_as_string) or ('TeachingAssistant' in context_roles_as_string):
             policy_role = 'Student'
         else:
             raise PermissionDenied

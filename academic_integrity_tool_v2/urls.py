@@ -22,7 +22,8 @@ from policy_wizard import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('lti/launch', views.determine_role_view, name='determine_role'),
+    #path('lti/launch', views.determine_role_view, name='determine_role'),
+    path('lti/launch', views.process_lti_launch_request_view, name='process_lti_launch_request'),
     path('lti/config.xml', lti_views.LTIConfigView.as_view(), name="get_lti_xml"),
     path('', include('policy_wizard.urls')),
 ]

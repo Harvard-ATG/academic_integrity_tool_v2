@@ -8,11 +8,37 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from .forms import NewPolicyForm
 from .models import PolicyTemplates, Policies
-from .middleware import role_identifier, validate_request
+from .middleware import role_identifier, validate_request, lti_launch_params_dict
 
 
 # Create your views here.
 @csrf_exempt
+def process_lti_launch_request_view(request):
+
+    is_basic_lti_launch = request.method == 'POST' and request.POST.get(
+        'lti_message_type') == 'basic-lti-launch-request'
+
+    request_is_valid = validate_request(request)
+
+    if is_basic_lti_launch and request_is_valid:
+
+        #store context_id in dictionary
+        lti_launch_params_dict['context_id'] = request.POST.get('context_id')
+
+        #Figure out role of launcher and path to take
+        role = role_identifier(request.POST.get('ext_roles'))
+
+        if role=='Instructor':
+            return redirect('policy_templates_list', role='Instructor')
+        elif role=='Student':
+            return redirect('published_policy_to_display')
+        elif role=='Administrator':
+            return redirect('policy_templates_list', role='Administrator')
+    else:
+        raise PermissionDenied
+
+
+'''
 def determine_role_view(request):
 
     is_basic_lti_launch = request.method=='POST' and request.POST.get('lti_message_type')=='basic-lti-launch-request'
@@ -30,6 +56,8 @@ def determine_role_view(request):
             return redirect('policy_templates_list', role='Administrator')
     else:
         raise PermissionDenied
+
+'''
 
 
 def policy_templates_list_view(request, role):
@@ -71,6 +99,7 @@ def instructor_level_policy_edit_view(request, pk):
         form = NewPolicyForm(request.POST)
         if form.is_valid():
             finalPolicy = Policies.objects.create(
+                context_id=lti_launch_params_dict['context_id'],
                 body=form.cleaned_data.get('body'),
                 related_template = policyTemplate,
                 published_by = user,
