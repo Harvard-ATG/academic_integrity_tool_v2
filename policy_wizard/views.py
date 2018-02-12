@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import NewPolicyForm
 from .models import PolicyTemplates, Policies
-from .middleware import role_identifier, validate_request, lti_launch_params_dict
+from .middleware import role_identifier, validate_request
 
 
 # Create your views here.
@@ -23,8 +23,11 @@ def process_lti_launch_request_view(request):
 
     if is_basic_lti_launch and request_is_valid:
 
+        #Store the context_id in the request's session attribute
+        request.session['context_id'] = request.POST.get('context_id')
+
         #store context_id in dictionary
-        lti_launch_params_dict['context_id'] = request.POST.get('context_id')
+        #lti_launch_params_dict['context_id'] = request.POST.get('context_id')
 
         #Figure out role of launcher and path to take
         role = role_identifier(request.POST.get('ext_roles'))
@@ -42,7 +45,7 @@ def policy_templates_list_view(request, role):
 
     if role=='Instructor':
         try:
-            publishedPolicy = Policies.objects.get(context_id=lti_launch_params_dict['context_id'])
+            publishedPolicy = Policies.objects.get(context_id=request.session['context_id'])
             return render(request, 'instructor_published_policy.html', {'publishedPolicy': publishedPolicy})
         except ObjectDoesNotExist:
             pass
@@ -84,7 +87,7 @@ def instructor_level_policy_edit_view(request, pk):
         form = NewPolicyForm(request.POST)
         if form.is_valid():
             finalPolicy = Policies.objects.create(
-                context_id=lti_launch_params_dict['context_id'],
+                context_id=request.session['context_id'],
                 body=form.cleaned_data.get('body'),
                 related_template = policyTemplate,
                 published_by = user,
@@ -102,7 +105,7 @@ def instructor_published_policy(request, pk):
 
 def student_published_policy_view(request):
     try:
-        publishedPolicy = Policies.objects.get(context_id=lti_launch_params_dict['context_id'])
+        publishedPolicy = Policies.objects.get(context_id=request.session['context_id'])
     except ObjectDoesNotExist:
         return HttpResponse("There is no published academic integrity policy in record for this course.")
 
@@ -118,7 +121,7 @@ def edit_published_policy(request, pk):
             return redirect('instructor_published_policy', pk=policyToEdit.pk)
     else:
         form = NewPolicyForm(initial={'body': policyToEdit.body})
-    return render(request, 'instructor_level_policy_edit.html', {'policyTemplate': policyToEdit, 'form': form}) #body=123 -> 12345
+    return render(request, 'instructor_level_policy_edit.html', {'policyTemplate': policyToEdit, 'form': form})
 
 def instructor_delete_old_publish_new_view(request, pk):
     #Delete old policy
