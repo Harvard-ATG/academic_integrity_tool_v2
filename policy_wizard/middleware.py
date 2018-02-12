@@ -62,10 +62,5 @@ def validate_request(request):
     # return True if request is valid or False if otherwise
     return lti_object._verify_request(request)
 
-#Dictionary that stores LTI launch parameters in POST request
-#lti_launch_params_dict = {
-#    "context_id": ""
-#}
-
 
 
