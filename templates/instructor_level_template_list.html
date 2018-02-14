@@ -1,59 +1,193 @@
 {% block content %}
 
-    <div>
-
-        <h1>Academic Integrity Policy</h1>
-        <h2>Instructions for Faculty</h2>
-        <p>As stated in <a>Information for Faculty</a>: “It is essential that instructors set out carefully in writing
-            and at the outset of a course or course assignment the extent of permissible student collaboration
-            in the preparation of papers, computer programs, or examinations. Students must assume that collaboration
-            in the completion of assignments is permitted unless explicitly prohibited by the instructor. Students
-            should be reminded that they are expected to acknowledge any collaboration and its extent in all
-            submitted work.”</p>
-
-        <p>Reviewing the the <a>Honor Code website</a> may be of assistance as you determine your policy,
-            particularly the sections on the <a>Affirmation</a> and <a>Teaching With Integrity</a>.</p>
-
-        <p>Please select the relevant description below, or you may customize your policy on collaboration for
-            this class.</p>
-
-        <h2>I. Collaboration Permitted</h2>
-        <h3>a. Written Work</h3>
-        <p>{{ written_work_policy_template.body }}</p>
-        <button><a href="{% url 'instructor_level_policy_edit' written_work_policy_template.pk %}">Choose This Template</a></button>
-
-        <h3>b. Problem Sets</h3>
-        <p>{{ problem_sets_policy_template.body }}</p>
-        <button><a href=" {% url 'instructor_level_policy_edit' problem_sets_policy_template.pk %}">Choose This Template</a></button>
-
-        <h2>II. Collaboration Prohibited</h2>
-        <p>{{ collaboration_prohibited_policy_template.body }}</p>
-        <button><a href="{% url 'instructor_level_policy_edit' collaboration_prohibited_policy_template.pk %}">Choose This Template</a></button>
-
-        <h2>Instructions for Customizing Collaboration Policy</h2>
-        <p>If you choose to write your own policy on collaboration, keep the following guidelines in mind.</p>
-        <ol>
-            <li>You should outline explicitly what students may or may not discuss with their classmates outside the classroom and how best to capture those discussions on formal work submitted for course credit.</li>
-            <li>You may want to include citation resources for students including the Harvard Guide to Using Sources.</li>
-            <li>You may want to include information about conforming to the College’s policies on academic integrity found in the Harvard College Handbook for Students.</li>
-        </ol>
-        <button><a href="{% url 'instructor_level_policy_edit' custom_policy_template.pk %}">Create A Custom Policy</a></button>
+    <head>
+        <title>Academic Integrity Policy</title>
 
 
-    </div>
+        <!-- Q for Vittorio: This stylesheet seems to be existing within a local directory called assets/. The stylesheet therefore
+        probably needs to be uploaded to this project's github repo so I can include it in my project's directory tree.-->
+        <link data-turbolinks-track="true" href="/assets/application-f2426e026c85d83f4d4ec5be1c26ee81.css" media="all" rel="stylesheet">
+<!-- UI comment #1 - Font Awesome-->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<!-- UI comment #2 - Bootstrap core CSS. I also added Boostrap LS by the end of the body tag -->
+         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
-{% endblock content %}
+        <!-- These local scripts in /assets/ and /js/. Vittorio needs to add them to github repo. -->
+        <script data-turbolinks-track="true" src="/assets/application-2671af1f4fe139755faa78265733f653.js"></script>
+        <script src="/js/tinymce/tinymce.min.js" type="text/javascript"></script>
 
+        <!-- I probably don't need to submit a form on this page. So the csrf-token may be unnecessary for now. Will be good to ask.
 
+        <meta content="authenticity_token" name="csrf-param">
+        <meta content="d0ccTyXMT8j2cAO95nISg+V5rFAEFJxqMA4Bt0J+zUA=" name="csrf-token">
 
+        -->
 
-{% comment %}
-{% block content %}
-    {% for object in object_list %}
+    </head>
+
+    <body>
+
         <div>
-            <h2><a href="{% url 'policy_edit' object.pk %}">{{ object.name }}</a></h2>
-            <p>{{ object.body }}</p>
+
+            <h1>Academic Integrity Policy</h1>
+            <h2>Instructions for Faculty</h2>
+            <p>As stated in <a href="http://infoforfaculty.fas.harvard.edu/" target="_new" title="Information for Faculty">Information for Faculty</a>: “It is essential that instructors set out carefully in writing
+                and at the outset of a course or course assignment the extent of permissible student collaboration
+                in the preparation of papers, computer programs, or examinations. Students must assume that collaboration
+                in the completion of assignments is permitted unless explicitly prohibited by the instructor. Students
+                should be reminded that they are expected to acknowledge any collaboration and its extent in all
+                submitted work.”</p>
+
+            <p>Reviewing the the <a href="http://honor.fas.harvard.edu/" target="_new">Honor Code website</a> may be of assistance as you determine your policy,
+                particularly the sections on the <a href="http://honor.fas.harvard.edu/affirmation" target="_new">Affirmation</a> and <a href="http://honor.fas.harvard.edu/teaching-integrity" target="_new">Teaching With Integrity</a>.</p>
+
+            <h4>Please select the relevant description below, or you may customize your policy on collaboration for
+                this class.</h4>
+
+            <div class="panel panel-primary">
+
+                <div class="panel-heading">
+                    <h4>I. Collaboration Permitted</h4>
+                </div>
+
+                <div class="panel-body">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="col-sm-8">
+                                <h4>a. Written Work</h4>
+                                <p>{{ written_work_policy_template.body }}</p>
+                            </div>
+
+                            <a href="{% url 'instructor_level_policy_edit' written_work_policy_template.pk %}">
+                                <div class="col-sm-4">
+                                    <div style="position: relative">
+                                        <span class="icon-input-btn" style="position: absolute; top: 50%; transform: translateY(50%);">
+                                            <button value="Choose Written Work Template" class="btn btn-default btn-md" type="submit" name="commit">
+                                                <i class="fa fa-file-word-o" style="font-size: 6em; color: rgb(51, 122, 183);"></i>
+                                                <br>
+                                                Choose Written Work Template
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+
+                            <div class="col-sm-8">
+                                <h4>b. Problem Sets</h4>
+                                <p>{{ problem_sets_policy_template.body }}</p>
+                            </div>
+
+                            <a href=" {% url 'instructor_level_policy_edit' problem_sets_policy_template.pk %}">
+                                <div class="col-sm-4">
+                                    <div style="position: relative">
+                                        <span class="icon-input-btn" style="position: absolute; top: 50%; transform: translateY(50%);">
+                                            <button value="Choose Problem Sets Template" class="btn btn-default btn-md" type="submit" name="commit">
+                                                <i class="fa-file-powerpoint-o" style="font-size: 6em; color: rgb(51, 122, 183);"></i>
+                                                <br>
+                                                Choose Problem Sets Template
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </a>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4>II. Collaboration Prohibited</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+
+                            <div class="col-sm-8">
+                                <p>{{ collaboration_prohibited_policy_template.body }}</p>
+                            </div>
+
+                            <a href="{% url 'instructor_level_policy_edit' collaboration_prohibited_policy_template.pk %}">
+                                <div class="col-sm-4">
+                                    <div style="position: relative">
+                                        <span class="icon-input-btn"
+                                              style="position: absolute; top: 50%; transform: translateY(0%);">
+                                            <button value="Choose Collaboration Prohibited Template" class="btn btn-default btn-md" type="submit" name="commit">
+                                                <i class="fa fa-file-word-o" style="font-size: 6em; color: rgb(51, 122, 183);"></i>
+                                                <br>
+                                                Choose
+                                                <br>
+                                                Collaboration Prohibited Template</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h4>III. Instructions For Customizing Collaboration Policy</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="col-sm-8">
+                                <p>
+                                    If you choose to write your own policy on collaboration, keep the following guidelines in mind.
+                                </p>
+
+                                <ol>
+                                    <li>
+                                        You should outline explicitly what students may or may not discuss with their classmates outside the classroom and how best to capture those discussions on formal work submitted for course credit.
+                                    </li>
+                                    <li>
+                                        You may want to include citation resources for students including the <a href="http://usingsources.fas.harvard.edu/" title="Harvard Guide to Using Sources">Harvard Guide to Using Sources</a>.
+                                    </li>
+                                    <li>
+                                        You may want to include information about conforming to the College’s policies on academic integrity found in the <a href="http://handbook.fas.harvard.edu/" title="Harvard College Handbook for Students">Harvard College Handbook for Students</a>.
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <a href="{% url 'instructor_level_policy_edit' custom_policy_template.pk %}">
+                                <div class="col-sm-4">
+                                    <div style="position: relative">
+                                        <span class="icon-input-btn" style="position: absolute;top: 50%; left: 10%; transform: translateY(30%);">
+                                            <button value="Create A Custom Policy" class="btn btn-default btn-md" type="submit" name="commit">
+                                                <i class="fa fa-file-o" style="font-size: 6em; color: rgb(51, 122, 183);"></i>
+                                                <br>
+                                                Create A Custom Policy
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
-    {% endfor %}
+
+        <!-- Bootstrap JS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/docs.min.js"></script>
+
+    </body>
+
 {% endblock content %}
-{% endcomment %}
