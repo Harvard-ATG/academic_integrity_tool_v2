@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'policy_wizard',
     'lti_provider',
+    'tinymce',
 ]
 
 MIDDLEWARE = [
