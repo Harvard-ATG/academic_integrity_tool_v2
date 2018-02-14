@@ -27,6 +27,7 @@ urlpatterns = [
     #path('lti/launch', views.process_lti_launch_request_view, name='process_lti_launch_request'),
     path('lti/launch', include('policy_wizard.urls')),
     path('lti/config.xml', lti_views.LTIConfigView.as_view(), name="get_lti_xml"),
+    path('tinymce/', include('tinymce.urls')),
     #path('', include('policy_wizard.urls')),
 ]
 
