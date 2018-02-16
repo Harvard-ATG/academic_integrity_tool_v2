@@ -1,7 +1,28 @@
+{% load static %}
 {% block content %}
-    <h1>Edit Policy Template</h1>
-    <form action="" method="post">{% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Update" />
-    </form>
+
+    <head>
+        <script type="text/javascript" src="{% static "tinymce/tinymce.min.js"%}"></script>
+        <script type="text/javascript">
+            tinymce.init({
+                selector: 'textarea',
+                theme: 'modern',
+                width: 600,
+                height: 300,
+                plugins: 'textcolor lists table media link image directionality',
+                menubar: false,
+                toolbar1: 'bold italic underline forecolor backcolor removeformat alignleft aligncenter alignright outdent indent superscript subscript bullist numlist',
+                toolbar2: 'table media link unlink image ltr rtl fontsizeselect formatselect'
+            });
+        </script>
+    </head>
+
+    <body>
+        <h1>Edit Policy Template</h1>
+        <form action="" method="post">{% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Update" />
+        </form>
+    </body>
+
 {% endblock content %}
