@@ -1,8 +1,29 @@
+{% load static %}
+
 {% block content %}
-    <h2>{{ policyTemplate.name }}</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Publish</button>
-    </form>
+    <head>
+        <script type="text/javascript" src="{% static "tinymce/tinymce.min.js"%}"></script>
+        <script type="text/javascript">
+            tinymce.init({
+                selector: 'textarea',
+                theme: 'modern',
+                width: 600,
+                height: 300,
+                plugins: 'textcolor lists table media link image directionality',
+                menubar: false,
+                toolbar1: 'bold italic underline forecolor backcolor removeformat alignleft aligncenter alignright outdent indent superscript subscript bullist numlist',
+                toolbar2: 'table media link unlink image ltr rtl fontsizeselect formatselect'
+            });
+        </script>
+    </head>
+
+    <body>
+        <h2>{{ policyTemplate.name }}</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Publish</button>
+        </form>
+    </body>
+
 {% endblock %}
