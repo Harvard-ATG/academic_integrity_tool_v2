@@ -15,6 +15,9 @@ from .middleware import role_identifier, validate_request
 # Create your views here.
 @csrf_exempt
 def process_lti_launch_request_view(request):
+    '''
+    Processes launch request and redirects to appropriate view depending on the role of the launcher
+    '''
 
     #True if this is a typical lti launch. False if not.
     is_basic_lti_launch = request.method == 'POST' and request.POST.get(
@@ -42,6 +45,9 @@ def process_lti_launch_request_view(request):
         raise PermissionDenied
 
 def policy_templates_list_view(request):
+    '''
+    Displays list of policy templates
+    '''
 
     #Fetch role from session attribute. It will be either 'Administrator' or 'Instructor'.
     role = request.session['role']
@@ -80,6 +86,9 @@ def policy_templates_list_view(request):
         })
 
 class AdminLevelTemplateUpdateView(UpdateView):
+    '''
+
+    '''
     model = PolicyTemplates
     fields = ['body']
     template_name = 'admin_level_template_edit.html'
