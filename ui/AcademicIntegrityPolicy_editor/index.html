@@ -1,20 +1,44 @@
+<!--There are #12 UI comments on this commit-->
+<html>
 
-<!-- Bare HTML for the text editor that is to be styled to resemble the Canvas editor-->
+<!--ui comment #1 - adding head tag and Bootstrap css links-->
+    <head>
+        <title>Academic Integrity Policy</title>
+
+<!-- UI comment #2 - Font Awesome-->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<!-- UI comment #3 - Bootstrap core CSS. I also added Boostrap LS by the end of the body tag -->
+         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+
+    <!-- Bare HTML for the text editor that is to be styled to resemble the Canvas editor-->
 <body>
 
-    <h3>New policy from <span>Collaboration Permitted - Written Work</span> template</h3>
-    <h5>Customize your policy on collaboration for this class</h5>
-	<form>
+<!--UI comment #4 - adding Bootstrap columns to simulate the native Canvas interface and the limited horizontal space-->
+	<div class="col-sm-2">(Native Canvas left hand navigation)</div>
+    <div class="col-sm-7">
+
+<!--UI comment # - headings-->
+    <h1>Academic Integrity Policy</h1>
+    <h3>New policy from <span class="label label-primary">Collaboration Permitted - Written Work</span></h3>
+    <h5 style="margin-top: 2em">Customize your policy on collaboration for this class</h5>
+    <form>
 
         <!-- I am leaving the styling for this textarea as you had it initially but some things may certainly change
             if it is to resemble the Canvas editor :) -->
+
+<!--UI comment #5 changing the border color to match Canvas syllabus interface-->
+<!--UI comment #6 - change the style of the class of .mce-panel to border: 0px solid #fff;-->
+<!--UI comment #7 - change the style of the class of .mce-tinymce to box-shadow: 0 0px 0px rgba(0, 0, 0, 0);-->
+<!--UI comment #8 - change the style of the class of .mce-top-part::before to box-shadow: 0 0 0 rgba(0, 0, 0, 0);-->
+<!--UI comment #9 - remove from the div with id="mceu_25" all the class properties - mce-top-part mce-container mce-stack-layout-item mce-first-->
 		<textarea cols="127" id="myEditor" name="policy[body]" rows="15"
                 style="width: 100%;
                 margin: 0;
-                border: 1px;
+                border: 0px;
                 border-style: solid;
-                border-width: 1px;
-                border-color: #ccc;
+                border-width: 0px;
+                border-color: #fff;
                 position: relative;
                 padding: 1em;
                 height: 20em;
@@ -27,12 +51,20 @@
         <!-- After a discussion with Artie and Mike, we decided to have only 2 buttons for now, i.e. 'Cancel' and 'Publish' (or 'Update' for the Administrator), so as to emulate the Canvas editor as closely as possible and to reduce complexity, for now. -->
         <!-- Also, again for the purpose of emulating the Canvas editor, we can have these 2 buttons next to each other on the bottom right of the textarea -->
         <div>
-            <button>Cancel</button> 
-            <button>Publish</button>
+
+<!--UI comment #10- adding a ruler to match the interface of the syllabus-->
+            <hr>
+<!--UI comment # - styling Bootstrap buttons, moving the primary function to the right hand side-->
+            <button class="btn-default btn-lg">Cancel</button>
+            <button class="btn-primary pull-right btn-lg">Publish</button>
         </div>
 
 	</form>
+    </div>
+    <div class="col-sm-3">(Native Canvas right hand column)</div>
 
+<!--UI comment #11 - change the style of the div with id="mceu_31" that contains the iframe to border: 1px solid #ccc; padding-right: 1px; -->
+<!--UI comment #12 - change div.mce-edit-area to background: #ccc;-->
 
 <!-- JavaScript for rendering the tinyMCE editor -->
     <script src='https://cloud.tinymce.com/stable/tinymce.min.js'></script>
@@ -47,3 +79,4 @@
             });
     </script>
 </body>
+</html>
