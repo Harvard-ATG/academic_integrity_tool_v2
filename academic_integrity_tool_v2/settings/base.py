@@ -207,8 +207,22 @@ LTI_TOOL_CONFIGURATION = {
 
 PYLTI_CONFIG = {
     'consumers': {
+        SECURE_SETTINGS.get('CONSUMER_KEY'): {
+            'secret': SECURE_SETTINGS.get('LTI_SECRET')
+        }
+    }
+}
+
+
+
+'''
+PYLTI_CONFIG = {
+    'consumers': {
         SECURE_SETTINGS['CONSUMER_KEY']: {
             'secret': SECURE_SETTINGS['LTI_SECRET']
         }
     }
 }
+'''
+
+
