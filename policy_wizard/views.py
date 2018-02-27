@@ -10,6 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from .forms import NewPolicyForm
 from .models import PolicyTemplates, Policies
 from .middleware import role_identifier, validate_request
+from .forms import PolicyTemplateForm, NewPolicyForm
 
 
 # Create your views here.
@@ -84,15 +85,28 @@ def policy_templates_list_view(request):
             'collaboration_prohibited_policy_template': collaboration_prohibited_policy_template,
             'custom_policy_template': custom_policy_template
         })
-
+'''
 class AdminLevelTemplateUpdateView(UpdateView):
-    '''
 
-    '''
     model = PolicyTemplates
     fields = ['body']
     template_name = 'admin_level_template_edit.html'
     success_url = reverse_lazy('policy_templates_list')
+'''
+
+
+def admin_level_template_edit_view(request, pk):
+    templateToUpdate = get_object_or_404(PolicyTemplates, pk=pk)
+
+    if request.method == 'POST':
+        form = PolicyTemplateForm(request.POST)
+        if form.is_valid():
+            templateToUpdate.body = form.cleaned_data.get('body')
+            templateToUpdate.save()
+            return redirect('policy_templates_list')
+    else:
+        form = PolicyTemplateForm(initial={'body': templateToUpdate.body})
+    return render(request, 'admin_level_template_edit.html', {'form': form})
 
 def instructor_level_policy_edit_view(request, pk):
     policyTemplate = get_object_or_404(PolicyTemplates, pk=pk)

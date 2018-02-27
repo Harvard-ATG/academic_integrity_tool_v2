@@ -41,7 +41,7 @@ def role_identifier(ext_roles_text):
         elif ('Instructor' in context_roles_as_string):
             policy_role = 'Instructor'
         elif ('Learner' in context_roles_as_string) or ('NonCreditLearner' in context_roles_as_string) or ('TeachingAssistant' in context_roles_as_string) or ('Mentor' in context_roles_as_string):
-            policy_role = 'Student'
+            policy_role = 'Instructor'
         else:
             raise PermissionDenied
 

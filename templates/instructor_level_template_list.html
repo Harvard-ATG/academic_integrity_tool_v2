@@ -27,10 +27,12 @@
 
     <body>
 
-        <div>
+        <div class="col-sm-2"></div>
+
+        <div class="col-sm-7">
 
             <h1>Academic Integrity Policy</h1>
-            <h2>Instructions for Faculty</h2>
+            <h3>Instructions for Faculty</h3>
             <p>As stated in <a href="http://infoforfaculty.fas.harvard.edu/" target="_new" title="Information for Faculty">Information for Faculty</a>: “It is essential that instructors set out carefully in writing
                 and at the outset of a course or course assignment the extent of permissible student collaboration
                 in the preparation of papers, computer programs, or examinations. Students must assume that collaboration
@@ -65,12 +67,16 @@
                                             <button value="Choose Written Work Template" class="btn btn-default btn-md" type="submit" name="commit">
                                                 <i class="fa fa-file-word-o" style="font-size: 6em; color: rgb(51, 122, 183);"></i>
                                                 <br>
-                                                Choose Written Work Template
+                                                Choose
+                                                <br>
+                                                Written Work Template
                                             </button>
                                         </span>
                                     </div>
                                 </div>
                             </a>
+
+
                         </div>
                     </div>
 
@@ -87,9 +93,11 @@
                                     <div style="position: relative">
                                         <span class="icon-input-btn" style="position: absolute; top: 50%; transform: translateY(50%);">
                                             <button value="Choose Problem Sets Template" class="btn btn-default btn-md" type="submit" name="commit">
-                                                <i class="fa-file-powerpoint-o" style="font-size: 6em; color: rgb(51, 122, 183);"></i>
+                                                <i class="fa fa-file-powerpoint-o" style="font-size: 6em; color: rgb(51, 122, 183);"></i>
                                                 <br>
-                                                Choose Problem Sets Template
+                                                Choose
+                                                <br>
+                                                Problem Sets Template
                                             </button>
                                         </span>
                                     </div>
@@ -116,21 +124,30 @@
                                 <p>{{ collaboration_prohibited_policy_template.body }}</p>
                             </div>
 
+
                             <a href="{% url 'instructor_level_policy_edit' collaboration_prohibited_policy_template.pk %}">
                                 <div class="col-sm-4">
                                     <div style="position: relative">
                                         <span class="icon-input-btn"
                                               style="position: absolute; top: 50%; transform: translateY(0%);">
                                             <button value="Choose Collaboration Prohibited Template" class="btn btn-default btn-md" type="submit" name="commit">
-                                                <i class="fa fa-file-word-o" style="font-size: 6em; color: rgb(51, 122, 183);"></i>
-                                                <br>
+                                                <div class="fa-4x">
+                                                    <span class="fa-layers fa-fw">
+                                                        <i class="fa fa-file-o" style="font-size: 1.5em; color: rgb(51, 122, 183);"></i>
+                                                        <i class="fa fa-times" style="position: absolute; font-size: .75em; color: rgb(51, 122, 183); margin-left: -1.25em; margin-top: .70em;"></i>
+                                                    </span>
+                                                </div>
                                                 Choose
                                                 <br>
-                                                Collaboration Prohibited Template</button>
+                                                Collaboration Prohibited
+                                                <br>
+                                                Template
+                                            </button>
                                         </span>
                                     </div>
                                 </div>
                             </a>
+
 
                         </div>
                     </div>
@@ -182,6 +199,8 @@
             </div>
 
         </div>
+
+        <div class="col-sm-3"></div>
 
         <!-- Bootstrap JS -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
