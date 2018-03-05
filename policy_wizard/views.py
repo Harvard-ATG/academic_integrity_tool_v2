@@ -11,7 +11,7 @@ from .forms import NewPolicyForm
 from .models import PolicyTemplates, Policies
 from .middleware import role_identifier, validate_request
 from .forms import PolicyTemplateForm, NewPolicyForm
-
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 # Create your views here.
 @csrf_exempt
