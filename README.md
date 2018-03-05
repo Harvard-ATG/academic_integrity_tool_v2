@@ -1,8 +1,8 @@
-Academic Integrity Policy Tool (V2)
+**Academic Integrity Policy Tool (V2)**
 
 This is a django application that enables instructors to prepare academic integrity policies from templates made by instructional technologists and publish said policies for students to view. It is an LTI tool that is embedded into and launched from the Canvas LMS.
 
-Steps to get it running locally:
+**Steps to get it running locally:**
 * Ensure you have VirtualBox installed on your local machine
 * Clone this repository to a desired directory location on your local machine
 * From the CLI and in the project root directory, which should contain a Vagrantfile, run `vagrant up`
@@ -10,7 +10,7 @@ Steps to get it running locally:
 * Do `workon academic_integrity_tool_v2`
 * Run `./manage.py runserver 0.0.0.0:8000`
 
-Installing the tool in the Canvas LMS:
+**Installing the tool in the Canvas LMS:**
 * Log into your Harvard Canvas account and select a desired course
 * On the left navigation bar, go to “Settings”
 * From top horizontal bar, click “Apps”
