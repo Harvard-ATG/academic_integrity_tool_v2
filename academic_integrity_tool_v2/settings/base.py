@@ -226,3 +226,6 @@ PYLTI_CONFIG = {
 '''
 
 
+X_FRAME_OPTIONS = 'ALLOW-FROM https://canvas.dev.tlt.harvard.edu/'
+
+
