@@ -15,6 +15,7 @@ from .forms import PolicyTemplateForm, NewPolicyForm
 
 # Create your views here.
 @csrf_exempt
+@xframe_options_exempt
 def process_lti_launch_request_view(request):
     '''
     Processes launch request and redirects to appropriate view depending on the role of the launcher
@@ -45,6 +46,7 @@ def process_lti_launch_request_view(request):
     else: #if not typical lti launch or if request is not valid ...
         raise PermissionDenied
 
+@xframe_options_exempt
 def policy_templates_list_view(request):
     '''
     Displays list of policy templates
@@ -94,7 +96,7 @@ class AdminLevelTemplateUpdateView(UpdateView):
     success_url = reverse_lazy('policy_templates_list')
 '''
 
-
+@xframe_options_exempt
 def admin_level_template_edit_view(request, pk):
     templateToUpdate = get_object_or_404(PolicyTemplates, pk=pk)
 
@@ -108,6 +110,7 @@ def admin_level_template_edit_view(request, pk):
         form = PolicyTemplateForm(initial={'body': templateToUpdate.body})
     return render(request, 'admin_level_template_edit.html', {'form': form})
 
+@xframe_options_exempt
 def instructor_level_policy_edit_view(request, pk):
     policyTemplate = get_object_or_404(PolicyTemplates, pk=pk)
 
@@ -130,10 +133,12 @@ def instructor_level_policy_edit_view(request, pk):
         form = NewPolicyForm(initial={'body': policyTemplate.body})
     return render(request, 'instructor_level_policy_edit.html', {'policyTemplate': policyTemplate, 'form': form})
 
+@xframe_options_exempt
 def instructor_published_policy(request, pk):
     publishedPolicy = Policies.objects.get(pk=pk)
     return render(request, 'instructor_published_policy.html', {'publishedPolicy': publishedPolicy})
 
+@xframe_options_exempt
 def student_published_policy_view(request):
     try:
         publishedPolicy = Policies.objects.get(context_id=request.session['context_id'])
@@ -142,6 +147,7 @@ def student_published_policy_view(request):
 
     return render(request, 'student_published_policy.html', {'publishedPolicy': publishedPolicy})
 
+@xframe_options_exempt
 def edit_published_policy(request, pk):
     policyToEdit = Policies.objects.get(pk=pk)
     if request.method == 'POST':
@@ -154,6 +160,7 @@ def edit_published_policy(request, pk):
         form = NewPolicyForm(initial={'body': policyToEdit.body})
     return render(request, 'instructor_level_policy_edit.html', {'policyTemplate': policyToEdit, 'form': form})
 
+@xframe_options_exempt
 def instructor_delete_old_publish_new_view(request, pk):
     #Delete old policy
     Policies.objects.filter(pk=pk).delete()
