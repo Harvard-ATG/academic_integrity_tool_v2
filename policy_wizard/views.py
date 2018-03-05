@@ -61,7 +61,7 @@ def policy_templates_list_view(request):
             publishedPolicy = Policies.objects.get(context_id=request.session['context_id'])
             #Render the published policy
             return render(request, 'instructor_published_policy.html', {'publishedPolicy': publishedPolicy})
-        except ObjectDoesNotExist: #If no such policy exists ...
+        except Policies.DoesNotExist: #If no such policy exists ...
             pass
 
     #Fetch each policy template from the `PolicyTemplates` table in the database and store as a variable
