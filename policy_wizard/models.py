@@ -10,7 +10,7 @@ class PolicyTemplates(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
 
 class Policies(models.Model):
-    context_id = models.CharField(max_length=255, null=True, blank=False)
+    context_id = models.CharField(max_length=255, blank=False)
     related_template = models.ForeignKey(PolicyTemplates, null=True, on_delete=models.CASCADE, related_name="related_policies")
     is_published = models.BooleanField()
     published_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='related_policies')
