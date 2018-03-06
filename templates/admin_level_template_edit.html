@@ -2,7 +2,7 @@
 {% block content %}
 
     <head>
-<!--
+
         <style>
             textarea {
                 width: 100%;
@@ -16,7 +16,6 @@
                 box-sizing: border-box;
             }
         </style>
--->
 
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -24,6 +23,7 @@
         <script type="text/javascript">
             tinymce.init({
                 selector: 'textarea',
+                content_css: "{% static "css/custom_content.css" %}",
                 branding: false,
                 theme: 'modern',
                 plugins: 'textcolor lists table media link image directionality',
@@ -36,7 +36,7 @@
 
     <body>
 
-        <div>
+        <div class="col-sm-7">
             <h1>Academic Integrity Policy</h1>
             <h3>Template: <span class="label label-primary">Collaboration Permitted - Written Work</span></h3>
             <h5 style="margin-top: 2em">Customize your policy on collaboration for this class</h5>
@@ -48,6 +48,8 @@
             </form>
 
         </div>
+
+        <div class="col-sm-5"></div>
 
     </body>
 

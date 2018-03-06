@@ -1,0 +1,11 @@
+.mce-panel {
+    border: 0px solid #fff;
+}
+
+.mce-tinymce {
+    box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
+}
+
+.mce-top-part::before {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+}
