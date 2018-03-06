@@ -43,7 +43,7 @@
             <h1>Edit Policy Template</h1>
             <form action="" method="post">{% csrf_token %}
                 {{ form.as_p }}
-                <button class="btn-default btn-lg">Cancel</button>
+                <button class="btn-default btn-lg"><a href="{% url 'policy_templates_list' %}">Cancel</a></button>
                 <input class="btn-primary pull-right btn-lg" type="submit" value="Update" />
             </form>
 
