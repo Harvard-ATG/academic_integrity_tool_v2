@@ -44,8 +44,7 @@
                 <h3>Template: <span class="label label-primary">Collaboration Permitted - Written Work</span></h3>
             {% endcomment %}
 
-            <h5 style="margin-top: 2em">Customize your policy on collaboration for this class</h5>
-            <h1>Edit Policy Template</h1>
+            <h5 style="margin-top: 2em">Edit to update this template</h5>
             <form action="" method="post">{% csrf_token %}
                 {{ form.as_p }}
                 <button class="btn-default btn-lg"><a href="{% url 'policy_templates_list' %}">Cancel</a></button>
