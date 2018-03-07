@@ -25,7 +25,7 @@ def role_identifier(ext_roles_text):
             non_context_roles.append(role)
 
     #Determine the 'policy_role', i.e. the role to use in this app, by mapping from context/non_context roles
-    # to the 3 role types (Administrator, Instructor, and Student) in this policy app
+    # to the 3 role types (Administrator, Instructor, and Student) in this policy wizard
     if not bool(context_roles):#if context_roles list is empty, i.e. if there are no context roles...
         # Process the institutional and system roles
         for non_context_role in non_context_roles:

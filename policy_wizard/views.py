@@ -13,9 +13,9 @@ from .middleware import role_identifier, validate_request
 from .forms import PolicyTemplateForm, NewPolicyForm
 from django.views.decorators.clickjacking import xframe_options_exempt
 
-# Create your views here.
+
 @csrf_exempt
-@xframe_options_exempt
+@xframe_options_exempt #Allows rendering in Canvas frame
 def process_lti_launch_request_view(request):
     '''
     Processes launch request and redirects to appropriate view depending on the role of the launcher
@@ -87,17 +87,13 @@ def policy_templates_list_view(request):
             'collaboration_prohibited_policy_template': collaboration_prohibited_policy_template,
             'custom_policy_template': custom_policy_template
         })
-'''
-class AdminLevelTemplateUpdateView(UpdateView):
 
-    model = PolicyTemplates
-    fields = ['body']
-    template_name = 'admin_level_template_edit.html'
-    success_url = reverse_lazy('policy_templates_list')
-'''
 
 @xframe_options_exempt
 def admin_level_template_edit_view(request, pk):
+    '''
+    Presents the text editor to an administrator so they can edit and update a policy template
+    '''
     templateToUpdate = get_object_or_404(PolicyTemplates, pk=pk)
 
     if request.method == 'POST':
@@ -112,9 +108,12 @@ def admin_level_template_edit_view(request, pk):
 
 @xframe_options_exempt
 def instructor_level_policy_edit_view(request, pk):
+    '''
+    Presents the text editor to an instructor so they can edit and publish a policy
+    '''
     policyTemplate = get_object_or_404(PolicyTemplates, pk=pk)
 
-    #Arbitrary user selection
+    #Arbitrary user selection - Will fix this soon
     user = User.objects.first()
 
     if request.method == 'POST':
@@ -135,20 +134,17 @@ def instructor_level_policy_edit_view(request, pk):
 
 @xframe_options_exempt
 def instructor_published_policy(request, pk):
+    '''
+    Displays to the instructor the policy they just prepared
+    '''
     publishedPolicy = Policies.objects.get(pk=pk)
     return render(request, 'instructor_published_policy.html', {'publishedPolicy': publishedPolicy})
 
 @xframe_options_exempt
-def student_published_policy_view(request):
-    try:
-        publishedPolicy = Policies.objects.get(context_id=request.session['context_id'])
-    except ObjectDoesNotExist:
-        return HttpResponse("There is no published academic integrity policy in record for this course.")
-
-    return render(request, 'student_published_policy.html', {'publishedPolicy': publishedPolicy})
-
-@xframe_options_exempt
 def edit_published_policy(request, pk):
+    '''
+    Provides an instructor the capability to edit a policy they already published
+    '''
     policyToEdit = Policies.objects.get(pk=pk)
     if request.method == 'POST':
         form = NewPolicyForm(request.POST)
@@ -162,10 +158,27 @@ def edit_published_policy(request, pk):
 
 @xframe_options_exempt
 def instructor_delete_old_publish_new_view(request, pk):
+    '''
+    From the published policy page, this view enables an instructor to prepare a new course policy from
+    the list of policy templates. The old published policy is deleted.
+    '''
     #Delete old policy
     Policies.objects.filter(pk=pk).delete()
     #Redirect to list of templates
     return redirect('policy_templates_list')
+
+@xframe_options_exempt
+def student_published_policy_view(request):
+    '''
+    Displays to the student the policy for the course, if one exists, and an appropriate message if one doesn't
+    '''
+    try:
+        publishedPolicy = Policies.objects.get(context_id=request.session['context_id'])
+    except ObjectDoesNotExist:
+        return HttpResponse("There is no published academic integrity policy in record for this course.")
+
+    return render(request, 'student_published_policy.html', {'publishedPolicy': publishedPolicy})
+
 
 
 
