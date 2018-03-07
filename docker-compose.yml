@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  redis:
+    image: redis:latest
+    restart: on-failure
+    ports:
+      - "6379:6379"
+  db:
+    image: postgres:9.4
+    restart: on-failure
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: academic_integrity_tool_v2
+      POSTGRES_USER: academic_integrity_tool_v2
+      POSTGRES_DB: academic_integrity_tool_v2
+  # Note: run "docker-compose run web python3 manage.py migrate" after the web service is up
+  web:
+    build: .
+    image: academic_integrity_tool_v2
+    command: ["./docker-wait-for-it.sh", "db:5432", "--", "python3", "manage.py", "runserver", "0.0.0.0:8000"]
+    environment:
+      DJANGO_SETTINGS_MODULE: "academic_integrity_tool_v2.settings.local"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
