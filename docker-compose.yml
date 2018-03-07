@@ -15,12 +15,13 @@ services:
       POSTGRES_PASSWORD: academic_integrity_tool_v2
       POSTGRES_USER: academic_integrity_tool_v2
       POSTGRES_DB: academic_integrity_tool_v2
+  # Note: run "docker-compose run web python3 manage.py migrate" after the web service is up
   web:
     build: .
-    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    image: academic_integrity_tool_v2
+    command: ["./docker-wait-for-it.sh", "db:5432", "--", "python3", "manage.py", "runserver", "0.0.0.0:8000"]
     environment:
       DJANGO_SETTINGS_MODULE: "academic_integrity_tool_v2.settings.local"
-    restart: on-failure
     volumes:
       - .:/app
     ports:
