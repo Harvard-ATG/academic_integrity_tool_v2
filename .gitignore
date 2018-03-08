@@ -8,6 +8,7 @@ sqlnet.log
 *.pot
 .vagrant
 *.sqlite3
+ignore-*.md
 # Generated files
 secure.py
 gunicorn.py
