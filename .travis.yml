@@ -5,9 +5,11 @@ python:
 env:
     - DJANGO_SETTINGS_MODULE=academic_integrity_tool_v2.settings.test
 install:
-    - pip install -r academic_integrity_tool_v2/requirements/base.txt
+    - pip install -r academic_integrity_tool_v2/requirements/local.txt
 before_script:
     - cat academic_integrity_tool_v2/settings/secure.py.example | tee academic_integrity_tool_v2/settings/secure.py
 script: 
     - python manage.py migrate --noinput
-    - python manage.py test 
+    - coverage run manage.py test 
+    - coverage report
+
