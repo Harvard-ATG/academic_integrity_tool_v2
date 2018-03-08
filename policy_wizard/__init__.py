@@ -1,0 +1,1 @@
+default_app_config = 'policy_wizard.apps.PolicyWizardConfig'

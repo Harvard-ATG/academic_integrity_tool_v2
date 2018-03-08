@@ -44,7 +44,9 @@ to
 * You should see the tool listed as "Academic Integrity Tool" in the left navigation pane of Canvas.
 * Click that "Academic Integrity Tool" navigation item to launch the tool
 
-## Running Tests
+## Developer Notes
+
+### Running Tests
 
 With vagrant: 
 
@@ -61,3 +63,8 @@ $ docker-compose up
 $ docker-compose run web python manage.py test
 ```
 
+### Loading Boilerplate Policy Templates
+
+```
+$ python manage.py loaddata --app policy_wizard boilerplate_policy_templates.yml
+```
