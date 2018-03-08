@@ -10,6 +10,6 @@ before_script:
     - cat academic_integrity_tool_v2/settings/secure.py.example | tee academic_integrity_tool_v2/settings/secure.py
 script: 
     - python manage.py migrate --noinput
-    - coverage run manage.py test 
+    - coverage run --source='.' manage.py test 
     - coverage report
 
