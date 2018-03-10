@@ -113,7 +113,7 @@ def instructor_level_policy_edit_view(request, pk):
     '''
     policyTemplate = get_object_or_404(PolicyTemplates, pk=pk)
 
-    #Arbitrary user selection - Will fix this soon
+    # TODO: Arbitrary user selection - Will fix this soon
     user = User.objects.first()
 
     if request.method == 'POST':

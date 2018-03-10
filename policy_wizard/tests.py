@@ -114,6 +114,50 @@ class LtiLaunchTests(TestCase):
         self.assertEquals(request.session['role'], 'Administrator')
 
 
+class RoleAndPermissionTests(TestCase):
+
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.studentSession = {
+            'context_id': 'abcd1234',
+            'role': 'Student',
+        }
+        self.instructorSession = {
+            'context_id': 'abcd1234',
+            'role': 'Instructor',
+        }
+        self.policyTemplates = create_default_policy_templates()
+
+    def testStudentDeniedPolicyTemplatesListView(self):
+        request = self.factory.get('policy_templates_list')
+        annotate_request_with_session(request, self.studentSession)
+        with self.assertRaises(PermissionDenied):
+            views.policy_templates_list_view(request)
+
+    def testInstructorAllowedPolicyTemplatesListView(self):
+        request = self.factory.get('policy_templates_list')
+        annotate_request_with_session(request, self.studentSession)
+        response = views.policy_templates_list_view(request)
+        self.assertEquals(response.status_code, 200)
+
+    def testStudentDeniedInstructorPolicyEditView(self):
+        request = self.factory.get('policy_templates_list')
+        annotate_request_with_session(request, self.studentSession)
+        with self.assertRaises(PermissionDenied):
+            views.instructor_level_policy_edit_view(request, self.policyTemplates[0].pk)
+
+    def testStudentDeniedAdminTemplateEditView(self):
+        request = self.factory.get('policy_templates_list')
+        annotate_request_with_session(request, self.studentSession)
+        with self.assertRaises(PermissionDenied):
+            views.admin_level_template_edit_view(request, self.policyTemplates[0].pk)
+
+    def testInstructorDeniedAdminTemplateEditView(self):
+        request = self.factory.get('policy_templates_list')
+        annotate_request_with_session(request, self.instructorSession)
+        with self.assertRaises(PermissionDenied):
+            views.admin_level_template_edit_view(request, self.policyTemplates[0].pk)
+
 class AdministratorRoleTests(TestCase):
 
     def setUp(self):
@@ -124,7 +168,7 @@ class AdministratorRoleTests(TestCase):
         for policyTemplate in self.policyTemplates:
             policyTemplate.delete()
 
-    def test_administrator_launch(self):
+    def testPolicyTemplatesListView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, {
             'context_id': 'fgvsxrzpdbcmiuawhwet',
@@ -143,7 +187,7 @@ class InstructorRoleTests(TestCase):
         for policyTemplate in self.policyTemplates:
             policyTemplate.delete()
 
-    def test_instructor_launch(self):
+    def testPolicyTemplatesListView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, {
             'context_id': 'tlhzlqzolkhapmnoukgm',
@@ -175,7 +219,7 @@ class StudentRoleTests(TestCase):
         for policyTemplate in self.policyTemplates:
             policyTemplate.delete()
 
-    def test_student_published_policy_view(self):
+    def testStudentPublishedPolicyView(self):
         request = self.factory.get('student_published_policy')
         annotate_request_with_session(request, {
             'context_id': self.context_id,
