@@ -118,15 +118,23 @@ class RoleAndPermissionTests(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
+        self.context_id = 'context123abcd'
         self.studentSession = {
-            'context_id': 'abcd1234',
+            'context_id': self.context_id,
             'role': 'Student',
         }
         self.instructorSession = {
-            'context_id': 'abcd1234',
+            'context_id': self.context_id,
             'role': 'Instructor',
         }
+        self.user = User.objects.create_user(username='jacob', email='jacob@…', password='top_secret')
         self.policyTemplates = create_default_policy_templates()
+        self.publishedPolicy = Policies.objects.create(
+            context_id=self.context_id,
+            is_published=True,
+            published_by=self.user,
+            body='this is an important policy. please read!'
+        )
 
     def tearDown(self):
         for policyTemplate in self.policyTemplates:
@@ -149,6 +157,12 @@ class RoleAndPermissionTests(TestCase):
         annotate_request_with_session(request, self.studentSession)
         with self.assertRaises(PermissionDenied):
             views.instructor_level_policy_edit_view(request, self.policyTemplates[0].pk)
+
+    def testStudentDeniedDeletePolicyView(self):
+        request = self.factory.get('policy_templates_list')
+        annotate_request_with_session(request, self.studentSession)
+        with self.assertRaises(PermissionDenied):
+            views.instructor_delete_old_publish_new_view(request, self.publishedPolicy.pk)
 
     def testStudentDeniedAdminTemplateEditView(self):
         request = self.factory.get('policy_templates_list')
@@ -191,8 +205,7 @@ class InstructorRoleTests(TestCase):
             'lis_person_sourcedid': '123456789',
             'role': 'Instructor'
         }
-        self.user = User.objects.create_user(
-            username='jacob', email='jacob@…', password='top_secret')
+        self.user = User.objects.create_user(username='jacob', email='jacob@…', password='top_secret')
 
     def tearDown(self):
         for policyTemplate in self.policyTemplates:
