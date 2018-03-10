@@ -245,15 +245,17 @@ class StudentRoleTests(TestCase):
         self.user = User.objects.create_user(
             username='jacob', email='jacob@…', password='top_secret')
 
-        self.context_id = 'z2gd5dn5nkg7tb5et6fb'
-
-        self.studentSession = {
-            'context_id': self.context_id,
+        self.studentSessionWithPublishedPolicy = {
+            'context_id': 'context123',
+            'role': 'Student'
+        }
+        self.studentSessionNoPublishedPolicy = {
+            'context_id': 'context456',
             'role': 'Student'
         }
 
         self.publishedPolicy = Policies.objects.create(
-            context_id=self.context_id,
+            context_id=self.studentSessionWithPublishedPolicy['context_id'],
             published_by=self.user,
             is_published=True,
             body='this is an important policy. please read!'
@@ -265,7 +267,14 @@ class StudentRoleTests(TestCase):
 
     def testStudentPublishedPolicyView(self):
         request = self.factory.get('student_published_policy')
-        annotate_request_with_session(request, self.studentSession)
+        annotate_request_with_session(request, self.studentSessionWithPublishedPolicy)
         response = views.student_published_policy_view(request)
         self.assertEquals(response.status_code, 200)
         self.assertInHTML(self.publishedPolicy.body, response.content.decode("utf-8"))
+
+    def testStudentNoPublishedPolicyView(self):
+        request = self.factory.get('student_published_policy')
+        annotate_request_with_session(request, self.studentSessionNoPublishedPolicy)
+        response = views.student_published_policy_view(request)
+        self.assertEquals(response.status_code, 200)
+        self.assertInHTML('There is no published academic integrity policy in record for this course.', response.content.decode("utf-8"))
