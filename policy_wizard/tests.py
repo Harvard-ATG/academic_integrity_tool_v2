@@ -128,6 +128,10 @@ class RoleAndPermissionTests(TestCase):
         }
         self.policyTemplates = create_default_policy_templates()
 
+    def tearDown(self):
+        for policyTemplate in self.policyTemplates:
+            policyTemplate.delete()
+
     def testStudentDeniedPolicyTemplatesListView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.studentSession)
@@ -182,6 +186,13 @@ class InstructorRoleTests(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.policyTemplates = create_default_policy_templates()
+        self.instructorSession = {
+            'context_id': 'tlhzlqzolkhapmnoukgm',
+            'lis_person_sourcedid': '123456789',
+            'role': 'Instructor'
+        }
+        self.user = User.objects.create_user(
+            username='jacob', email='jacob@…', password='top_secret')
 
     def tearDown(self):
         for policyTemplate in self.policyTemplates:
@@ -189,12 +200,27 @@ class InstructorRoleTests(TestCase):
 
     def testPolicyTemplatesListView(self):
         request = self.factory.get('policy_templates_list')
-        annotate_request_with_session(request, {
-            'context_id': 'tlhzlqzolkhapmnoukgm',
-            'role': 'Instructor'
-        })
+        annotate_request_with_session(request, self.instructorSession)
         response = views.policy_templates_list_view(request)
         self.assertEquals(response.status_code, 200)
+
+    def testPublishNewPolicy(self):
+        postparams = {'body': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean in volutpat purus.'}
+        policy_template_id = self.policyTemplates[3].pk
+        request = self.factory.post('instructor_level_policy_edit', postparams)
+        annotate_request_with_session(request, self.instructorSession)
+        response = views.instructor_level_policy_edit_view(request, policy_template_id)
+        self.assertEquals(response.status_code, 302)
+
+        try:
+            policy = Policies.objects.get(body=postparams['body'])
+        except Policies.DoesNotExist:
+            self.fail("policy should have been created")
+
+        self.assertEqual(policy.related_template_id, policy_template_id)
+        self.assertEqual(policy.body, postparams['body'])
+        self.assertTrue(policy.is_published)
+        self.assertEqual(policy.published_by, self.instructorSession['lis_person_sourcedid'])
 
 
 class StudentRoleTests(TestCase):
