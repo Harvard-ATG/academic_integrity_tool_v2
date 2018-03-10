@@ -234,11 +234,16 @@ class StudentRoleTests(TestCase):
 
         self.context_id = 'z2gd5dn5nkg7tb5et6fb'
 
+        self.studentSession = {
+            'context_id': self.context_id,
+            'role': 'Student'
+        }
+
         self.publishedPolicy = Policies.objects.create(
             context_id=self.context_id,
             published_by=self.user,
             is_published=True,
-            body='important policy'
+            body='this is an important policy. please read!'
         )
 
     def tearDown(self):
@@ -247,10 +252,7 @@ class StudentRoleTests(TestCase):
 
     def testStudentPublishedPolicyView(self):
         request = self.factory.get('student_published_policy')
-        annotate_request_with_session(request, {
-            'context_id': self.context_id,
-            'role': 'Student'
-        })
+        annotate_request_with_session(request, self.studentSession)
         response = views.student_published_policy_view(request)
         self.assertEquals(response.status_code, 200)
-        self.assertTrue(Policies.objects.exists())
+        self.assertInHTML(self.publishedPolicy.body, response.content.decode("utf-8"))
