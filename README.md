@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Harvard-ATG/academic_integrity_tool_v2.svg?branch=master)](https://travis-ci.org/Harvard-ATG/academic_integrity_tool_v2)
+
 # Academic Integrity Policy Tool (V2)
 
 This is a django application that enables instructors to prepare academic integrity policies from templates made by instructional technologists and publish said policies for students to view. It is an LTI tool that is embedded into and launched from the Canvas LMS.
