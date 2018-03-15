@@ -148,7 +148,7 @@ class RoleAndPermissionTests(TestCase):
 
     def testInstructorAllowedPolicyTemplatesListView(self):
         request = self.factory.get('policy_templates_list')
-        annotate_request_with_session(request, self.studentSession)
+        annotate_request_with_session(request, self.instructorSession)
         response = views.policy_templates_list_view(request)
         self.assertEquals(response.status_code, 200)
 
