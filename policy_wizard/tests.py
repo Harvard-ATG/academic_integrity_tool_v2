@@ -134,7 +134,6 @@ class RoleAndPermissionTests(TestCase):
             'lis_person_sourcedid': '123456789',
             'role': 'Administrator',
         }
-        self.roleSessions = [self.studentSession, self.instructorSession, self.administratorSession]
         self.policyTemplates = create_default_policy_templates()
         self.publishedPolicy = Policies.objects.create(
             context_id=self.context_id,
@@ -217,7 +216,7 @@ class RoleAndPermissionTests(TestCase):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.instructorSession)
         response = views.instructor_delete_old_publish_new_view(request, self.publishedPolicy.pk)
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.status_code, 302)
 
     def testAdministratorDeniedInstructorPolicyEditView(self):
         request = self.factory.get('policy_templates_list')
@@ -284,7 +283,6 @@ class InstructorRoleTests(TestCase):
             'lis_person_sourcedid': '123456789',
             'role': 'Instructor'
         }
-        self.user = User.objects.create_user(username='jacob', email='jacob@…', password='top_secret')
 
     def tearDown(self):
         for policyTemplate in self.policyTemplates:
@@ -321,8 +319,7 @@ class StudentRoleTests(TestCase):
         self.factory = RequestFactory()
         self.policyTemplates = create_default_policy_templates()
 
-        self.user = User.objects.create_user(
-            username='jacob', email='jacob@…', password='top_secret')
+        self.lis_person_sourcedid='123456789',
 
         self.studentSessionWithPublishedPolicy = {
             'context_id': 'context123',
@@ -335,7 +332,7 @@ class StudentRoleTests(TestCase):
 
         self.publishedPolicy = Policies.objects.create(
             context_id=self.studentSessionWithPublishedPolicy['context_id'],
-            published_by=self.user,
+            published_by=self.lis_person_sourcedid,
             is_published=True,
             body='this is an important policy. please read!'
         )
