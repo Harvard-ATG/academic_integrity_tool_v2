@@ -37,6 +37,10 @@ def process_lti_launch_request_view(request):
         #Figure out role of launcher and store the role in the request's session attribute
         request.session['role'] = role_identifier(request.POST.get('ext_roles'))
 
+        #Store the 'lis_person_sourcedid', a unique identifier of the launcher, in the request's session attribute.
+        #This is used later to indicate the author of a course policy.
+        request.session['lis_person_sourcedid'] = request.POST.get('lis_person_sourcedid')
+
         #Using the role, e.g. 'Administrator', 'Instructor', or 'Student', determine route to take
         role = request.session['role']
         if role=='Administrator' or role=='Instructor':
@@ -113,9 +117,6 @@ def instructor_level_policy_edit_view(request, pk):
     '''
     policyTemplate = get_object_or_404(PolicyTemplates, pk=pk)
 
-    # TODO: Arbitrary user selection - Will fix this soon
-    user = User.objects.first()
-
     if request.method == 'POST':
         form = NewPolicyForm(request.POST)
         if form.is_valid():
@@ -123,7 +124,7 @@ def instructor_level_policy_edit_view(request, pk):
                 context_id=request.session['context_id'],
                 body=form.cleaned_data.get('body'),
                 related_template = policyTemplate,
-                published_by = user,
+                published_by = request.session['lis_person_sourcedid'],
                 is_published = True,
             )
 
