@@ -115,6 +115,115 @@ class LtiLaunchTests(TestCase):
 
 
 class RoleAndPermissionTests(TestCase):
+    '''
+        def testStudentDeniedPolicyTemplatesListView(self):
+            request = self.factory.get('policy_templates_list')
+            annotate_request_with_session(request, self.studentSession)
+            with self.assertRaises(PermissionDenied):
+                views.policy_templates_list_view(request)
+
+        def testStudentDeniedInstructorPolicyEditView(self):
+            request = self.factory.get('policy_templates_list')
+            annotate_request_with_session(request, self.studentSession)
+            with self.assertRaises(PermissionDenied):
+                views.instructor_level_policy_edit_view(request, self.policyTemplates[0].pk)
+
+        def testStudentDeniedDeletePolicyView(self):
+            request = self.factory.get('policy_templates_list')
+            annotate_request_with_session(request, self.studentSession)
+            with self.assertRaises(PermissionDenied):
+                views.instructor_delete_old_publish_new_view(request, self.publishedPolicy.pk)
+
+        def testStudentDeniedAdminTemplateEditView(self):
+            request = self.factory.get('policy_templates_list')
+            annotate_request_with_session(request, self.studentSession)
+            with self.assertRaises(PermissionDenied):
+                views.admin_level_template_edit_view(request, self.policyTemplates[0].pk)
+
+        def testStudentDeniedInstructorPublishedPolicyView(self):
+            request = self.factory.get('policy_templates_list')
+            annotate_request_with_session(request, self.studentSession)
+            with self.assertRaises(PermissionDenied):
+                views.instructor_published_policy(request, self.publishedPolicy.pk)
+
+        def testStudentDeniedEditPublishedPolicyView(self):
+            request = self.factory.get('policy_templates_list')
+            annotate_request_with_session(request, self.studentSession)
+            with self.assertRaises(PermissionDenied):
+                views.edit_published_policy(request, self.publishedPolicy.pk)
+
+        def testInstructorDeniedAdminTemplateEditView(self):
+            request = self.factory.get('policy_templates_list')
+            annotate_request_with_session(request, self.instructorSession)
+            with self.assertRaises(PermissionDenied):
+                views.admin_level_template_edit_view(request, self.policyTemplates[0].pk)
+
+        def testInstructorDeniedStudentPublishedPolicyView(self):
+            request = self.factory.get('policy_templates_list')
+            annotate_request_with_session(request, self.instructorSession)
+            with self.assertRaises(PermissionDenied):
+                views.student_published_policy_view(request)
+
+        def testInstructorAllowedPolicyTemplatesListView(self):
+            request = self.factory.get('policy_templates_list')
+            annotate_request_with_session(request, self.instructorSession)
+            response = views.policy_templates_list_view(request)
+            self.assertEquals(response.status_code, 200)
+
+        def testInstructorAllowedInstructorPublishedPolicyView(self):
+            request = self.factory.get('policy_templates_list')
+            annotate_request_with_session(request, self.instructorSession)
+            response = views.instructor_published_policy(request, self.publishedPolicy.pk)
+            self.assertEquals(response.status_code, 200)
+
+        def testInstructorAllowedEditPublishedPolicyView(self):
+            request = self.factory.get('policy_templates_list')
+            annotate_request_with_session(request, self.instructorSession)
+            response = views.edit_published_policy(request, self.publishedPolicy.pk)
+            self.assertEquals(response.status_code, 200)
+
+        def testInstructorAllowedDeleteOldPublishNewView(self):
+            request = self.factory.get('policy_templates_list')
+            annotate_request_with_session(request, self.instructorSession)
+            response = views.instructor_delete_old_publish_new_view(request, self.publishedPolicy.pk)
+            self.assertEquals(response.status_code, 200)
+
+        def testAdministratorDeniedInstructorPolicyEditView(self):
+            request = self.factory.get('policy_templates_list')
+            annotate_request_with_session(request, self.administratorSession)
+            with self.assertRaises(PermissionDenied):
+                views.instructor_level_policy_edit_view(request, self.policyTemplates[0].pk)
+
+        def testAdministratorDeniedInstructorPublishedPolicyView(self):
+            request = self.factory.get('policy_templates_list')
+            annotate_request_with_session(request, self.administratorSession)
+            with self.assertRaises(PermissionDenied):
+                views.instructor_published_policy(request, self.publishedPolicy.pk)
+
+        def testAdministratorDeniedEditPublishedPolicyView(self):
+            request = self.factory.get('policy_templates_list')
+            annotate_request_with_session(request, self.administratorSession)
+            with self.assertRaises(PermissionDenied):
+                views.edit_published_policy(request, self.publishedPolicy.pk)
+
+        def testAdministratorDeniedDeletePolicyView(self):
+            request = self.factory.get('policy_templates_list')
+            annotate_request_with_session(request, self.administratorSession)
+            with self.assertRaises(PermissionDenied):
+                views.instructor_delete_old_publish_new_view(request, self.publishedPolicy.pk)
+
+        def testAdministratorDeniedStudentPublishedPolicyView(self):
+            request = self.factory.get('policy_templates_list')
+            annotate_request_with_session(request, self.administratorSession)
+            with self.assertRaises(PermissionDenied):
+                views.student_published_policy_view(request)
+
+        def testAdministratorAllowedAdminTemplateEditView(self):
+            request = self.factory.get('policy_templates_list')
+            annotate_request_with_session(request, self.administratorSession)
+            response = views.admin_level_template_edit_view(request, self.policyTemplates[0].pk)
+            self.assertEquals(response.status_code, 200)
+    '''
 
     def setUp(self):
         self.factory = RequestFactory()
@@ -147,113 +256,96 @@ class RoleAndPermissionTests(TestCase):
         for policyTemplate in self.policyTemplates:
             policyTemplate.delete()
 
-    def testStudentDeniedPolicyTemplatesListView(self):
+    def roleAndPermissionTestForPolicyTemplatesListView(self):
         request = self.factory.get('policy_templates_list')
-        annotate_request_with_session(request, self.studentSession)
-        with self.assertRaises(PermissionDenied):
-            views.policy_templates_list_view(request)
+        for roleSession in self.roleSessions:
+            annotate_request_with_session(request, roleSession)
+            response = views.policy_templates_list_view(request)
+            if roleSession.role=='Student':
+                #Assert 'Student' denied
+                with self.assertRaises(PermissionDenied):
+                    response
+            else:
+                #Assert 'Instructor or Administrator' allowed
+                self.assertEquals(response.status_code, 200)
 
-    def testStudentDeniedInstructorPolicyEditView(self):
+    def roleAndPermissionTestForInstructorPolicyEditView(self):
         request = self.factory.get('policy_templates_list')
-        annotate_request_with_session(request, self.studentSession)
-        with self.assertRaises(PermissionDenied):
-            views.instructor_level_policy_edit_view(request, self.policyTemplates[0].pk)
+        for roleSession in self.roleSessions:
+            annotate_request_with_session(request, roleSession)
+            response = views.instructor_level_policy_edit_view(request, self.policyTemplates[0].pk)
+            if roleSession['role'] == 'Instructor':
+                #Assert 'Instructor' allowed
+                self.assertEquals(response.status_code, 200)
+            else:
+                #Assert 'Administrator' or 'Student' denied
+                with self.assertRaises(PermissionDenied):
+                    response
 
-    def testStudentDeniedDeletePolicyView(self):
+    def roleAndPermissionTestForInstructorDeleteOldPublishNewView(self):
         request = self.factory.get('policy_templates_list')
-        annotate_request_with_session(request, self.studentSession)
-        with self.assertRaises(PermissionDenied):
-            views.instructor_delete_old_publish_new_view(request, self.publishedPolicy.pk)
+        for roleSession in self.roleSessions:
+            annotate_request_with_session(request, roleSession)
+            response = views.instructor_delete_old_publish_new_view(request, self.publishedPolicy.pk)
+            if roleSession['role'] == 'Instructor':
+                #Assert 'Instructor' allowed
+                self.assertEquals(response.status_code, 200)
+            else:
+                #Assert 'Administrator' or 'Student' denied
+                with self.assertRaises(PermissionDenied):
+                    response
 
-    def testStudentDeniedAdminTemplateEditView(self):
+    def roleAndPermissionTestForInstructorPublishedPolicyView(self):
         request = self.factory.get('policy_templates_list')
-        annotate_request_with_session(request, self.studentSession)
-        with self.assertRaises(PermissionDenied):
-            views.admin_level_template_edit_view(request, self.policyTemplates[0].pk)
+        for roleSession in self.roleSessions:
+            annotate_request_with_session(request, roleSession)
+            response = views.instructor_published_policy(request, self.publishedPolicy.pk)
+            if roleSession.role == 'Instructor':
+                #Assert 'Instructor' allowed
+                self.assertEquals(response.status_code, 200)
+            else:
+                #Assert 'Administrator' or 'Student' denied
+                with self.assertRaises(PermissionDenied):
+                    response
 
-    def testStudentDeniedInstructorPublishedPolicyView(self):
+    def roleAndPermissionTestForEditPublishedPolicyView(self):
         request = self.factory.get('policy_templates_list')
-        annotate_request_with_session(request, self.studentSession)
-        with self.assertRaises(PermissionDenied):
-            views.instructor_published_policy(request, self.publishedPolicy.pk)
+        for roleSession in self.roleSessions:
+            annotate_request_with_session(request, roleSession)
+            response = views.edit_published_policy(request, self.publishedPolicy.pk)
+            if roleSession.role == 'Instructor':
+                #Assert 'Instructor' allowed
+                self.assertEquals(response.status_code, 200)
+            else:
+                #Assert 'Administrator' or 'Student' denied
+                with self.assertRaises(PermissionDenied):
+                    response
 
-    def testStudentDeniedEditPublishedPolicyView(self):
+    def roleAndPermissionTestForAdminTemplateEditView(self):
         request = self.factory.get('policy_templates_list')
-        annotate_request_with_session(request, self.studentSession)
-        with self.assertRaises(PermissionDenied):
-            views.edit_published_policy(request, self.publishedPolicy.pk)
+        for roleSession in self.roleSessions:
+            annotate_request_with_session(request, roleSession)
+            response = views.admin_level_template_edit_view(request, self.policyTemplates[0].pk)
+            if roleSession.role == 'Administrator':
+                #Assert 'Administrator' allowed
+                self.assertEquals(response.status_code, 200)
+            else:
+                #Assert 'Instructor' or 'Student' denied
+                with self.assertRaises(PermissionDenied):
+                    response
 
-    def testInstructorDeniedAdminTemplateEditView(self):
+    def roleAndPermissionTestForStudentPublishedPolicyView(self):
         request = self.factory.get('policy_templates_list')
-        annotate_request_with_session(request, self.instructorSession)
-        with self.assertRaises(PermissionDenied):
-            views.admin_level_template_edit_view(request, self.policyTemplates[0].pk)
-
-    def testInstructorDeniedStudentPublishedPolicyView(self):
-        request = self.factory.get('policy_templates_list')
-        annotate_request_with_session(request, self.instructorSession)
-        with self.assertRaises(PermissionDenied):
-            views.student_published_policy_view(request)
-
-    def testInstructorAllowedPolicyTemplatesListView(self):
-        request = self.factory.get('policy_templates_list')
-        annotate_request_with_session(request, self.instructorSession)
-        response = views.policy_templates_list_view(request)
-        self.assertEquals(response.status_code, 200)
-
-    def testInstructorAllowedInstructorPublishedPolicyView(self):
-        request = self.factory.get('policy_templates_list')
-        annotate_request_with_session(request, self.instructorSession)
-        response = views.instructor_published_policy(request, self.publishedPolicy.pk)
-        self.assertEquals(response.status_code, 200)
-
-    def testInstructorAllowedEditPublishedPolicyView(self):
-        request = self.factory.get('policy_templates_list')
-        annotate_request_with_session(request, self.instructorSession)
-        response = views.edit_published_policy(request, self.publishedPolicy.pk)
-        self.assertEquals(response.status_code, 200)
-
-    def testInstructorAllowedDeleteOldPublishNewView(self):
-        request = self.factory.get('policy_templates_list')
-        annotate_request_with_session(request, self.instructorSession)
-        response = views.instructor_delete_old_publish_new_view(request, self.publishedPolicy.pk)
-        self.assertEquals(response.status_code, 200)
-
-    def testAdministratorDeniedInstructorPolicyEditView(self):
-        request = self.factory.get('policy_templates_list')
-        annotate_request_with_session(request, self.administratorSession)
-        with self.assertRaises(PermissionDenied):
-            views.instructor_level_policy_edit_view(request, self.policyTemplates[0].pk)
-
-    def testAdministratorDeniedInstructorPublishedPolicyView(self):
-        request = self.factory.get('policy_templates_list')
-        annotate_request_with_session(request, self.administratorSession)
-        with self.assertRaises(PermissionDenied):
-            views.instructor_published_policy(request, self.publishedPolicy.pk)
-
-    def testAdministratorDeniedEditPublishedPolicyView(self):
-        request = self.factory.get('policy_templates_list')
-        annotate_request_with_session(request, self.administratorSession)
-        with self.assertRaises(PermissionDenied):
-            views.edit_published_policy(request, self.publishedPolicy.pk)
-
-    def testAdministratorDeniedDeletePolicyView(self):
-        request = self.factory.get('policy_templates_list')
-        annotate_request_with_session(request, self.administratorSession)
-        with self.assertRaises(PermissionDenied):
-            views.instructor_delete_old_publish_new_view(request, self.publishedPolicy.pk)
-
-    def testAdministratorDeniedStudentPublishedPolicyView(self):
-        request = self.factory.get('policy_templates_list')
-        annotate_request_with_session(request, self.administratorSession)
-        with self.assertRaises(PermissionDenied):
-            views.student_published_policy_view(request)
-
-    def testAdministratorAllowedAdminTemplateEditView(self):
-        request = self.factory.get('policy_templates_list')
-        annotate_request_with_session(request, self.administratorSession)
-        response = views.admin_level_template_edit_view(request, self.policyTemplates[0].pk)
-        self.assertEquals(response.status_code, 200)
+        for roleSession in self.roleSessions:
+            annotate_request_with_session(request, roleSession)
+            response = views.student_published_policy_view(request)
+            if roleSession.role == 'Student':
+                #Assert 'Student' allowed
+                self.assertEquals(response.status_code, 200)
+            else:
+                #Assert 'Administrator' or 'Instructor' denied
+                with self.assertRaises(PermissionDenied):
+                    response
 
 class AdministratorRoleTests(TestCase):
 
