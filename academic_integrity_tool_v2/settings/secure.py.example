@@ -7,7 +7,11 @@
 SECURE_SETTINGS = {
     'enable_debug': True,
     'django_secret_key': '1@7&11tb*l1c84uco-9=%(u#mb)_dl6%%++rihgnl&r)wmldrc',
+    'redis_host': '127.0.0.1',
+    'db_default_host': '127.0.0.1',
     'db_default_name': 'academic_integrity_tool_v2',
     'db_default_user': 'academic_integrity_tool_v2',
     'db_default_password': 'academic_integrity_tool_v2',
+    'CONSUMER_KEY': 'academic_integrity_tool_v2',
+    'LTI_SECRET': 'secret',
 }

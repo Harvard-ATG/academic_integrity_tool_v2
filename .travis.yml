@@ -1,0 +1,15 @@
+sudo: false
+language: python
+python: 
+    - "3.6"
+env:
+    - DJANGO_SETTINGS_MODULE=academic_integrity_tool_v2.settings.test
+install:
+    - pip install -r academic_integrity_tool_v2/requirements/local.txt
+before_script:
+    - cat academic_integrity_tool_v2/settings/secure.py.example | tee academic_integrity_tool_v2/settings/secure.py
+script: 
+    - python manage.py migrate --noinput
+    - coverage run --source='.' manage.py test 
+    - coverage report
+
