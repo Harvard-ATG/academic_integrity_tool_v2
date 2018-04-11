@@ -12,6 +12,7 @@ from .models import PolicyTemplates, Policies
 from .utils import role_identifier, validate_request
 from .forms import PolicyTemplateForm, NewPolicyForm
 from django.views.decorators.clickjacking import xframe_options_exempt
+from .decorators import require_role_admin
 
 
 @csrf_exempt
@@ -97,27 +98,26 @@ def policy_templates_list_view(request):
     else: #i.e. 'Student'
         raise PermissionDenied
 
+
 @xframe_options_exempt
+@require_role_admin
 def admin_level_template_edit_view(request, pk):
     '''
     Presents the text editor to an administrator so they can edit and update a policy template
     '''
-    role = request.session['role']
 
-    if role == 'Administrator':
-        templateToUpdate = get_object_or_404(PolicyTemplates, pk=pk)
+    templateToUpdate = get_object_or_404(PolicyTemplates, pk=pk)
 
-        if request.method == 'POST':
-            form = PolicyTemplateForm(request.POST)
-            if form.is_valid():
-                templateToUpdate.body = form.cleaned_data.get('body')
-                templateToUpdate.save()
-                return redirect('policy_templates_list')
-        else:
-            form = PolicyTemplateForm(initial={'body': templateToUpdate.body})
-        return render(request, 'admin_level_template_edit.html', {'form': form})
-    else: #i.e. if 'Instructor' or 'Student'
-        raise PermissionDenied
+    if request.method == 'POST':
+        form = PolicyTemplateForm(request.POST)
+        if form.is_valid():
+            templateToUpdate.body = form.cleaned_data.get('body')
+            templateToUpdate.save()
+            return redirect('policy_templates_list')
+    else:
+        form = PolicyTemplateForm(initial={'body': templateToUpdate.body})
+    return render(request, 'admin_level_template_edit.html', {'form': form})
+
 
 @xframe_options_exempt
 def instructor_level_policy_edit_view(request, pk):
