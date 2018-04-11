@@ -1,4 +1,4 @@
-
+<!--There are 5 UI comments on this commit-->
 <html>
     <head>
         <title>Academic Integrity Policy</title>
@@ -19,38 +19,50 @@
     </head>
     <body>
 
-        <h1>Academic Integrity Policy</h1>
+<!--UI comment #1 - placing heading and Edit button in Bootstrap grid for alignment-->
+        <div class="row">
+            <div class="col-sm-7">
+                <h1>Academic Integrity Policy</h1>
+             </div>
 
-        <h2>Collaboration Permitted - Written Work Policy</h2>
+<!--UI comment #2 - editing and repositioning the Edit button to match Canvas-->
+            <div class="col-sm-2" style="margin-top: 2em">
+                <a class="btn btn-default pull-right" href="link/to/policy/edit/page" role="button">
+                    <i class="fa fa-envelope-o"></i>
+                    Edit
+                </a>
+            </div>
+
+<!--UI comment #3 - repositioning the Back to list of policy templates button to a right new column-->
+            <div class="col-sm-3" style="margin-top: 2em">
+                <a class="btn btn-default pull-right" href="Link/back/to/list/of/policy/templates" role="button">
+                    Back to list of policy templates
+                </a>
+            </div>
+        </div>
+<!--UI comment #4 - placing page content in Bootstrap grid to align with new columns-->
+        <div class="row">
+            <div class="col-sm-9">
+
+                <h2>Collaboration Permitted - Written Work Policy</h2>
 
 
-        <div class="alert alert-success" role="alert">Policy was successfully updated.</div>
+                <div class="alert alert-success" role="alert">Policy was successfully updated.</div>
 
 
 
 
-       <div class="row">
-            <div class="col-sm-12">
-                Discussion and the exchange of ideas are essential to academic work. For assignments in this course, you are encouraged to consult with your classmates on the choice of paper topics and to share sources. You may find it useful to discuss your chosen topic with your peers, particularly if you are working on the same topic as a classmate. However, you should ensure that any written work you submit for evaluation is the result of your own research and writing and that it reflects your own approach to the topic. You must also adhere to standard citation practices in this discipline and properly cite any books, articles, websites, lectures, etc. that have helped you with your work. If you received any help with your writing (feedback on drafts, etc), you must also acknowledge this assistance.
+               <div class="row">
+                    <div class="col-sm-12">
+                        Discussion and the exchange of ideas are essential to academic work. For assignments in this course, you are encouraged to consult with your classmates on the choice of paper topics and to share sources. You may find it useful to discuss your chosen topic with your peers, particularly if you are working on the same topic as a classmate. However, you should ensure that any written work you submit for evaluation is the result of your own research and writing and that it reflects your own approach to the topic. You must also adhere to standard citation practices in this discipline and properly cite any books, articles, websites, lectures, etc. that have helped you with your work. If you received any help with your writing (feedback on drafts, etc), you must also acknowledge this assistance.
+                    </div>
+                </div>
+
+<!--UI comment # 5 - removing div with As an instructor, you may edit this policy.-->
+
             </div>
         </div>
 
-
-        <div class="col-sm-12">
-            <hr>
-            <h5>
-              As an instructor, you may edit this policy.
-            </h5>
-        </div>
-
-        <div class="col-sm-12" style="margin-top: 1em">
-            <a class="btn btn-primary pull-right" href="link/to/policy/edit/page" role="button">
-                Edit Written Work policy
-            </a>
-            <a class="btn btn-default" href="Link/back/to/list/of/policy/templates" role="button">
-                Back to list of policy templates
-            </a>
-        </div>
 
     </body>
 
