@@ -7,7 +7,8 @@
 {% block content %}
     <head>
         <!-- UI comment #2 - Font Awesome-->
-        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+
         <!-- UI comment #3 - Bootstrap core CSS. I also added Boostrap LS by the end of the body tag -->
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
@@ -23,7 +24,7 @@
 
                 <div class="col-sm-3" style="margin-top: 2em">
                     <a class="btn btn-default pull-right" href="{% url 'edit_published_policy' publishedPolicy.pk %}" role="button">
-                    <i class="fa fa-envelope-o"></i>
+                    <i class="fa fa-pencil-alt fa-flip-horizontal"></i>
                     Edit
                     </a>
                 </div>
