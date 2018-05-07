@@ -16,8 +16,18 @@
 
         <div class="col-sm-9">
 
+            <div class="row">
+                <div class="col-sm-9">
+                    <h1>Academic Integrity Policy</h1>
+                </div>
 
-            <h1>Academic Integrity Policy</h1>
+                <div class="col-sm-3" style="margin-top: 2em">
+                    <a class="btn btn-default pull-right" href="{% url 'edit_published_policy' publishedPolicy.pk %}" role="button">
+                    <i class="fa fa-envelope-o"></i>
+                    Edit
+                    </a>
+                </div>
+            </div>
 
             <div class="row">
                 <div class="col-sm-12">
@@ -29,18 +39,13 @@
                 <hr>
             </div>
 
-            <div class="col-sm-12" style="margin-top: 1em">
-                    <a class="btn btn-primary pull-right" href="{% url 'edit_published_policy' publishedPolicy.pk %}" role="button">
-                        Edit This policy
-                    </a>
-                    <a class="btn btn-default" href="{% url 'instructor_delete_old_publish_new' publishedPolicy.pk %}" role="button">
-                        Publish New Policy From Templates
-                    </a>
-            </div>
-
         </div>
 
-        <div class="col-sm-3"></div>
+        <div class="col-sm-3" style="margin-top: 2em">
+            <a class="btn btn-default pull-right" href="{% url 'instructor_delete_old_publish_new' publishedPolicy.pk %}" role="button">
+                    Publish New Policy From Templates
+                </a>
+        </div>
 
     </body>
 
