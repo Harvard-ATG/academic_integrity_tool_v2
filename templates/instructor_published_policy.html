@@ -7,7 +7,8 @@
 {% block content %}
     <head>
         <!-- UI comment #2 - Font Awesome-->
-        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+
         <!-- UI comment #3 - Bootstrap core CSS. I also added Boostrap LS by the end of the body tag -->
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
@@ -16,8 +17,18 @@
 
         <div class="col-sm-9">
 
+            <div class="row">
+                <div class="col-sm-9">
+                    <h1>Academic Integrity Policy</h1>
+                </div>
 
-            <h1>Academic Integrity Policy</h1>
+                <div class="col-sm-3" style="margin-top: 2em">
+                    <a class="btn btn-default pull-right" href="{% url 'edit_published_policy' publishedPolicy.pk %}" role="button">
+                    <i class="fa fa-pencil-alt fa-flip-horizontal"></i>
+                    Edit
+                    </a>
+                </div>
+            </div>
 
             <div class="row">
                 <div class="col-sm-12">
@@ -27,23 +38,15 @@
 
             <div class="col-sm-12">
                 <hr>
-                <h5>
-                  As an instructor, you may edit this policy.
-                </h5>
-            </div>
-
-            <div class="col-sm-12" style="margin-top: 1em">
-                    <a class="btn btn-primary pull-right" href="{% url 'edit_published_policy' publishedPolicy.pk %}" role="button">
-                        Edit This policy
-                    </a>
-                    <a class="btn btn-default" href="{% url 'instructor_delete_old_publish_new' publishedPolicy.pk %}" role="button">
-                        Publish New Policy From Templates
-                    </a>
             </div>
 
         </div>
 
-        <div class="col-sm-3"></div>
+        <div class="col-sm-3" style="margin-top: 2em">
+            <a class="btn btn-default pull-right" href="{% url 'instructor_delete_old_publish_new' publishedPolicy.pk %}" role="button">
+                    Publish New Policy From Templates
+                </a>
+        </div>
 
     </body>
 
