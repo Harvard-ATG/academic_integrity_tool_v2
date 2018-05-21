@@ -1,5 +1,7 @@
-<!-- HTML and styling for the administrator view of the policy templates. The instructor view is pretty similar so we can just work with this view. I have included
-some comments as 'Notes'.-->
+<!--There are 5 IUI comments in this commit-->
+
+
+
 
 
 <html>
@@ -7,7 +9,7 @@ some comments as 'Notes'.-->
         <title>Academic Integrity Policy Templates</title>
 
 
-<!-- Note 1: This stylesheet seems to come from a local directory called /assets/ on your local environment. I am not sure where it is used in this html file given the page seems to render just fine (except for that PowerPoint icon that was missing and the displacement of the icons :) ). -->
+
         <link data-turbolinks-track="true" href="/assets/application-f2426e026c85d83f4d4ec5be1c26ee81.css" media="all" rel="stylesheet">
 
 
@@ -24,7 +26,7 @@ some comments as 'Notes'.-->
 
 
 
-<!-- Note 2: Related to Note 1 above, this script seems to come from a local directory, i.e. /assets/. Perhaps you could upload it to the Github repo? -->
+
         <script data-turbolinks-track="true" src="/assets/application-2671af1f4fe139755faa78265733f653.js"></script>
 
 
@@ -44,15 +46,22 @@ some comments as 'Notes'.-->
     </head>
     <body>
 
+<!--UI comment #1 - Horizontal space occupied by the Canvas left nav-->
+
+        <div class="col-sm-2" style="width: 270px">
+            <p style="margin-top: 10em; color: #ccc">(Native Canvas 270 pixel wide left-hand navigation)</p>
+        </div>
+
+        <div class="col-sm-7" style="max-width: 670px">
         <h1>Academic Integrity Policy Templates</h1>
 
-        <h2>Instructions for the Administrators</h2>
+        <h3>Instructions for the Administrators</h3>
 
         <div class="highlighted">
 
-            <h4>
+            <h5>
               As an administrator, you can edit to update these templates.
-            </h4>
+            </h5>
         </div>
 
         <div class="panel panel-primary">
@@ -64,131 +73,47 @@ some comments as 'Notes'.-->
           <div class="panel-body">
               <div class="panel panel-default">
                 <div class="panel-body">
-                    <div class="col-sm-8">
-                        <h4>a. Written Work</h4>
+                    <h4>a. Written Work </h4>
+
+<!--UI comment #2 - Changing the large icon to a Bootstrap button and repositioning for responsiveness-->
+                    <div>
                         <p>
                             Discussion and the exchange of ideas are essential to academic work. For assignments in this course, you are encouraged to consult with your classmates on the choice of paper topics and to share sources. You may find it useful to discuss your chosen topic with your peers, particularly if you are working on the same topic as a classmate. However, you should ensure that any written work you submit for evaluation is the result of your own research and writing and that it reflects your own approach to the topic. You must also adhere to standard citation practices in this discipline and properly cite any books, articles, websites, lectures, etc. that have helped you with your work. If you received any help with your writing (feedback on drafts, etc), you must also acknowledge this assistance.
                         </p>
-                    </div>
-
-<!-- Note 3: Instead of implementing the link for "Edit Written Work Template" as a a submittable form, I implemented it as a button wrapped in an <a> tag. Kindly see Note 4. It made integration into the rest of the project much easier. Maybe this is why the icons got displaced downwards? Either way, is it possible to work with my replacement as laid out in Note 4? -->
-
-
-
-  <!-- This is the code you implemented. See my replacement in Note 4 below. 
-
-                    <div class="col-sm-4">
-                        <form method="get" action="https://lti.acts.cloud.huit.harvard.edu/policies/new" accept-charset="UTF-8">
-                            <div style="display:none">
-                                <input name="utf8" type="hidden" value="✓">
-                            </div>
-                            <input id="custom" name="custom" type="hidden" value="1">
-                            <div style="position: relative">
-                                <span class="icon-input-btn"
-                                      style="position: absolute; top: 50%; transform: translateY(50%);">
-
-                                    <button value="Edit Written Work Template" class="btn btn-default btn-md" type="submit" name="commit">
-                                        <i class="fa fa-file-word-o" style="font-size: 6em; color: rgb(51, 122, 183);"></i>
-                                        <br>
-                                        Edit Written Work Template</button>
-                                </span>
-                            </div>
-                        </form>
-                    </div>
-
-
-                  -->
-
-
-
-
-<!-- End of Note 3 -->
-
-
-
-
-
-
-<!-- Note 4: The "Edit Written Work Template" link implemented as an <a> tag that wraps around a simple button for easy integration. Don't worry about how the data is sent to the server once a user clicks the button. I took care of that with Django. Django can handle it via the 'href' attribute so no worries. -->
-
-                    <a href="link/to/text/editor">
-                      <div class="col-sm-4">
-                          <div style="position: relative">
-                              <span class="icon-input-btn" style="position: absolute; top: 50%; transform: translateY(50%);">
-                                  <button value="Choose Written Work Template" class="btn btn-default btn-md" type="submit" name="commit">
-                                      <i class="fa fa-file-word-o" style="font-size: 6em; color: rgb(51, 122, 183);"></i>
-                                      <br>
-                                      Edit Written Work Template
+                        <p>
+                            <a href="link/to/text/editor">
+                                <span class="icon-input-btn pull-right">
+                                  <button value="Choose Written Work Template" class="btn btn-primary btn-md" type="submit" name="commit">
+                                    <i class="fa fa-file-word-o" style="font-size: 2em; color:#fff;"></i>
+                                    Edit Written Work Template
                                   </button>
-                              </span>
-                          </div>
-                      </div>
-                  </a>
-
-<!-- End of Note 4 -->
-
-
-
-
-
-
-
+                                </span>
+                            </a>
+                        </p>
+                    </div>
                 </div>
               </div>
+
               <div class="panel panel-default">
                 <div class="panel-body">
-                    <div class="col-sm-8">
-                        <h4>b. Problem Sets</h4>
+                    <h4>b. Problem Sets</h4>
+
+<!--UI comment #3 - Changing the large icon to a Bootstrap button and repositioning for responsiveness-->
+                    <div>
                         <p>
                             Discussion and the exchange of ideas are essential to doing academic work. For assignments in this course, you are encouraged to consult with your classmates as you work on problem sets. However, after discussions with peers, make sure that you can work through the problem yourself and ensure that any answers you submit for evaluation are the result of your own efforts. In addition, you must cite any books, articles, websites, lectures, etc that have helped you with your work using appropriate citation practices. Similarly, you must list the names of students with whom you have collaborated on problem sets.
                         </p>
-                    </div>
-
-
-
-
-
-<!-- Note 5: Same as Note 3 above. I replaced this with the code in Note 6.
-
-  
-                    <div class="col-sm-4">
-                        <form method="get" action="https://lti.acts.cloud.huit.harvard.edu/policies/new" accept-charset="UTF-8"><div style="display:none"><input name="utf8" type="hidden" value="✓"></div>
-                            <input id="custom" name="custom" type="hidden" value="1">
-                            <div style="position: relative">
-                                <span class="icon-input-btn"
-                                      style="position: absolute; top: 50%; transform: translateY(50%);">
-                                    <button value="Edit Problem Sets Template" class="btn btn-default btn-md" type="submit" name="commit">
-                                        <i class="fa-file-powerpoint-o" style="font-size: 6em; color: rgb(51, 122, 183);"></i>
-                                        <br>
-                                        Edit Problem Sets Template</button>
+                        <p>
+                            <a href="/link/to/text/editor">
+                                <span class="icon-input-btn pull-right">
+                                  <button value="Choose Problem Sets Template" class="btn btn-primary btn-md" type="submit" name="commit">
+                                    <i class="fa fa-file-powerpoint-o" style="font-size: 2em; color:#fff;"></i>
+                                    Edit Problem Sets Template
+                                  </button>
                                 </span>
-                            </div>
-                        </form>
+                            </a>
+                        </p>
                     </div>
-
-
-End of note 5 -->
-
-
-<!-- Note 6: "Edit Problem Sets Template" link as a clickable button wrapped around an <a> tag, instead of a submittable form.-->
-
-                    <a href="/link/to/text/editor">
-                        <div class="col-sm-4">
-                            <div style="position: relative">
-                                <span class="icon-input-btn" style="position: absolute; top: 50%; transform: translateY(50%);">
-                                    <button value="Choose Problem Sets Template" class="btn btn-default btn-md" type="submit" name="commit">
-                                        <i class="fa-file-powerpoint-o" style="font-size: 6em; color: rgb(51, 122, 183);"></i>
-                                        <br>
-                                        Edit Problem Sets Template
-                                    </button>
-                                </span>
-                            </div>
-                        </div>
-                    </a>
-
-<!-- End of Note 6 -->
-
-
                 </div>
               </div>
           </div>
@@ -201,67 +126,42 @@ End of note 5 -->
               </h4>
           </div>
           <div class="panel-body">
+
               <div class="panel panel-default">
                 <div class="panel-body">
-                    <div class="col-sm-8">
+
+<!--UI comment #4 - Changing the large icon to a Bootstrap button and repositioning for responsiveness-->
+                    <div>
                         <p>
                             Students should be aware that in this course collaboration of any sort on any work submitted for formal evaluation is not permitted. This means that you may not discuss your problem sets, paper assignments, exams, or any other assignments with other students. All work should be entirely your own and must use appropriate citation practices to acknowledge the use of books, articles, websites, lectures, discussions, etc., that you have consulted to complete your assignments.
                         </p>
-                    </div>
-
-
-<!-- Note 7: Same as Note 3 above. I replaced this with the code in Note 8.
-
-                    <div class="col-sm-4">
-                        <form method="get" action="https://lti.acts.cloud.huit.harvard.edu/policies/new" accept-charset="UTF-8">
-                            <div style="display:none"><input name="utf8" type="hidden" value="✓"></div>
-                            <input id="custom" name="custom" type="hidden" value="3">
-                            <div style="position: relative">
-                                <span class="icon-input-btn"
-                                      style="position: absolute; top: 50%; transform: translateY(0%);">
-                                    <button value="Edit Collaboration Prohibited Template" class="btn btn-default btn-md" type="submit" name="commit">
-                                        <i class="fa fa-file-word-o" style="font-size: 6em; color: rgb(51, 122, 183);"></i>
-                                        <br>
-                                        Edit
-                                        <br>
-                                        Collaboration Prohibited Template</button>
+                        <p>
+                            <a href="/link/to/text/editor">
+                                <span class="icon-input-btn pull-right">
+                                  <button value="Choose Collaboration Prohibited Template" class="btn btn-primary btn-md" type="submit" name="commit">
+                                        <span class="fa-layers fa-fw">
+                                            <i class="fa fa-file-o" style="font-size: 2em; color:#fff;"></i>
+                                            <i class="fa fa-times" style="position: absolute; font-size: 1em; color:#fff; margin-left: -1.50em; margin-top: .70em;"></i>
+                                        </span>
+                                    Collaboration Prohibited
+                                  </button>
                                 </span>
-                            </div>
-                        </form>
+                            </a>
+                        </p>
                     </div>
-
-End of Note 7 -->
-
-
-<!-- Note 8: "Edit Collaboration Prohibited Template" link as a clickable button wrapped around an <a> tag, instead of a submittable form.-->
-                    <a href="href="/link/to/text/editor">
-                        <div class="col-sm-4">
-                            <div style="position: relative">
-                                <span class="icon-input-btn"
-                                      style="position: absolute; top: 50%; transform: translateY(0%);">
-                                    <button value="Choose Collaboration Prohibited Template" class="btn btn-default btn-md" type="submit" name="commit">
-                                        <i class="fa fa-file-word-o" style="font-size: 6em; color: rgb(51, 122, 183);"></i>
-                                        <br>
-                                        Edit
-                                        <br>
-                                        Collaboration Prohibited Template</button>
-                                </span>
-                            </div>
-                        </div>
-                    </a>
-
-<!-- End of Note 8 -->
-
-
                 </div>
               </div>
           </div>
         </div>
+    </div>
+
+<!--UI comment #5 - Horizontal space occupied by the Canvas right nav-->
+    <div class="col-sm-1" style="width: 270px">(Native Canvas right hand column)</div>
 
 
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/docs.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/docs.min.js"></script>
 
     </body>
 </html>
