@@ -1,5 +1,3 @@
-<!--There are #7 UI comments on this commit-->
-
 <!-- HTML and styling for the administrator view of the policy templates. The instructor view is pretty similar so we can just work with this view. I have included
 some comments as 'Notes'.-->
 
@@ -45,18 +43,16 @@ some comments as 'Notes'.-->
         <meta content="d0ccTyXMT8j2cAO95nISg+V5rFAEFJxqMA4Bt0J+zUA=" name="csrf-token">
     </head>
     <body>
-<!--UI comment #1 - adding Bootstrap columns to simulate the native Canvas interface and the limited horizontal space-->
-	<div class="col-sm-2">(Native Canvas left hand navigation)</div>
-    <div class="col-sm-7">
+
         <h1>Academic Integrity Policy Templates</h1>
-<!--UI comment #2 - changing to heading 3-->
-        <h3>Instructions for the Administrators</h3>
+
+        <h2>Instructions for the Administrators</h2>
 
         <div class="highlighted">
-<!--UI comment #3 - changing to heading 5-->
-            <h5>
+
+            <h4>
               As an administrator, you can edit to update these templates.
-            </h5>
+            </h4>
         </div>
 
         <div class="panel panel-primary">
@@ -181,8 +177,7 @@ End of note 5 -->
                             <div style="position: relative">
                                 <span class="icon-input-btn" style="position: absolute; top: 50%; transform: translateY(50%);">
                                     <button value="Choose Problem Sets Template" class="btn btn-default btn-md" type="submit" name="commit">
-<!--UI comment #4 - adding an extra fa to fa-file-powerpoint-o-->
-                                        <i class="fa fa-file-powerpoint-o" style="font-size: 6em; color: rgb(51, 122, 183);"></i>
+                                        <i class="fa-file-powerpoint-o" style="font-size: 6em; color: rgb(51, 122, 183);"></i>
                                         <br>
                                         Edit Problem Sets Template
                                     </button>
@@ -245,19 +240,11 @@ End of Note 7 -->
                                 <span class="icon-input-btn"
                                       style="position: absolute; top: 50%; transform: translateY(0%);">
                                     <button value="Choose Collaboration Prohibited Template" class="btn btn-default btn-md" type="submit" name="commit">
-<!--UI comment #5 - adding a new icon that better represents Collaboration Prohibited-->
-                                        <div class="fa-4x">
-                                            <span class="fa-layers fa-fw">
-                                                <i class="fa fa-file-o" style="font-size: 1.5em; color: rgb(51, 122, 183);"></i>
-                                                <i class="fa fa-times" style="position: absolute; font-size: .75em; color: rgb(51, 122, 183); margin-left: -1.25em; margin-top: .70em;"></i>
-                                            </span></div>
-<!--UI comment #6 - removing br-->
+                                        <i class="fa fa-file-word-o" style="font-size: 6em; color: rgb(51, 122, 183);"></i>
+                                        <br>
                                         Edit
                                         <br>
-                                        Collaboration Prohibited
-<!--UI comment #7 - adding an extra break-->
-                                        <br>
-                                        Template</button>
+                                        Collaboration Prohibited Template</button>
                                 </span>
                             </div>
                         </div>
@@ -270,8 +257,6 @@ End of Note 7 -->
               </div>
           </div>
         </div>
-    </div>
-    <div class="col-sm-3">(Native Canvas right hand column)</div>
 
 
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
