@@ -158,11 +158,11 @@ class RoleAndPermissionTests(TestCase):
         with self.assertRaises(PermissionDenied):
             views.instructor_level_policy_edit_view(request, self.policyTemplates[0].pk)
 
-    def testStudentDeniedDeletePolicyView(self):
+    def testStudentDeniedInactivatePolicyView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.studentSession)
         with self.assertRaises(PermissionDenied):
-            views.instructor_delete_old_publish_new_view(request, self.publishedPolicy.pk)
+            views.instructor_inactivate_old_prepare_new_view(request, self.publishedPolicy.pk)
 
     def testStudentDeniedAdminTemplateEditView(self):
         request = self.factory.get('policy_templates_list')
@@ -212,10 +212,10 @@ class RoleAndPermissionTests(TestCase):
         response = views.edit_published_policy(request, self.publishedPolicy.pk)
         self.assertEquals(response.status_code, 200)
 
-    def testInstructorAllowedDeleteOldPublishNewView(self):
+    def testInstructorAllowedInactivateOldPublishNewView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.instructorSession)
-        response = views.instructor_delete_old_publish_new_view(request, self.publishedPolicy.pk)
+        response = views.instructor_inactivate_old_prepare_new_view(request, self.publishedPolicy.pk)
         self.assertEquals(response.status_code, 302)
 
     def testAdministratorDeniedInstructorPolicyEditView(self):
@@ -236,11 +236,11 @@ class RoleAndPermissionTests(TestCase):
         with self.assertRaises(PermissionDenied):
             views.edit_published_policy(request, self.publishedPolicy.pk)
 
-    def testAdministratorDeniedDeletePolicyView(self):
+    def testAdministratorDeniedInactivatePolicyView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.administratorSession)
         with self.assertRaises(PermissionDenied):
-            views.instructor_delete_old_publish_new_view(request, self.publishedPolicy.pk)
+            views.instructor_inactivate_old_prepare_new_view(request, self.publishedPolicy.pk)
 
     def testAdministratorDeniedStudentPublishedPolicyView(self):
         request = self.factory.get('policy_templates_list')

@@ -62,10 +62,10 @@ def policy_templates_list_view(request):
     if role=='Instructor' or role=='Administrator':
 
         if role=='Instructor':
-            try: #if a policy has already been published for this course ...
-                #Get the published policy
-                publishedPolicy = Policies.objects.get(context_id=request.session['context_id'])
-                #Render the published policy
+            try: #if there is an active published policy for this course ...
+                #Get the active published policy
+                publishedPolicy = Policies.objects.get(context_id=request.session['context_id'], is_active=True)
+                #Render the active published policy
                 return render(request, 'instructor_published_policy.html', {'publishedPolicy': publishedPolicy})
             except Policies.DoesNotExist: #If no such policy exists ...
                 pass
@@ -138,6 +138,7 @@ def instructor_level_policy_edit_view(request, pk):
                     related_template = policyTemplate,
                     published_by = request.session['lis_person_sourcedid'],
                     is_published = True,
+                    is_active=True,
                 )
 
                 return redirect('instructor_published_policy', pk=finalPolicy.pk)
@@ -182,16 +183,18 @@ def edit_published_policy(request, pk):
         raise PermissionDenied
 
 @xframe_options_exempt
-def instructor_delete_old_publish_new_view(request, pk):
+def instructor_inactivate_old_prepare_new_view(request, pk):
     '''
-    From the published policy page, this view enables an instructor to prepare a new course policy from
-    the list of policy templates. The old published policy is deleted.
+    From the published policy page, this view enables an instructor to inactivate an already published policy and prepare
+    a new course policy from the list of policy templates.
     '''
     role = request.session['role']
 
     if role == 'Instructor':
-        #Delete old policy
-        Policies.objects.filter(pk=pk).delete()
+        policyToEdit = Policies.objects.get(pk=pk)
+        #Inactivate old policy
+        policyToEdit.is_active = False
+        policyToEdit.save()
         #Redirect to list of templates
         return redirect('policy_templates_list')
     else: #i.e. 'Administrator' or 'Student'

@@ -10,5 +10,5 @@ urlpatterns = [
     path('policy/<int:pk>/edit/', views.instructor_level_policy_edit_view, name='instructor_level_policy_edit'),
     path('published_policy/<int:pk>/', views.instructor_published_policy, name='instructor_published_policy'),
     path('edit_published_policy/<int:pk>/', views.edit_published_policy, name='edit_published_policy'),
-    path('instructor_delete_old_publish_new/<int:pk>/', views.instructor_delete_old_publish_new_view, name='instructor_delete_old_publish_new'),
+    path('instructor_inactivate_old_prepare_new/<int:pk>/', views.instructor_inactivate_old_prepare_new_view, name='instructor_inactivate_old_prepare_new'),
 ]
