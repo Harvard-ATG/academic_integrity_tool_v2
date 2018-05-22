@@ -138,6 +138,7 @@ class RoleAndPermissionTests(TestCase):
         self.publishedPolicy = Policies.objects.create(
             context_id=self.context_id,
             is_published=True,
+            is_active=True,
             published_by=self.instructorSession['lis_person_sourcedid'],
             body='this is an important policy. please read!'
         )
@@ -334,6 +335,7 @@ class StudentRoleTests(TestCase):
             context_id=self.studentSessionWithPublishedPolicy['context_id'],
             published_by=self.lis_person_sourcedid,
             is_published=True,
+            is_active=True,
             body='this is an important policy. please read!'
         )
 
