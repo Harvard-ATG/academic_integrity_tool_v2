@@ -1,9 +1,10 @@
+import logging
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import UpdateView, CreateView
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, MultipleObjectsReturned
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
@@ -13,6 +14,7 @@ from .utils import role_identifier, validate_request
 from .forms import PolicyTemplateForm, NewPolicyForm
 from django.views.decorators.clickjacking import xframe_options_exempt
 
+logger = logging.getLogger(__name__)
 
 @csrf_exempt
 @xframe_options_exempt #Allows rendering in Canvas frame
@@ -63,8 +65,13 @@ def policy_templates_list_view(request):
 
         if role=='Instructor':
             try: #if there is an active published policy for this course ...
-                #Get the active published policy
-                publishedPolicy = Policies.objects.get(context_id=request.session['context_id'], is_active=True)
+                try: #Get the active published policy
+                    publishedPolicy = Policies.objects.get(context_id=request.session['context_id'], is_active=True)
+                except Policies.MultipleObjectsReturned: #If multiple active published policies are returned
+                    #Issue a warning
+                    logger.warning("Multiple active published policies in existence. Only 1 such policy should exist.")
+                    #Use the latest active published policy
+                    publishedPolicy = Policies.objects.filter(context_id=request.session['context_id'], is_active=True).order_by('updated_at').first()
                 #Render the active published policy
                 return render(request, 'instructor_published_policy.html', {'publishedPolicy': publishedPolicy})
             except Policies.DoesNotExist: #If no such policy exists ...
