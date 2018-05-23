@@ -1,4 +1,4 @@
-<!--There are 6 UI comments on this commit-->
+
 <html>
     <head>
         <title>Academic Integrity Policy</title>
@@ -9,19 +9,24 @@
         <script data-turbolinks-track="true" src="/assets/application-2671af1f4fe139755faa78265733f653.js"></script>
         <script src="/js/tinymce/tinymce.min.js" type="text/javascript"></script>
 
-<!--UI comment #1 - placing new font awesome stylesheet-->
+
 	    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
 
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
+<!--UI comment # - adding Boostrap jquery and js links-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 
         <meta content="authenticity_token" name="csrf-param">
         <meta content="d0ccTyXMT8j2cAO95nISg+V5rFAEFJxqMA4Bt0J+zUA=" name="csrf-token">
+
     </head>
 
     <body>
 
-<!--UI comment #2 - Horizontal space occupied by the Canvas left nav-->
+
 
         <div class="col-sm-2" style="width: 270px">
             <p style="margin-top: 10em; color: #ccc">(Native Canvas 270 pixel wide left-hand navigation)</p>
@@ -33,7 +38,7 @@
                 <h1>Academic Integrity Policy</h1>
              </div>
 
-<!--UI comment #3 - styling and aligning the Edit button to match Canvas'-->
+
             <div class="col-sm-2" style="margin-top: 2em">
                 <a class="btn btn-default btn-default--edit pull-right" href="/link/to/editor" role="button"
                    style="background: #f5f5f5;">
@@ -47,9 +52,12 @@
                 <h2>Collaboration Permitted - Written Work Policy</h2>
             </div>
 
-<!--UI comment #4 - editing the content of the alert-->
+
             <div class="col-sm-12">
-                <div class="alert alert-success" role="alert">This policy is successfully updated.</div>
+                <div class="alert alert-success" role="alert">
+                    Your policy has been successfully published. You can click the ‘Edit’ button to refine it or
+                    the ‘Delete and prepare new policy from templates’ to delete this policy and start afresh.
+                </div>
             </div>
 
 
@@ -64,18 +72,51 @@
             </div>
         </div>
 
-<!--UI comment #5 - Horizontal space occupied by the Canvas right nav-->
+
         <div class="col-sm-1" style="width: 270px">
 
-<!--UI comment #6 - styling and aligning the the button next to the Edit button to match Canvas'-->
-            <a class="btn btn-default pull-right" href="Link/back/to/list/of/policy/templates" role="button"
-               style="margin-top: 2em; background: #f5f5f5;">
-                    Back to list of policy templates
+<!--UI comment # - edit button label, adding modal function-->
+            <a class="btn btn-default pull-right" role="button"
+               style="margin-top: 2em; background: #f5f5f5;"
+             data-toggle="modal" data-target="#myModal">
+                    <i class="fa fa-times-circle fa-flip-horizontal"></i>
+                Delete and prepare<br>new policy from templates
                 </a>
 
             <p style="margin-top: 10em; color: #ccc">(Native Canvas 290 pixel wide left-hand navigation)</p>
 
         </div>
+
+<!--UI comment # - modal-->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Warning</h4>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to delete your current published policy and start afresh?
+                  <br>
+                  If you simply want to edit the policy,
+                  click ‘Cancel’ and then access the text editor via the ‘Edit’ button.
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal"
+                 href="Link/back/to/list/of/policy/templates">Yes, delete and start afresh</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+<!--UI comment # - javaScript for modal-->
+        <script type="text/javascript">
+            $('#myModal').on('shown.bs.modal', function () {
+              $('#myInput').focus()
+            })
+        </script>
 
 
     </body>
