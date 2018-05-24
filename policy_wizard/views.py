@@ -66,12 +66,12 @@ def policy_templates_list_view(request):
         if role=='Instructor':
             try: #If there is an active published policy for this course, get it. (Only 1 active published policy expected.)
                 publishedPolicy = Policies.objects.get(context_id=request.session['context_id'], is_active=True)
+                # Render the active published policy
+                return render(request, 'instructor_published_policy.html', {'publishedPolicy': publishedPolicy})
             except Policies.MultipleObjectsReturned: #If multiple active published policies exist (which should never happen)...
                 return HttpResponse("Something went wrong #@$%. Contact the site admin at atg@fas.harvard.edu.")
             except Policies.DoesNotExist: #If no active published policy exists ...
                 pass
-            #Render the active published policy
-            return render(request, 'instructor_published_policy.html', {'publishedPolicy': publishedPolicy})
 
 
         #Fetch each policy template from the `PolicyTemplates` table in the database and store as a variable
@@ -213,14 +213,15 @@ def student_published_policy_view(request):
 
     if role == 'Student':
         try:
+            # If an active published policy exists (Only 1 expected)...
             publishedPolicy = Policies.objects.get(context_id=request.session['context_id'], is_active=True)
-        except ObjectDoesNotExist:
+            # Render the policy
+            return render(request, 'student_published_policy.html', {'publishedPolicy': publishedPolicy})
+        except Policies.DoesNotExist: #If no active published policy exists ...
             return HttpResponse("There is no published academic integrity policy in record for this course.")
-        except MultipleObjectsReturned: #If multiple active published policies present (which should never happen) ...
+        except Policies.MultipleObjectsReturned: #If multiple active published policies present (which should never happen) ...
             return HttpResponse("Something went wrong #@$%. Contact the site admin at atg@fas.harvard.edu.")
 
-        # Render the policy
-        return render(request, 'student_published_policy.html', {'publishedPolicy': publishedPolicy})
     else: #i.e. 'Administrator' or 'Instructor'
         raise PermissionDenied
 
