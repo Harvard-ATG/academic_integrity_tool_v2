@@ -64,18 +64,15 @@ def policy_templates_list_view(request):
     if role=='Instructor' or role=='Administrator':
 
         if role=='Instructor':
-            try: #if there is an active published policy for this course ...
-                try: #Get the active published policy
-                    publishedPolicy = Policies.objects.get(context_id=request.session['context_id'], is_active=True)
-                except Policies.MultipleObjectsReturned: #If multiple active published policies are returned
-                    #Issue a warning
-                    logger.warning("Multiple active published policies in existence. Only 1 such policy should exist.")
-                    #Use the latest active published policy
-                    publishedPolicy = Policies.objects.filter(context_id=request.session['context_id'], is_active=True).order_by('updated_at').first()
-                #Render the active published policy
-                return render(request, 'instructor_published_policy.html', {'publishedPolicy': publishedPolicy})
-            except Policies.DoesNotExist: #If no such policy exists ...
+            try: #If there is an active published policy for this course, get it. (Only 1 active published policy expected.)
+                publishedPolicy = Policies.objects.get(context_id=request.session['context_id'], is_active=True)
+            except Policies.MultipleObjectsReturned: #If multiple active published policies exist (which should never happen)...
+                return HttpResponse("Something went wrong #@$%. Contact the site admin at atg@fas.harvard.edu.")
+            except Policies.DoesNotExist: #If no active published policy exists ...
                 pass
+            #Render the active published policy
+            return render(request, 'instructor_published_policy.html', {'publishedPolicy': publishedPolicy})
+
 
         #Fetch each policy template from the `PolicyTemplates` table in the database and store as a variable
         written_work_policy_template = PolicyTemplates.objects.get(name="Collaboration Permitted: Written Work")
@@ -210,16 +207,19 @@ def instructor_inactivate_old_prepare_new_view(request, pk):
 @xframe_options_exempt
 def student_published_policy_view(request):
     '''
-    Displays to the student the policy for the course, if one exists, and an appropriate message if one doesn't
+    Displays to the student the policy for the course if one exists
     '''
     role = request.session['role']
 
     if role == 'Student':
         try:
-            publishedPolicy = Policies.objects.get(context_id=request.session['context_id'])
+            publishedPolicy = Policies.objects.get(context_id=request.session['context_id'], is_active=True)
         except ObjectDoesNotExist:
             return HttpResponse("There is no published academic integrity policy in record for this course.")
+        except MultipleObjectsReturned: #If multiple active published policies present (which should never happen) ...
+            return HttpResponse("Something went wrong #@$%. Contact the site admin at atg@fas.harvard.edu.")
 
+        # Render the policy
         return render(request, 'student_published_policy.html', {'publishedPolicy': publishedPolicy})
     else: #i.e. 'Administrator' or 'Instructor'
         raise PermissionDenied
