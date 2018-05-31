@@ -1,42 +1,11 @@
+{% extends 'tinymce_editor_base.html' %}
+
 {% comment %}
-    Presents the text editor to an administrator
+    Presents the text editor to an administrator so they can re-edit a template they
+    just updated
 {% endcomment %}
 
-{% load static %}
-{% block content %}
-
-    <head>
-
-        <style>
-            textarea {
-                width: 100%;
-                margin: 0;
-                border: 0px solid #fff;
-                position: relative;
-                padding: 1em;
-                height: 20em;
-                -moz-box-sizing: border-box;
-                -webkit-box-sizing: border-box;
-                box-sizing: border-box;
-            }
-        </style>
-
-        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-        <script type="text/javascript" src="{% static "tinymce/tinymce.min.js"%}"></script>
-        <script type="text/javascript">
-            tinymce.init({
-                selector: 'textarea',
-                content_css: "{% static "css/custom_content.css" %}",
-                branding: false,
-                theme: 'modern',
-                plugins: 'textcolor lists table media link image directionality',
-                menubar: false,
-                toolbar1: 'bold italic underline forecolor backcolor removeformat alignleft aligncenter alignright outdent indent superscript subscript bullist numlist',
-                toolbar2: 'table media link unlink image ltr rtl fontsizeselect formatselect'
-            });
-        </script>
-    </head>
+{% block editorContent %}
 
     <body>
 
@@ -61,4 +30,4 @@
 
     </body>
 
-{% endblock content %}
+{% endblock editorContent %}
