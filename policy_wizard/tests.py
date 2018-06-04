@@ -311,8 +311,8 @@ class InstructorRoleTests(TestCase):
         self.assertEqual(policy.related_template_id, policy_template_id)
         self.assertEqual(policy.body, postparams['body'])
         self.assertTrue(policy.is_published)
+        self.assertTrue(policy.is_active)
         self.assertEqual(policy.published_by, self.instructorSession['lis_person_sourcedid'])
-
 
 class StudentRoleTests(TestCase):
 
