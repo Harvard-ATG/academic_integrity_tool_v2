@@ -1,11 +1,12 @@
 import logging
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import UpdateView, CreateView
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied, MultipleObjectsReturned
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseServerError
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import NewPolicyForm
@@ -69,7 +70,7 @@ def policy_templates_list_view(request):
                 # Render the active published policy
                 return render(request, 'instructor_published_policy.html', {'publishedPolicy': publishedPolicy})
             except Policies.MultipleObjectsReturned: #If multiple active published policies exist (which should never happen)...
-                return HttpResponse("Something went wrong #@$%. Contact the site admin at atg@fas.harvard.edu.")
+                return HttpResponseServerError("Something went wrong #@$%. Contact the site admin at " + settings.SECURE_SETTINGS['help_email_address'])
             except Policies.DoesNotExist: #If no active published policy exists ...
                 pass
 
@@ -256,7 +257,7 @@ def student_published_policy_view(request):
         except Policies.DoesNotExist: #If no active published policy exists ...
             return HttpResponse("There is no published academic integrity policy in record for this course.")
         except Policies.MultipleObjectsReturned: #If multiple active published policies present (which should never happen) ...
-            return HttpResponse("Something went wrong #@$%. Contact the site admin at atg@fas.harvard.edu.")
+            return HttpResponseServerError("Something went wrong #@$%. Contact the site admin at " + settings.SECURE_SETTINGS['help_email_address'])
 
     else: #i.e. 'Administrator' or 'Instructor'
         raise PermissionDenied
