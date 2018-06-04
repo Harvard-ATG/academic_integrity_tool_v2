@@ -116,12 +116,48 @@ def admin_level_template_edit_view(request, pk):
             if form.is_valid():
                 templateToUpdate.body = form.cleaned_data.get('body')
                 templateToUpdate.save()
-                return redirect('policy_templates_list')
+                return redirect('admin_updated_template', pk=templateToUpdate.pk)
         else:
             form = PolicyTemplateForm(initial={'body': templateToUpdate.body})
         return render(request, 'admin_level_template_edit.html', {'form': form})
     else: #i.e. if 'Instructor' or 'Student'
         raise PermissionDenied
+
+@xframe_options_exempt
+def admin_updated_template_view(request, pk):
+    '''
+    Present the updated template to the administrator
+    '''
+    role = request.session['role']
+
+    if role == 'Administrator':
+        updatedTemplate = PolicyTemplates.objects.get(pk=pk)
+        return render(request, 'admin_updated_template.html', {'updatedTemplate': updatedTemplate})
+    else: #i.e. 'Instructor' or 'Student'
+        raise PermissionDenied
+
+@xframe_options_exempt
+def admin_edit_updated_template_view(request, pk):
+    '''
+    Present administrator with editor so they can edit a template they just updated
+    '''
+    role = request.session['role']
+
+    if role == 'Administrator':
+        templateToUpdate = get_object_or_404(PolicyTemplates, pk=pk)
+
+        if request.method == 'POST':
+            form = PolicyTemplateForm(request.POST)
+            if form.is_valid():
+                templateToUpdate.body = form.cleaned_data.get('body')
+                templateToUpdate.save()
+                return redirect('admin_updated_template', pk=templateToUpdate.pk)
+        else:
+            form = PolicyTemplateForm(initial={'body': templateToUpdate.body})
+        return render(request, 'admin_edit_updated_template.html', {'form': form, 'templateToUpdate': templateToUpdate})
+    else: #i.e. if 'Instructor' or 'Student'
+        raise PermissionDenied
+
 
 @xframe_options_exempt
 def instructor_level_policy_edit_view(request, pk):
