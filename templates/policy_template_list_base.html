@@ -1,0 +1,155 @@
+{% comment %}
+    Given that the administrator's and instructor's displays of policy templates are similar,
+    this template abstracts out code common in the corresponding django templates.
+{% endcomment %}
+
+{% block content %}
+
+    <html>
+
+        <head>
+                <title>Academic Integrity Policy Wizard</title>
+
+
+                <!-- Q for Vittorio: This stylesheet seems to be existing within a local directory called assets/. The stylesheet therefore
+                probably needs to be uploaded to this project's github repo so I can include it in my project's directory tree.-->
+                <link data-turbolinks-track="true" href="/assets/application-f2426e026c85d83f4d4ec5be1c26ee81.css" media="all" rel="stylesheet">
+        <!-- UI comment #1 - Font Awesome-->
+                <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <!-- UI comment #2 - Bootstrap core CSS. I also added Boostrap LS by the end of the body tag -->
+                 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+                <!-- These local scripts in /assets/ and /js/. Vittorio needs to add them to github repo. -->
+                <script data-turbolinks-track="true" src="/assets/application-2671af1f4fe139755faa78265733f653.js"></script>
+                <script src="/js/tinymce/tinymce.min.js" type="text/javascript"></script>
+
+                <!-- I probably don't need to submit a form on this page. So the csrf-token may be unnecessary for now. Will be good to ask.
+
+                <meta content="authenticity_token" name="csrf-param">
+                <meta content="d0ccTyXMT8j2cAO95nISg+V5rFAEFJxqMA4Bt0J+zUA=" name="csrf-token">
+
+                -->
+
+        </head>
+
+        <body>
+
+            <div class="col-sm-9">
+                <h1>Academic Integrity Policy Wizard</h1>
+
+                {% block instructions %}
+                {% endblock instructions %}
+
+                <div class="panel panel-primary">
+
+                    <div class="panel-heading">
+                        <h4>I. Collaboration Permitted</h4>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="col-sm-8">
+                                    <h4>a. Written Work</h4>
+                                    <p>{{ written_work_policy_template.body|safe }}</p>
+                                </div>
+
+                                <a href="{% block urlToEditorWithWrittenWorkTemplateParameter %}{% endblock urlToEditorWithWrittenWorkTemplateParameter %}">
+                                    <div class="col-sm-4">
+                                        <div style="position: relative">
+                                            <span class="icon-input-btn" style="position: absolute; top: 50%; transform: translateY(50%);">
+                                                <button value="Choose Written Work Template" class="btn btn-default btn-md" type="submit" name="commit">
+                                                    <i class="fa fa-file-word-o" style="font-size: 6em; color: rgb(51, 122, 183);"></i>
+                                                    <br>
+                                                    {% block writtenWorkTemplateButtonText %}{% endblock writtenWorkTemplateButtonText %}
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="col-sm-8">
+                                    <h4>b. Problem Sets</h4>
+                                    <p>{{ problem_sets_policy_template.body|safe }}</p>
+                                </div>
+
+                                <a href="{% block urlToEditorWithProblemSetsTemplateParameter %}{% endblock urlToEditorWithProblemSetsTemplateParameter %}">
+                                    <div class="col-sm-4">
+                                        <div style="position: relative">
+                                            <span class="icon-input-btn" style="position: absolute; top: 50%; transform: translateY(50%);">
+                                                <button value="Choose Problem Sets Template" class="btn btn-default btn-md" type="submit" name="commit">
+                                                    <i class="fa fa-file-powerpoint-o" style="font-size: 6em; color: rgb(51, 122, 183);"></i>
+                                                    <br>
+                                                    {% block problemSetsTemplateButtonText %}{% endblock problemSetsTemplateButtonText %}
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h4>II. Collaboration Prohibited</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+
+                                <div class="col-sm-8">
+                                    <p>{{ collaboration_prohibited_policy_template.body|safe }}</p>
+                                </div>
+
+
+                                <a href="{% block urlToEditorWithCollaborationProhibitedTemplateParameter %}{% endblock urlToEditorWithCollaborationProhibitedTemplateParameter %}">
+                                    <div class="col-sm-4">
+                                        <div style="position: relative">
+                                            <span class="icon-input-btn"
+                                                  style="position: absolute; top: 50%; transform: translateY(0%);">
+                                                <button value="Choose Collaboration Prohibited Template" class="btn btn-default btn-md" type="submit" name="commit">
+                                                    <div class="fa-4x">
+                                                        <span class="fa-layers fa-fw">
+                                                            <i class="fa fa-file-o" style="font-size: 1.5em; color: rgb(51, 122, 183);"></i>
+                                                            <i class="fa fa-times" style="position: absolute; font-size: .75em; color: rgb(51, 122, 183); margin-left: -1.25em; margin-top: .70em;"></i>
+                                                        </span>
+                                                    </div>
+                                                    {% block collaborationProhibitedTemplateButtonText %}{% endblock collaborationProhibitedTemplateButtonText %}
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% block customizePolicyBlock %}
+                {% endblock customizePolicyBlock %}
+
+            </div>
+
+            <div class="col-sm-3"></div>
+
+            <!-- Bootstrap JS -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/docs.min.js"></script>
+
+        </body>
+
+    </html>
+
+{% endblock content %}
