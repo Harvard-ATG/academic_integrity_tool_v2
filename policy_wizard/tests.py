@@ -138,6 +138,7 @@ class RoleAndPermissionTests(TestCase):
         self.publishedPolicy = Policies.objects.create(
             context_id=self.context_id,
             is_published=True,
+            is_active=True,
             published_by=self.instructorSession['lis_person_sourcedid'],
             body='this is an important policy. please read!'
         )
@@ -158,11 +159,11 @@ class RoleAndPermissionTests(TestCase):
         with self.assertRaises(PermissionDenied):
             views.instructor_level_policy_edit_view(request, self.policyTemplates[0].pk)
 
-    def testStudentDeniedDeletePolicyView(self):
+    def testStudentDeniedInactivatePolicyView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.studentSession)
         with self.assertRaises(PermissionDenied):
-            views.instructor_delete_old_publish_new_view(request, self.publishedPolicy.pk)
+            views.instructor_inactivate_old_prepare_new_view(request, self.publishedPolicy.pk)
 
     def testStudentDeniedAdminTemplateEditView(self):
         request = self.factory.get('policy_templates_list')
@@ -212,10 +213,10 @@ class RoleAndPermissionTests(TestCase):
         response = views.edit_published_policy(request, self.publishedPolicy.pk)
         self.assertEquals(response.status_code, 200)
 
-    def testInstructorAllowedDeleteOldPublishNewView(self):
+    def testInstructorAllowedInactivateOldPublishNewView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.instructorSession)
-        response = views.instructor_delete_old_publish_new_view(request, self.publishedPolicy.pk)
+        response = views.instructor_inactivate_old_prepare_new_view(request, self.publishedPolicy.pk)
         self.assertEquals(response.status_code, 302)
 
     def testAdministratorDeniedInstructorPolicyEditView(self):
@@ -236,11 +237,11 @@ class RoleAndPermissionTests(TestCase):
         with self.assertRaises(PermissionDenied):
             views.edit_published_policy(request, self.publishedPolicy.pk)
 
-    def testAdministratorDeniedDeletePolicyView(self):
+    def testAdministratorDeniedInactivatePolicyView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.administratorSession)
         with self.assertRaises(PermissionDenied):
-            views.instructor_delete_old_publish_new_view(request, self.publishedPolicy.pk)
+            views.instructor_inactivate_old_prepare_new_view(request, self.publishedPolicy.pk)
 
     def testAdministratorDeniedStudentPublishedPolicyView(self):
         request = self.factory.get('policy_templates_list')
@@ -310,8 +311,8 @@ class InstructorRoleTests(TestCase):
         self.assertEqual(policy.related_template_id, policy_template_id)
         self.assertEqual(policy.body, postparams['body'])
         self.assertTrue(policy.is_published)
+        self.assertTrue(policy.is_active)
         self.assertEqual(policy.published_by, self.instructorSession['lis_person_sourcedid'])
-
 
 class StudentRoleTests(TestCase):
 
@@ -334,6 +335,7 @@ class StudentRoleTests(TestCase):
             context_id=self.studentSessionWithPublishedPolicy['context_id'],
             published_by=self.lis_person_sourcedid,
             is_published=True,
+            is_active=True,
             body='this is an important policy. please read!'
         )
 
