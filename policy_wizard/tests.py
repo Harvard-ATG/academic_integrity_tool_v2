@@ -183,6 +183,18 @@ class RoleAndPermissionTests(TestCase):
         with self.assertRaises(PermissionDenied):
             views.edit_published_policy(request, self.publishedPolicy.pk)
 
+    def testStudentDeniedAdminUpdatedTemplateView(self):
+        request = self.factory.get('policy_templates_list')
+        annotate_request_with_session(request, self.studentSession)
+        with self.assertRaises(PermissionDenied):
+            views.admin_updated_template_view(request, self.policyTemplates[0].pk)
+
+    def testStudentDeniedAdminEditUpdatedTemplateView(self):
+        request = self.factory.get('policy_templates_list')
+        annotate_request_with_session(request, self.studentSession)
+        with self.assertRaises(PermissionDenied):
+            views.admin_edit_updated_template_view(request, self.policyTemplates[0].pk)
+
     def testInstructorDeniedAdminTemplateEditView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.instructorSession)
@@ -218,6 +230,18 @@ class RoleAndPermissionTests(TestCase):
         annotate_request_with_session(request, self.instructorSession)
         response = views.instructor_inactivate_old_prepare_new_view(request, self.publishedPolicy.pk)
         self.assertEquals(response.status_code, 302)
+
+    def testInstructorDeniedAdminUpdatedTemplateView(self):
+        request = self.factory.get('policy_templates_list')
+        annotate_request_with_session(request, self.instructorSession)
+        with self.assertRaises(PermissionDenied):
+            views.admin_updated_template_view(request, self.policyTemplates[0].pk)
+
+    def testInstructorDeniedAdminEditUpdatedTemplateView(self):
+        request = self.factory.get('policy_templates_list')
+        annotate_request_with_session(request, self.instructorSession)
+        with self.assertRaises(PermissionDenied):
+            views.admin_edit_updated_template_view(request, self.policyTemplates[0].pk)
 
     def testAdministratorDeniedInstructorPolicyEditView(self):
         request = self.factory.get('policy_templates_list')
