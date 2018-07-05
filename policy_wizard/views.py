@@ -14,8 +14,8 @@ from .models import PolicyTemplates, Policies
 from .utils import role_identifier, validate_request
 from .forms import PolicyTemplateForm, NewPolicyForm
 from django.views.decorators.clickjacking import xframe_options_exempt
-from .decorators import require_role_administrator, require_role_instructor, require_role_student
-
+from .decorators import require_role_admin, require_role_instructor, require_role_student
+from .roles import ROLES
 logger = logging.getLogger(__name__)
 
 @csrf_exempt
@@ -46,10 +46,10 @@ def process_lti_launch_request_view(request):
         request.session['lis_person_sourcedid'] = request.POST.get('lis_person_sourcedid')
 
         #Using the role, e.g. 'Administrator', 'Instructor', or 'Student', determine route to take
-        role = request.session['role']
-        if role=='Administrator' or role=='Instructor':
+        role = request.session.get('role')
+        if role==ROLES.get("ADMIN") or role==ROLES.get("INSTRUCTOR"):
             return redirect('policy_templates_list')
-        elif role=='Student':
+        elif role==ROLES.get("STUDENT"):
             return redirect('student_published_policy')
     else: #if not typical lti launch or if request is not valid ...
         raise PermissionDenied
@@ -61,11 +61,11 @@ def policy_templates_list_view(request):
     '''
 
     #Fetch role from session attribute. It should be either 'Administrator' or 'Instructor'.
-    role = request.session['role']
+    role = request.session.get('role')
 
-    if role=='Instructor' or role=='Administrator':
+    if role==ROLES.get("INSTRUCTOR") or role==ROLES.get("ADMIN"):
 
-        if role=='Instructor':
+        if role==ROLES.get("INSTRUCTOR"):
             try: #If there is an active published policy for this course, get it. (Only 1 active published policy expected.)
                 publishedPolicy = Policies.objects.get(context_id=request.session['context_id'], is_active=True)
                 # Render the active published policy
@@ -82,7 +82,7 @@ def policy_templates_list_view(request):
         collaboration_prohibited_policy_template = PolicyTemplates.objects.get(name="Collaboration Prohibited")
         custom_policy_template = PolicyTemplates.objects.get(name="Custom Policy")
 
-        if role=='Administrator':
+        if role==ROLES.get("ADMIN"):
             #Django template to use
             template_to_use = 'admin_level_template_list.html'
         else: #role=='Instructor'
@@ -105,7 +105,7 @@ def policy_templates_list_view(request):
 
 
 @xframe_options_exempt
-@require_role_administrator
+@require_role_admin
 def admin_level_template_edit_view(request, pk):
     '''
     Presents the text editor to an administrator so they can edit and update a policy template
@@ -123,7 +123,7 @@ def admin_level_template_edit_view(request, pk):
     return render(request, 'admin_level_template_edit.html', {'form': form})
 
 @xframe_options_exempt
-@require_role_administrator
+@require_role_admin
 def admin_updated_template_view(request, pk):
     '''
     Present the updated template to the administrator
@@ -132,7 +132,7 @@ def admin_updated_template_view(request, pk):
     return render(request, 'admin_updated_template.html', {'updatedTemplate': updatedTemplate})
 
 @xframe_options_exempt
-@require_role_administrator
+@require_role_admin
 def admin_edit_updated_template_view(request, pk):
     '''
     Present administrator with editor so they can edit a template they just updated
