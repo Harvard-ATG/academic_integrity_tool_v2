@@ -1,6 +1,6 @@
 from functools import wraps
 from django.core.exceptions import PermissionDenied
-from .roles import ROLES
+from . import roles
 
 def require_role(permitted_role):
     def decorator(view_function):
@@ -16,6 +16,6 @@ def require_role(permitted_role):
 
     return decorator
 
-require_role_admin = require_role(ROLES.get("ADMIN"))
-require_role_instructor = require_role(ROLES.get("INSTRUCTOR"))
-require_role_student = require_role(ROLES.get("STUDENT"))
+require_role_administrator = require_role(roles.ADMINISTRATOR)
+require_role_instructor = require_role(roles.INSTRUCTOR)
+require_role_student = require_role(roles.STUDENT)

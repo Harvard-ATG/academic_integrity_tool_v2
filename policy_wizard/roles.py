@@ -1,7 +1,5 @@
-ROLES = {
-    "ADMIN": "Administrator",
-    "INSTRUCTOR": "Instructor",
-    "STUDENT": "Student"
-}
+ADMINISTRATOR = "Administrator"
+INSTRUCTOR = "Instructor"
+STUDENT = "Student"
 
 
