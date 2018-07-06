@@ -18,7 +18,7 @@
 
             <div class="row">
                 <div class="col-sm-9">
-                    <h1>Academic Integrity Policy Template</h1>
+                    <h2>Academic Integrity Policy Template</h2>
                 </div>
 
                 <div class="col-sm-3" style="margin-top: 2em">
@@ -26,6 +26,13 @@
                     <i class="fa fa-pencil-alt fa-flip-horizontal"></i>
                     Edit
                     </a>
+                </div>
+            </div>
+
+            <div class="col-sm-12">
+                <div class="alert alert-success" role="alert">
+                    <strong>The policy template has been successfully updated.</strong>
+                    <br>You can now visit the list of up-to-date policy templates by clicking the ‘List of up-to-date policy templates’ link.
                 </div>
             </div>
 
@@ -41,9 +48,9 @@
 
         </div>
 
-        <div class="col-sm-3" style="margin-top: 2em">
-            <a class="btn btn-default pull-right" href="{% url 'policy_templates_list' %}" role="button">
-                    Back to List of Policy Templates
+        <div class="col-sm-3" style="margin-top: 2.5em">
+            <a href="{% url 'policy_templates_list' %}">
+                    List of up-to-date policy templates
                 </a>
         </div>
 
