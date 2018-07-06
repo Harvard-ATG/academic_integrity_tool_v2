@@ -5,14 +5,20 @@
 {% endcomment %}
 
 {% block content %}
-    <head>
-        <!-- UI comment #2 - Font Awesome-->
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
 
-        <!-- UI comment #3 - Bootstrap core CSS. I also added Boostrap LS by the end of the body tag -->
+    <head>
+        <title>Academic Integrity Policy</title>
+
+	    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
+        <!-- Bootstrap jquery and js links -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
     </head>
+
     <body>
 
         <div class="col-sm-9">
@@ -32,8 +38,14 @@
 
             <div class="row">
                 <div class="col-sm-12">
-                    <p class="alert alert-success" role="alert">Successfully published</p>
+                    <div class="alert alert-success" role="alert">
+                        <strong>Your policy has been successfully published.</strong>
+                        <br>You can click the ‘Edit’ button to refine it or
+                        the ‘Delete and prepare new policy from templates’ to delete this policy and start afresh.
+                    </div>
+
                 </div>
+
             </div>
 
             <div class="row">
@@ -48,11 +60,40 @@
 
         </div>
 
-        <div class="col-sm-3" style="margin-top: 2em">
-            <a class="btn btn-default pull-right" href="{% url 'instructor_inactivate_old_prepare_new' publishedPolicy.pk %}" role="button">
-                    Publish New Policy From Templates
-                </a>
+        <div class="col-sm-3" >
+            <a class="btn btn-default pull-right" role="button" style="margin-top: 2em; background: #f5f5f5;" data-toggle="modal" data-target="#myModal">
+                <i class="fa fa-times-circle fa-flip-horizontal"></i>
+                    Delete and prepare<br>new policy from templates
+            </a>
+
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Warning</h4>
+                  </div>
+                  <div class="modal-body">
+                    Are you sure you want to delete your current published policy and start afresh?
+                      <br>
+                      If you simply want to edit the policy,
+                      click ‘Cancel’ and then access the text editor via the ‘Edit’ button.
+                  </div>
+                  <div class="modal-footer">
+                      <a type="button" class="btn btn-default pull-left" href="{% url 'instructor_inactivate_old_prepare_new' publishedPolicy.pk %}">Yes, <strong>DELETE</strong> and start afresh</a>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
         </div>
+
+        <script type="text/javascript">
+            $('#myModal').on('shown.bs.modal', function () {
+              $('#myInput').focus()
+            })
+        </script>
 
     </body>
 
