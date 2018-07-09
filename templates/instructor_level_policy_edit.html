@@ -8,27 +8,38 @@
 
     <body>
 
-        <div class="col-sm-9">
+        <div class="row">
+            <div class="col-xs-9">
 
-            <h1>Academic Integrity Policy Wizard</h1>
+                <div class="row">
+                    <div class="col-xs-12 page-header">
+                        <h1>Academic Integrity Policy Wizard</h1>
+                    </div>
+                </div>
 
-            {% comment %}
-                Needs more work ...
-                <h3>Template: <span class="label label-primary">{{ policyTemplate.name }}</span></h3>
-            {% endcomment %}
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="alert alert-info" role="alert">
+                            <p><strong>Customize your policy on collaboration for this class</strong></p>
+                        </div>
+                    </div>
+                </div>
 
-            <h4 style="margin-top: 2em">Customize your policy on collaboration for this class</h4>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button class="btn-default btn-lg"><a href="{% url 'policy_templates_list' %}">Cancel</a></button>
+                            <input class="btn-primary pull-right btn-lg" type="submit" value="Publish" />
+                        </form>
+                    </div>
+                </div>
 
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button class="btn-default btn-lg"><a href="{% url 'policy_templates_list' %}">Cancel</a></button>
-                <input class="btn-primary pull-right btn-lg" type="submit" value="Publish" />
-            </form>
+            </div>
 
+            <div class="col-xs-3"></div>
         </div>
-
-        <div class="col-sm-3"></div>
 
     </body>
 

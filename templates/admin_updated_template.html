@@ -14,46 +14,55 @@
     </head>
     <body>
 
-        <div class="col-sm-9">
+        <div class="row">
 
-            <div class="row">
-                <div class="col-sm-9">
-                    <h2>Academic Integrity Policy Template</h2>
+            <div class="col-xs-9">
+
+                <div class="row">
+                    <div class="col-xs-9">
+                        <h2>Academic Integrity Policy Template</h2>
+                    </div>
+
+                    <div class="col-xs-3" style="margin-top: 2em">
+                        <a class="btn btn-default pull-right" href="{% url 'admin_edit_updated_template' updatedTemplate.pk %}" role="button">
+                        <i class="fa fa-pencil-alt fa-flip-horizontal"></i>
+                        Edit
+                        </a>
+                    </div>
                 </div>
 
-                <div class="col-sm-3" style="margin-top: 2em">
-                    <a class="btn btn-default pull-right" href="{% url 'admin_edit_updated_template' updatedTemplate.pk %}" role="button">
-                    <i class="fa fa-pencil-alt fa-flip-horizontal"></i>
-                    Edit
-                    </a>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <br />
+                    </div>
                 </div>
-            </div>
 
-            <div class="col-sm-12">
-                <div class="alert alert-success" role="alert">
-                    <strong>The policy template has been successfully updated.</strong>
-                    <br>You can now visit the list of up-to-date policy templates by clicking the ‘List of up-to-date policy templates’ link.
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="alert alert-success" role="alert">
+                            <strong>Your academic integrity policy template has been updated successfully.</strong>
+                            <br>You can now visit your list of up-to-date policy templates by clicking the ‘List of up-to-date policy templates’ link.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col-sm-12">
-                    {{ updatedTemplate.body|safe }}
+                <div class="row">
+                    <div class="col-xs-12 text-justify">
+                        <h3><span class="label label-primary">{{ updatedTemplate.name }}</span></h3>
+                        <br />
+                        {{ updatedTemplate.body|safe }}
+                    </div>
                 </div>
+
             </div>
 
-            <div class="col-sm-12">
-                <hr>
-            </div>
-
-        </div>
-
-        <div class="col-sm-3" style="margin-top: 2.5em">
-            <a href="{% url 'policy_templates_list' %}">
+            <div class="col-xs-3" style="margin-top: 2em">
+                <a class="pull-right" href="{% url 'policy_templates_list' %}">
                     List of up-to-date policy templates
                 </a>
-        </div>
+            </div>
 
+        </div>
     </body>
 
 {% endblock content %}

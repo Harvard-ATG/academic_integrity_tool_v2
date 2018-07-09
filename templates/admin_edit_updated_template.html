@@ -9,24 +9,45 @@
 
     <body>
 
-        <div class="col-sm-9">
-            <h1>Academic Integrity Policy Wizard</h1>
+        <div class="row">
+            <div class="col-sm-9">
 
-            {% comment %}
-                Needs more work ...
-                <h3>Template: <span class="label label-primary">Collaboration Permitted - Written Work</span></h3>
-            {% endcomment %}
+                <div class="row">
+                    <div class="col-xs-12 page-header">
+                        <h1>Academic Integrity Policy Wizard</h1>
+                    </div>
+                </div>
 
-            <h4 style="margin-top: 2em">Edit to update this template</h4>
-            <form action="" method="post">{% csrf_token %}
-                {{ form.as_p }}
-                <button class="btn-default btn-lg"><a href="{% url 'admin_updated_template' templateToUpdate.pk %}">Cancel</a></button>
-                <input class="btn-primary pull-right btn-lg" type="submit" value="Update" />
-            </form>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="alert alert-info">
+                            <p><strong>Edit to update this template</strong></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h3><span class="label label-primary">{{ templateToUpdate.name }}</span></h3>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form action="" method="post">{% csrf_token %}
+                            {{ form.as_p }}
+                            <button class="btn-default btn-lg"><a href="{% url 'admin_updated_template' templateToUpdate.pk %}">Cancel</a></button>
+                            <input class="btn-primary pull-right btn-lg" type="submit" value="Update" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-3"></div>
 
         </div>
-
-        <div class="col-sm-3"></div>
 
     </body>
 

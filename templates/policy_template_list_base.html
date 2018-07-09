@@ -18,114 +18,144 @@
 
         <body>
 
-            <div class="col-sm-9">
-                <h1>Academic Integrity Policy Wizard</h1>
+            <div class="row">
 
-                {% block instructions %}
-                {% endblock instructions %}
+                <div class="col-xs-9">
 
-                <div class="panel panel-primary">
-
-                    <div class="panel-heading">
-                        <h4>I. Collaboration Permitted</h4>
+                    <div class="row">
+                        <div class="col-xs-12 page-header">
+                            <h1>Academic Integrity Policy Wizard</h1>
+                        </div>
                     </div>
 
-                    <div class="panel-body">
+                    <br />
 
-                        <div class="panel panel-default">
-                            <div class="panel-body">
-                                <div class="col-sm-8">
-                                    <h4>a. Written Work</h4>
-                                    <p>{{ written_work_policy_template.body|safe }}</p>
-                                </div>
-
-                                <a href="{% block urlToEditorWithWrittenWorkTemplateParameter %}{% endblock urlToEditorWithWrittenWorkTemplateParameter %}">
-                                    <div class="col-sm-4">
-                                        <div style="position: relative">
-                                            <span class="icon-input-btn" style="position: absolute; top: 50%; transform: translateY(50%);">
-                                                <button value="Choose Written Work Template" class="btn btn-default btn-md" type="submit" name="commit">
-                                                    <i class="fa fa-file-word-o" style="font-size: 6em; color: rgb(51, 122, 183);"></i>
-                                                    <br>
-                                                    {% block writtenWorkTemplateButtonText %}{% endblock writtenWorkTemplateButtonText %}
-                                                </button>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </a>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="alert alert-info" role="alert">
+                                {% block instructions %}
+                                {% endblock instructions %}
                             </div>
                         </div>
+                    </div>
 
-                        <div class="panel panel-default">
-                            <div class="panel-body">
-                                <div class="col-sm-8">
-                                    <h4>b. Problem Sets</h4>
-                                    <p>{{ problem_sets_policy_template.body|safe }}</p>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="panel panel-primary">
+
+                                <div class="panel-heading">
+                                    <h4>I. Collaboration Permitted</h4>
                                 </div>
+                                <div class="panel-body">
 
-                                <a href="{% block urlToEditorWithProblemSetsTemplateParameter %}{% endblock urlToEditorWithProblemSetsTemplateParameter %}">
-                                    <div class="col-sm-4">
-                                        <div style="position: relative">
-                                            <span class="icon-input-btn" style="position: absolute; top: 50%; transform: translateY(50%);">
-                                                <button value="Choose Problem Sets Template" class="btn btn-default btn-md" type="submit" name="commit">
-                                                    <i class="fa fa-file-powerpoint-o" style="font-size: 6em; color: rgb(51, 122, 183);"></i>
-                                                    <br>
-                                                    {% block problemSetsTemplateButtonText %}{% endblock problemSetsTemplateButtonText %}
-                                                </button>
-                                            </span>
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-xs-12 text-justify">
+                                                    <h4>a. Written Work</h4>
+                                                    <p>{{ written_work_policy_template.body|safe }}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <a href="{% block urlToEditorWithWrittenWorkTemplateParameter %}{% endblock urlToEditorWithWrittenWorkTemplateParameter %}">
+                                                        <div style="position: relative">
+                                                            <span class="icon-input-btn">
+                                                                <button value="Choose Written Work Template" class="btn btn-primary btn-md pull-right" type="submit" name="commit">
+                                                                    <i class="fa fa-file-word-o" style="font-size: 1.3em; color: white;"></i>
+                                                                    {% block writtenWorkTemplateButtonText %}{% endblock writtenWorkTemplateButtonText %}
+                                                                </button>
+                                                            </span>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </a>
+
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-xs-12 text-justify">
+                                                    <h4>b. Problem Sets</h4>
+                                                    <p>{{ problem_sets_policy_template.body|safe }}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <a href="{% block urlToEditorWithProblemSetsTemplateParameter %}{% endblock urlToEditorWithProblemSetsTemplateParameter %}">
+                                                        <div style="position: relative">
+                                                            <span class="icon-input-btn">
+                                                                <button value="Choose Problem Sets Template" class="btn btn-primary btn-md pull-right" type="submit" name="commit">
+                                                                    <i class="fa fa-file-powerpoint-o" style="font-size: 1.3em; color: white;"></i>
+                                                                    {% block problemSetsTemplateButtonText %}{% endblock problemSetsTemplateButtonText %}
+                                                                </button>
+                                                            </span>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
                             </div>
                         </div>
+                    </div>
 
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h4>II. Collaboration Prohibited</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-xs-12 text-justify">
+                                                    <p>{{ collaboration_prohibited_policy_template.body|safe }}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <a href="{% block urlToEditorWithCollaborationProhibitedTemplateParameter %}{% endblock urlToEditorWithCollaborationProhibitedTemplateParameter %}">
+                                                        <div style="position: relative">
+                                                            <span class="icon-input-btn">
+                                                                <button value="Choose Collaboration Prohibited Template" class="btn btn-primary btn-md pull-right" type="submit" name="commit">
+                                                                    <span class="fa-layers fa-fw">
+                                                                        <i class="fa fa-file-o" style="font-size: 1.3em; color: white;"></i>
+                                                                        <i class="fa fa-times" style="position: absolute; font-size: .75em; color: white; margin-left: -1.6em; margin-top: .68em;"></i>
+                                                                    </span>
+                                                                    {% block collaborationProhibitedTemplateButtonText %}{% endblock collaborationProhibitedTemplateButtonText %}
+                                                                </button>
+                                                            </span>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            {% block customizePolicyBlock %}
+                            {% endblock customizePolicyBlock %}
+                        </div>
                     </div>
 
                 </div>
 
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h4>II. Collaboration Prohibited</h4>
-                    </div>
-                    <div class="panel-body">
-                        <div class="panel panel-default">
-                            <div class="panel-body">
-
-                                <div class="col-sm-8">
-                                    <p>{{ collaboration_prohibited_policy_template.body|safe }}</p>
-                                </div>
-
-
-                                <a href="{% block urlToEditorWithCollaborationProhibitedTemplateParameter %}{% endblock urlToEditorWithCollaborationProhibitedTemplateParameter %}">
-                                    <div class="col-sm-4">
-                                        <div style="position: relative">
-                                            <span class="icon-input-btn"
-                                                  style="position: absolute; top: 50%; transform: translateY(0%);">
-                                                <button value="Choose Collaboration Prohibited Template" class="btn btn-default btn-md" type="submit" name="commit">
-                                                    <div class="fa-4x">
-                                                        <span class="fa-layers fa-fw">
-                                                            <i class="fa fa-file-o" style="font-size: 1.5em; color: rgb(51, 122, 183);"></i>
-                                                            <i class="fa fa-times" style="position: absolute; font-size: .75em; color: rgb(51, 122, 183); margin-left: -1.25em; margin-top: .70em;"></i>
-                                                        </span>
-                                                    </div>
-                                                    {% block collaborationProhibitedTemplateButtonText %}{% endblock collaborationProhibitedTemplateButtonText %}
-                                                </button>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </a>
-
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {% block customizePolicyBlock %}
-                {% endblock customizePolicyBlock %}
-
+                <div class="col-xs-3"></div>
             </div>
-
-            <div class="col-sm-3"></div>
 
             <!-- Bootstrap JS -->
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

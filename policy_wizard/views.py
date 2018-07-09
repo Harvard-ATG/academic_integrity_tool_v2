@@ -120,7 +120,7 @@ def admin_level_template_edit_view(request, pk):
             return redirect('admin_updated_template', pk=templateToUpdate.pk)
     else:
         form = PolicyTemplateForm(initial={'body': templateToUpdate.body})
-    return render(request, 'admin_level_template_edit.html', {'form': form})
+    return render(request, 'admin_level_template_edit.html', {'form': form, 'templateToUpdate': templateToUpdate})
 
 @xframe_options_exempt
 @require_role_administrator
