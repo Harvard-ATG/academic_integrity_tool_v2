@@ -20,7 +20,7 @@ from lti_provider import views as lti_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('lti/launch', include('policy_wizard.urls')),
+    path('lti/launch/', include('policy_wizard.urls')),
     path('lti/config.xml', lti_views.LTIConfigView.as_view(), name="get_lti_xml"),
     path('tinymce/', include('tinymce.urls')),
 ]
