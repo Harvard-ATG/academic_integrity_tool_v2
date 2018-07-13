@@ -1,7 +1,6 @@
 from django.test import TestCase, RequestFactory
 from django.shortcuts import reverse
 from django.contrib.sessions.middleware import SessionMiddleware
-from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 from .models import Policies, PolicyTemplates
 from . import views

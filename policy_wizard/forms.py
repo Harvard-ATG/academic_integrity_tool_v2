@@ -1,6 +1,3 @@
-from django import forms
-from .models import Policies
-from tinymce.widgets import TinyMCE
 from django.forms import ModelForm, Textarea
 from .models import PolicyTemplates, Policies
 from django.utils.translation import gettext_lazy as _

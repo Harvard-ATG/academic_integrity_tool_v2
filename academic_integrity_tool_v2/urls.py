@@ -12,26 +12,20 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from django.conf.urls import url
 from django.conf import settings
 from django.urls import include, path
 from django.contrib import admin
-from lti_provider import views as lti_views
-from policy_wizard import views
 from lti_provider import views as lti_views
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #path('lti/launch', views.determine_role_view, name='determine_role'),
-    #path('lti/launch', views.process_lti_launch_request_view, name='process_lti_launch_request'),
     path('lti/launch', include('policy_wizard.urls')),
     path('lti/config.xml', lti_views.LTIConfigView.as_view(), name="get_lti_xml"),
     path('tinymce/', include('tinymce.urls')),
-    #path('', include('policy_wizard.urls')),
 ]
 
-'''
+
 if settings.DEBUG:
     import debug_toolbar
 
@@ -39,5 +33,4 @@ if settings.DEBUG:
         path('__debug__/', include(debug_toolbar.urls)),
     ]
 
-'''
 

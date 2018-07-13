@@ -1,15 +1,9 @@
 import logging
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView, DetailView
-from django.views.generic.edit import UpdateView, CreateView
-from django.urls import reverse_lazy
-from django.contrib.auth.models import User
-from django.core.exceptions import PermissionDenied, MultipleObjectsReturned
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, HttpResponseServerError
 from django.views.decorators.csrf import csrf_exempt
-from django.core.exceptions import ObjectDoesNotExist
-from .forms import NewPolicyForm
 from .models import PolicyTemplates, Policies
 from .utils import role_identifier, validate_request
 from .forms import PolicyTemplateForm, NewPolicyForm
