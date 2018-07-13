@@ -29,18 +29,18 @@ def role_identifier(ext_roles_text):
     if not bool(context_roles):#if context_roles list is empty, i.e. if there are no context roles...
         # Process the institutional and system roles
         for non_context_role in non_context_roles:
-            if ('Administrator' or 'ContentDeveloper') in non_context_role:
+            if ('Administrator') in non_context_role:
                 policy_role = 'Administrator'
                 break
             else:
                 raise PermissionDenied
     else: #if context_roles list is not empty
         context_roles_as_string = ''.join(context_roles) #convert context_roles to string
-        if ('Administrator' in context_roles_as_string) or ('ContentDeveloper' in context_roles_as_string):
+        if ('Administrator' in context_roles_as_string):
             policy_role = 'Administrator'
         elif ('Instructor' in context_roles_as_string):
             policy_role = 'Instructor'
-        elif ('Learner' in context_roles_as_string) or ('NonCreditLearner' in context_roles_as_string) or ('TeachingAssistant' in context_roles_as_string) or ('Mentor' in context_roles_as_string):
+        elif ('Learner' in context_roles_as_string) or ('NonCreditLearner' in context_roles_as_string) or ('TeachingAssistant' in context_roles_as_string) or ('Mentor' in context_roles_as_string) or ('ContentDeveloper' in context_roles_as_string):
             policy_role = 'Student'
         else:
             raise PermissionDenied
