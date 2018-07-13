@@ -10,7 +10,7 @@
     <body>
 
         <div class="row">
-            <div class="col-xs-9">
+            <div class="col-xs-12" style="padding-right: 20px; padding-left: 40px">
 
                 <div class="row">
                     <div class="col-xs-12 page-header">
@@ -36,12 +36,6 @@
 
                 <div class="row">
                     <div class="col-xs-12">
-                        {% comment %}
-                            Needs more work ...
-                            <h3>Template: <span class="label label-primary">Collaboration Permitted - Written Work</span></h3>
-                        {% endcomment %}
-
-
                         <form action="" method="post">{% csrf_token %}
                             {{ form.as_p }}
                             <button class="btn-default btn-lg"><a href="{% url 'policy_templates_list' %}">Cancel</a></button>
@@ -52,7 +46,6 @@
 
             </div>
 
-            <div class="col-xs-3"></div>
         </div>
 
     </body>
