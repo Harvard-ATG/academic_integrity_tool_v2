@@ -57,50 +57,46 @@
 
 
 {% block customizePolicyBlock %}
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-          <h4>III. Instructions For Customizing Collaboration Policy</h4>
-        </div>
+    <div class="panel panel-default">
         <div class="panel-body">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-sm-12 text-justify">
-                            <p>
-                                If you choose to write your own policy on collaboration, keep the following guidelines in mind.
-                            </p>
+            <div class="row">
+                <div class="col-sm-12 text-justify">
+                    <h3><span class="label label-primary">Blank Template</span></h3>
 
-                            <ol>
-                                <li>
-                                    You should outline explicitly what students may or may not discuss with their classmates outside the classroom and how best to capture those discussions on formal work submitted for course credit.
-                                </li>
-                                <li>
-                                    You may want to include citation resources for students including the <a href="http://usingsources.fas.harvard.edu/" title="Harvard Guide to Using Sources">Harvard Guide to Using Sources</a>.
-                                </li>
-                                <li>
-                                    You may want to include information about conforming to the College’s policies on academic integrity found in the <a href="http://handbook.fas.harvard.edu/" title="Harvard College Handbook for Students">Harvard College Handbook for Students</a>.
-                                </li>
-                            </ol>
-                        </div>
-                    </div>
+                    <div style="margin-top: 1.5em;">
+                        <p>
+                            <em>If you choose to write your own policy on collaboration, keep the following guidelines in mind.</em>
+                        </p>
 
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <a href="{% url 'instructor_level_policy_edit' custom_policy_template.pk %}">
-                                <div style="position: relative">
-                                    <span class="icon-input-btn">
-                                        <button value="Create A Custom Policy" class="btn btn-primary btn-md pull-right" type="submit" name="commit">
-                                            <i class="fa fa-file-o" style="font-size: 1.3em; color: white;"></i>
-                                            Write From Scratch
-                                        </button>
-                                    </span>
-                                </div>
-                            </a>
-                        </div>
+                        <ol>
+                            <li>
+                                You should outline explicitly what students may or may not discuss with their classmates outside the classroom and how best to capture those discussions on formal work submitted for course credit.
+                            </li>
+                            <li>
+                                You may want to include citation resources for students including the <a href="http://usingsources.fas.harvard.edu/" title="Harvard Guide to Using Sources">Harvard Guide to Using Sources</a>.
+                            </li>
+                            <li>
+                                You may want to include information about conforming to the College’s policies on academic integrity found in the <a href="http://handbook.fas.harvard.edu/" title="Harvard College Handbook for Students">Harvard College Handbook for Students</a>.
+                            </li>
+                        </ol>
                     </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <a href="{% url 'instructor_level_policy_edit' custom_policy_template.pk %}">
+                        <div style="position: relative">
+                            <span class="icon-input-btn">
+                                <button value="Create A Custom Policy" class="btn btn-primary btn-md pull-right" type="submit" name="commit">
+                                    <i class="fa fa-file-o" style="font-size: 1.3em; color: white;"></i>
+                                    Write From Scratch
+                                </button>
+                            </span>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 {% endblock customizePolicyBlock %}
-
