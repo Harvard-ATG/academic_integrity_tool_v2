@@ -29,8 +29,15 @@ def process_lti_launch_request_view(request):
     if is_basic_lti_launch and request_is_valid: #if typical lti launch and request is valid ...
 
         #Store the context_id in the request's session attribute.
-        #A 'context_id' represents a particular course.
+        #A 'context_id' is a unique opaque identifier for the context from which this wizard is launched.
+        #Thus, if the wizard is launched from a canvas course site, the context_id will point to the canvas
+        #course site.
         request.session['context_id'] = request.POST.get('context_id')
+
+        # Store the custom_canvas_course_id in the request's session attribute.
+        # A custom_canvas_course_id is a unique identifier for a canvas course site.
+        # You can find the Canvas course associated with it more easily than you can with a course's context_id.
+        request.session['course_id'] = request.POST.get('custom_canvas_course_id')
 
         #Figure out role of launcher and store the role in the request's session attribute
         request.session['role'] = role_identifier(request.POST.get('ext_roles'))
@@ -61,7 +68,7 @@ def policy_templates_list_view(request):
 
         if role==roles.INSTRUCTOR:
             try: #If there is an active published policy for this course, get it. (Only 1 active published policy expected.)
-                publishedPolicy = Policies.objects.get(context_id=request.session['context_id'], is_active=True)
+                publishedPolicy = Policies.objects.get(course_id=request.session['course_id'], is_active=True)
                 # Render the active published policy
                 return render(request, 'instructor_published_policy.html', {'publishedPolicy': publishedPolicy})
             except Policies.MultipleObjectsReturned: #If multiple active published policies exist (which should never happen)...
@@ -156,6 +163,7 @@ def instructor_level_policy_edit_view(request, pk):
         form = NewPolicyForm(request.POST)
         if form.is_valid():
             finalPolicy = Policies.objects.create(
+                course_id=request.session['course_id'],
                 context_id=request.session['context_id'],
                 body=form.cleaned_data.get('body'),
                 related_template = policyTemplate,
@@ -217,7 +225,7 @@ def student_published_policy_view(request):
     '''
     try:
         # If an active published policy exists (Only 1 expected)...
-        publishedPolicy = Policies.objects.get(context_id=request.session['context_id'], is_active=True)
+        publishedPolicy = Policies.objects.get(course_id=request.session['course_id'], is_active=True)
         # Render the policy
         return render(request, 'student_published_policy.html', {'publishedPolicy': publishedPolicy})
     except Policies.DoesNotExist: #If no active published policy exists ...
