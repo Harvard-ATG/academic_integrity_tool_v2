@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 import logging
 from .secure import SECURE_SETTINGS
+from django.utils.log import DEFAULT_LOGGING
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 # NOTE: Since we have a settings module, we have to go one more directory up to get to
@@ -163,6 +164,7 @@ LOGGING = {
         'simple': {
             'format': '%(levelname)s\t%(name)s:%(lineno)s\t%(message)s',
         },
+        'django.server': DEFAULT_LOGGING['formatters']['django.server'],
     },
     'handlers': {
         # By default, log to a file
@@ -172,6 +174,7 @@ LOGGING = {
             'formatter': 'verbose',
             'filename': os.path.join(_LOG_ROOT, 'django-academic_integrity_tool_v2.log'),
         },
+        'django.server': DEFAULT_LOGGING['handlers']['django.server'],
     },
     # This is the default logger for any apps or libraries that use the logger
     # package, but are not represented in the `loggers` dict below.  A level
@@ -192,6 +195,7 @@ LOGGING = {
         # },
         # Make sure that propagate is False so that the root logger doesn't get involved
         # after an app logger handles a log message.
+        'django.server': DEFAULT_LOGGING['loggers']['django.server'],
     },
 }
 
@@ -217,5 +221,3 @@ PYLTI_CONFIG = {
 
 
 X_FRAME_OPTIONS = 'ALLOW-FROM https://canvas.dev.tlt.harvard.edu/'
-
-
