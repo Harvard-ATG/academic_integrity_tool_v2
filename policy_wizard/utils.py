@@ -54,6 +54,7 @@ def role_identifier(ext_roles_text):
 
 # validates LTI request
 def validate_request(request):
+
     consumer_key = settings.SECURE_SETTINGS['CONSUMER_KEY']
     shared_secret = settings.SECURE_SETTINGS['LTI_SECRET']
 
@@ -63,8 +64,6 @@ def validate_request(request):
     # Instantiate an LTI object with an 'initial' request type and 'any' role type
     lti_object = LTI('initial', 'any')
 
-    # return True if request is valid or False if otherwise
-    return lti_object._verify_request(request)
-
-
-
+    verified = lti_object._verify_any(request)
+    #verified can potentially be None according to the library in use
+    return False if verified is False else True
