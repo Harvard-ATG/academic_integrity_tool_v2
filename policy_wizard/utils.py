@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.exceptions import PermissionDenied
-from lti_provider.lti import LTI
+from lti_provider.lti import LTI, LTIException
 
 def role_identifier(ext_roles_text):
     """
@@ -64,6 +64,9 @@ def validate_request(request):
     # Instantiate an LTI object with an 'initial' request type and 'any' role type
     lti_object = LTI('initial', 'any')
 
-    verified = lti_object._verify_any(request)
-    #verified can potentially be None according to the library in use
-    return False if verified is False else True
+    # keep this for testing
+    # if request.method == 'POST':
+    #     request.POST = request.POST.copy()
+    #     request.POST['oauth_timestamp'] = '111111111'
+
+    return lti_object._verify_request(request)
