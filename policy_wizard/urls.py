@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     path('', views.process_lti_launch_request_view, name='process_lti_launch_request'),
-    path('refresh', views.refresh_browser_view, name='refresh_browser_view'),
+    path('refresh', views.lti_exception_view, name='lti_exception_view'),
     path('policy_templates_list/', views.policy_templates_list_view, name='policy_templates_list'),
     path('student_published_policy/', views.student_published_policy_view, name='student_published_policy'),
     path('template/<int:pk>/edit/', views.admin_level_template_edit_view, name='admin_level_template_edit'),

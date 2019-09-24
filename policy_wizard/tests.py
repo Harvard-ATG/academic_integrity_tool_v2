@@ -34,7 +34,7 @@ class LtiLaunchTests(TestCase):
         request = self.factory.post('process_lti_launch_request')
         annotate_request_with_session(request)
         response = views.process_lti_launch_request_view(request)
-        self.assertEquals(response['Location'], reverse('refresh_browser_view'))
+        self.assertEquals(response['Location'], reverse('lti_exception_view'))
 
     @mock.patch('policy_wizard.views.validate_request')
     def testPostNotValidLtiRequest(self, mock_validate_request):
