@@ -64,9 +64,4 @@ def validate_request(request):
     # Instantiate an LTI object with an 'initial' request type and 'any' role type
     lti_object = LTI('initial', 'any')
 
-    # keep this for testing
-    # if request.method == 'POST':
-    #     request.POST = request.POST.copy()
-    #     request.POST['oauth_timestamp'] = '111111111'
-
     return lti_object._verify_request(request)

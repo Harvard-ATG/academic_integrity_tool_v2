@@ -28,7 +28,7 @@ def process_lti_launch_request_view(request):
 
     try:
         request_is_valid = validate_request(request)
-    except LTIException: # oauth session may have timed out
+    except LTIException: # oauth session may have timed out or the keys may be wrong
         return redirect('refresh_browser_view')
 
     if is_basic_lti_launch and request_is_valid: #if typical lti launch and request is valid ...
