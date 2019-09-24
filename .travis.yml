@@ -4,7 +4,6 @@ python:
     - "3.6"
 env:
     - DJANGO_SETTINGS_MODULE=academic_integrity_tool_v2.settings.test
-    - DEBUG_TOOLBAR=
 install:
     - pip install -r academic_integrity_tool_v2/requirements/local.txt
 before_script:
