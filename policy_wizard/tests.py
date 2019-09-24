@@ -5,7 +5,6 @@ from django.core.exceptions import PermissionDenied
 from .models import Policies, PolicyTemplates
 from . import views
 
-import pylti
 import mock
 
 
@@ -31,17 +30,11 @@ class LtiLaunchTests(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
 
-    def testGetRequest(self):
-        request = self.factory.get('process_lti_launch_request')
-        annotate_request_with_session(request)
-        with self.assertRaises(pylti.common.LTIException):
-            views.process_lti_launch_request_view(request)
-
-    def testPostIsEmpty(self):
+    def testLTILaunchFailure(self):
         request = self.factory.post('process_lti_launch_request')
         annotate_request_with_session(request)
-        with self.assertRaises(pylti.common.LTIException):
-            views.process_lti_launch_request_view(request)
+        response = views.process_lti_launch_request_view(request)
+        self.assertEquals(response['Location'], reverse('refresh_browser_view'))
 
     @mock.patch('policy_wizard.views.validate_request')
     def testPostNotValidLtiRequest(self, mock_validate_request):

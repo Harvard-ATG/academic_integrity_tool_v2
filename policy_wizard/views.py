@@ -26,12 +26,10 @@ def process_lti_launch_request_view(request):
     is_basic_lti_launch = request.method == 'POST' and request.POST.get(
         'lti_message_type') == 'basic-lti-launch-request'
 
-    #True if this request is valid. False if not.
-    # try:
-    #     request_is_valid = validate_request(request)
-    # except LTIException: # oauth session may have timed out
-    #     return redirect('refresh_browser_view')
-    request_is_valid = validate_request(request)
+    try:
+        request_is_valid = validate_request(request)
+    except LTIException: # oauth session may have timed out
+        return redirect('refresh_browser_view')
 
     if is_basic_lti_launch and request_is_valid: #if typical lti launch and request is valid ...
 
