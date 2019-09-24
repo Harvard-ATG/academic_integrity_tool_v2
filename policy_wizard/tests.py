@@ -122,16 +122,19 @@ class RoleAndPermissionTests(TestCase):
             'context_id': self.context_id,
             'lis_person_sourcedid': '123456789',
             'role': 'Student',
+            'course_id': 1
         }
         self.instructorSession = {
             'context_id': self.context_id,
             'lis_person_sourcedid': '123456789',
             'role': 'Instructor',
+            'course_id': 1
         }
         self.administratorSession = {
             'context_id': self.context_id,
             'lis_person_sourcedid': '123456789',
             'role': 'Administrator',
+            'course_id': 1
         }
         self.policyTemplates = create_default_policy_templates()
         self.publishedPolicy = Policies.objects.create(
@@ -139,7 +142,8 @@ class RoleAndPermissionTests(TestCase):
             is_published=True,
             is_active=True,
             published_by=self.instructorSession['lis_person_sourcedid'],
-            body='this is an important policy. please read!'
+            body='this is an important policy. please read!',
+            course_id=1
         )
 
     def tearDown(self):
@@ -305,7 +309,8 @@ class InstructorRoleTests(TestCase):
         self.instructorSession = {
             'context_id': 'tlhzlqzolkhapmnoukgm',
             'lis_person_sourcedid': '123456789',
-            'role': 'Instructor'
+            'role': 'Instructor',
+            'course_id': 1
         }
 
     def tearDown(self):
@@ -347,11 +352,13 @@ class StudentRoleTests(TestCase):
 
         self.studentSessionWithPublishedPolicy = {
             'context_id': 'context123',
-            'role': 'Student'
+            'role': 'Student',
+            'course_id': 1
         }
         self.studentSessionNoPublishedPolicy = {
             'context_id': 'context456',
-            'role': 'Student'
+            'role': 'Student',
+            'course_id': 2
         }
 
         self.publishedPolicy = Policies.objects.create(
@@ -359,7 +366,8 @@ class StudentRoleTests(TestCase):
             published_by=self.lis_person_sourcedid,
             is_published=True,
             is_active=True,
-            body='this is an important policy. please read!'
+            body='this is an important policy. please read!',
+            course_id=1
         )
 
     def tearDown(self):
