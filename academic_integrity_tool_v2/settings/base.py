@@ -17,6 +17,9 @@ from django.utils.log import DEFAULT_LOGGING
 # the project root
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+# Toggle for the Django Debug Toolbar
+DEBUG_TOOLBAR = False
+
 # Application definition
 
 INSTALLED_APPS = [

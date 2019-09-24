@@ -2,7 +2,6 @@ from .base import *
 from logging.config import dictConfig
 
 DEBUG = True
-DEBUG_TOOLBAR = False
 
 SECRET_KEY = '1@7&11tb*l1c84uco-9=%(u#mb)_dl6%%++rihgnl&r)wmldrc'
 
