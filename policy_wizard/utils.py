@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.exceptions import PermissionDenied
-from lti_provider.lti import LTI
+from lti_provider.lti import LTI, LTIException
 
 def role_identifier(ext_roles_text):
     """
@@ -54,6 +54,7 @@ def role_identifier(ext_roles_text):
 
 # validates LTI request
 def validate_request(request):
+
     consumer_key = settings.SECURE_SETTINGS['CONSUMER_KEY']
     shared_secret = settings.SECURE_SETTINGS['LTI_SECRET']
 
@@ -63,8 +64,4 @@ def validate_request(request):
     # Instantiate an LTI object with an 'initial' request type and 'any' role type
     lti_object = LTI('initial', 'any')
 
-    # return True if request is valid or False if otherwise
     return lti_object._verify_request(request)
-
-
-

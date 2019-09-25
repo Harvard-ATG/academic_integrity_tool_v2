@@ -5,7 +5,6 @@ from django.core.exceptions import PermissionDenied
 from .models import Policies, PolicyTemplates
 from . import views
 
-import pylti
 import mock
 
 
@@ -31,17 +30,11 @@ class LtiLaunchTests(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
 
-    def testGetRequest(self):
-        request = self.factory.get('process_lti_launch_request')
-        annotate_request_with_session(request)
-        with self.assertRaises(pylti.common.LTIException):
-            views.process_lti_launch_request_view(request)
-
-    def testPostIsEmpty(self):
+    def testLTILaunchFailure(self):
         request = self.factory.post('process_lti_launch_request')
         annotate_request_with_session(request)
-        with self.assertRaises(pylti.common.LTIException):
-            views.process_lti_launch_request_view(request)
+        response = views.process_lti_launch_request_view(request)
+        self.assertEquals(response['Location'], reverse('lti_exception_view'))
 
     @mock.patch('policy_wizard.views.validate_request')
     def testPostNotValidLtiRequest(self, mock_validate_request):
@@ -122,16 +115,19 @@ class RoleAndPermissionTests(TestCase):
             'context_id': self.context_id,
             'lis_person_sourcedid': '123456789',
             'role': 'Student',
+            'course_id': 1
         }
         self.instructorSession = {
             'context_id': self.context_id,
             'lis_person_sourcedid': '123456789',
             'role': 'Instructor',
+            'course_id': 1
         }
         self.administratorSession = {
             'context_id': self.context_id,
             'lis_person_sourcedid': '123456789',
             'role': 'Administrator',
+            'course_id': 1
         }
         self.policyTemplates = create_default_policy_templates()
         self.publishedPolicy = Policies.objects.create(
@@ -139,7 +135,8 @@ class RoleAndPermissionTests(TestCase):
             is_published=True,
             is_active=True,
             published_by=self.instructorSession['lis_person_sourcedid'],
-            body='this is an important policy. please read!'
+            body='this is an important policy. please read!',
+            course_id=1
         )
 
     def tearDown(self):
@@ -305,7 +302,8 @@ class InstructorRoleTests(TestCase):
         self.instructorSession = {
             'context_id': 'tlhzlqzolkhapmnoukgm',
             'lis_person_sourcedid': '123456789',
-            'role': 'Instructor'
+            'role': 'Instructor',
+            'course_id': 1
         }
 
     def tearDown(self):
@@ -347,11 +345,13 @@ class StudentRoleTests(TestCase):
 
         self.studentSessionWithPublishedPolicy = {
             'context_id': 'context123',
-            'role': 'Student'
+            'role': 'Student',
+            'course_id': 1
         }
         self.studentSessionNoPublishedPolicy = {
             'context_id': 'context456',
-            'role': 'Student'
+            'role': 'Student',
+            'course_id': 2
         }
 
         self.publishedPolicy = Policies.objects.create(
@@ -359,7 +359,8 @@ class StudentRoleTests(TestCase):
             published_by=self.lis_person_sourcedid,
             is_published=True,
             is_active=True,
-            body='this is an important policy. please read!'
+            body='this is an important policy. please read!',
+            course_id=1
         )
 
     def tearDown(self):

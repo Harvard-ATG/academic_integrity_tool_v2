@@ -1,4 +1,7 @@
 import logging
+
+from pylti.common import LTIException
+
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import PermissionDenied
@@ -23,8 +26,10 @@ def process_lti_launch_request_view(request):
     is_basic_lti_launch = request.method == 'POST' and request.POST.get(
         'lti_message_type') == 'basic-lti-launch-request'
 
-    #True if this request is valid. False if not.
-    request_is_valid = validate_request(request)
+    try:
+        request_is_valid = validate_request(request)
+    except LTIException: # oauth session may have timed out or the keys may be wrong
+        return redirect('lti_exception_view')
 
     if is_basic_lti_launch and request_is_valid: #if typical lti launch and request is valid ...
 
@@ -54,6 +59,10 @@ def process_lti_launch_request_view(request):
             return redirect('student_published_policy')
     else: #if not typical lti launch or if request is not valid ...
         raise PermissionDenied
+
+@xframe_options_exempt
+def lti_exception_view(request):
+    return render(request, 'lti_exception.html', {})
 
 @xframe_options_exempt
 def policy_templates_list_view(request):
@@ -232,12 +241,3 @@ def student_published_policy_view(request):
         return HttpResponse("There is no published academic integrity policy in record for this course.")
     except Policies.MultipleObjectsReturned: #If multiple active published policies present (which should never happen) ...
         return HttpResponseServerError("Something went wrong #@$%. Contact the site admin at " + settings.SECURE_SETTINGS['help_email_address'])
-
-
-
-
-
-
-
-
-
