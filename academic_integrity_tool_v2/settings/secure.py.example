@@ -1,6 +1,6 @@
-# The secure.py file stores environment specific settings and secrets.  It is 
+# The secure.py file stores environment specific settings and secrets.  It is
 # generated during deployment to AWS based on settings stored in s3.  Using the
-# below secure settings in combination with project defaults should be 
+# below secure settings in combination with project defaults should be
 # sufficient to get you started.  Make sure you copy this file over as is to
 # secure.py before running `vagrant up`.
 
@@ -14,4 +14,5 @@ SECURE_SETTINGS = {
     'db_default_password': 'academic_integrity_tool_v2',
     'CONSUMER_KEY': 'academic_integrity_tool_v2',
     'LTI_SECRET': 'secret',
+    'X_FRAME_OPTIONS': 'ALLOW-FROM https://canvas.dev.tlt.harvard.edu/'
 }
