@@ -1,3 +1,5 @@
+{% extends 'base.html' %}
+
 {% comment %}
     Displays the published policy to the instructor.
     Also displayed are 2 buttons: 1 to enable them prepare a new policy from the list of policy templates
@@ -5,103 +7,83 @@
 {% endcomment %}
 
 {% block content %}
+    <div class="row">
+        <div class="col-sm-12" style="padding-right: 20px; padding-left: 30px">
 
-    <head>
-        <title>Academic Integrity Policy</title>
-
-	    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
-
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-
-        <!-- Bootstrap jquery and js links -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-    </head>
-
-    <body>
-      <div class="container">
-        <div class="row">
-            <div class="col-sm-12" style="padding-right: 20px; padding-left: 30px">
-
-                <div class="row">
-                    <div class="col-xs-12">
-                        <h1>Academic Integrity Policy</h1>
-                    </div>
-
+            <div class="row">
+                <div class="col-xs-12">
+                    <h1>Academic Integrity Policy</h1>
                 </div>
 
-                <br />
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="alert alert-success" role="alert">
-                            <strong>Your academic integrity policy has been published successfully.</strong>
-                            <br>You can click the ‘Edit’ button to refine it or
-                            the ‘Delete and prepare new policy from templates’ button to delete this policy and start afresh.
-                        </div>
+            </div>
 
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-xs-12 text-justify">
-                        {{ publishedPolicy.body|safe }}
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-xs-8">
-                        <div>
-                            <a class="btn btn-default" role="button" data-toggle="modal" data-target="#myModal">
-                                <i class="fa fa-times-circle fa-flip-horizontal"></i>
-                                    Delete and prepare new policy from templates
-                            </a>
-
-                            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                              <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                  <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title" id="myModalLabel">Warning</h4>
-                                  </div>
-                                  <div class="modal-body">
-                                      <strong>Are you sure you want to delete your current published policy and customize a new one from the available templates?</strong>
-                                      <br />
-                                      <br />
-                                      If you simply want to edit the current policy,
-                                      click ‘Cancel’ and then access the text editor via the ‘Edit’ button.
-                                  </div>
-                                  <div class="modal-footer">
-                                      <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-                                      <a type="button" class="btn btn-primary pull-right" href="{% url 'instructor_inactivate_old_prepare_new' publishedPolicy.pk %}">Yes, <strong>DELETE</strong> and start afresh</a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xs-4">
-                        <a class="btn btn-primary pull-right" href="{% url 'edit_published_policy' publishedPolicy.pk %}" role="button">
-                            <i class="fa fa-pencil-alt fa-flip-horizontal"></i>
-                            Edit
-                        </a>
+            <br />
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="alert alert-success" role="alert">
+                        <strong>Your academic integrity policy has been published successfully.</strong>
+                        <br>You can click the ‘Edit’ button to refine it or
+                          the ‘Delete and prepare new policy from templates’ button to delete this policy and start afresh.
                     </div>
 
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-xs-12 text-justify">
+                    {{ publishedPolicy.body|safe }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-8">
+                    <div>
+                        <a class="btn btn-default" role="button" data-toggle="modal" data-target="#myModal">
+                            <i class="fa fa-times-circle fa-flip-horizontal"></i>
+                                Delete and prepare new policy from templates
+                        </a>
+
+                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Warning</h4>
+                              </div>
+                              <div class="modal-body">
+                                  <strong>Are you sure you want to delete your current published policy and customize a new one from the available templates?</strong>
+                                  <br />
+                                  <br />
+                                  If you simply want to edit the current policy,
+                                  click ‘Cancel’ and then access the text editor via the ‘Edit’ button.
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                                  <a type="button" class="btn btn-primary pull-right" href="{% url 'instructor_inactivate_old_prepare_new' publishedPolicy.pk %}">Yes, <strong>DELETE</strong> and start afresh</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-4">
+                    <a class="btn btn-primary pull-right" href="{% url 'edit_published_policy' publishedPolicy.pk %}" role="button">
+                        <i class="fa fa-pencil-alt fa-flip-horizontal"></i>
+                        Edit
+                    </a>
+                </div>
+
+            </div>
         </div>
-      </div>
-
-
-
-
-        <script type="text/javascript">
-            $('#myModal').on('shown.bs.modal', function () {
-              $('#myInput').focus()
-            })
-        </script>
-
-    </body>
+    </div>
 
 {% endblock content %}
+
+{% block extra_script %}
+    <script type="text/javascript">
+        $('#myModal').on('shown.bs.modal', function () {
+          $('#myInput').focus()
+        })
+    </script>
+{% endblock extra_script %}
