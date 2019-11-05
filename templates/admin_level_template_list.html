@@ -14,33 +14,3 @@
         </ul>
     </div>
 {% endblock instructions %}
-
-
-{% block urlToEditorWithWrittenWorkTemplateParameter %}
-    {% url 'admin_level_template_edit' written_work_policy_template.pk %}
-{% endblock urlToEditorWithWrittenWorkTemplateParameter %}
-
-
-{% block writtenWorkTemplateButtonText %}
-    Update Template
-{% endblock writtenWorkTemplateButtonText %}
-
-
-{% block urlToEditorWithProblemSetsTemplateParameter %}
-    {% url 'admin_level_template_edit' problem_sets_policy_template.pk %}
-{% endblock urlToEditorWithProblemSetsTemplateParameter %}
-
-
-{% block problemSetsTemplateButtonText %}
-    Update Template
-{% endblock problemSetsTemplateButtonText %}
-
-
-{% block urlToEditorWithCollaborationProhibitedTemplateParameter %}
-    {% url 'admin_level_template_edit' collaboration_prohibited_policy_template.pk %}
-{% endblock urlToEditorWithCollaborationProhibitedTemplateParameter %}
-
-
-{% block collaborationProhibitedTemplateButtonText %}
-    Update Template
-{% endblock collaborationProhibitedTemplateButtonText %}

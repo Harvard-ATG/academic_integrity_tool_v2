@@ -59,12 +59,12 @@
 
                                             <div class="row">
                                                 <div class="col-xs-12">
-                                                    <a href="{% block urlToEditorWithWrittenWorkTemplateParameter %}{% endblock urlToEditorWithWrittenWorkTemplateParameter %}">
+                                                    <a href="{% url list_level written_work_policy_template.pk %}">
                                                         <div style="position: relative">
                                                             <span class="icon-input-btn">
                                                                 <button value="Choose Written Work Template" class="btn btn-primary btn-md pull-right" type="submit" name="commit">
                                                                     <i class="fa fa-file-word-o" style="font-size: 1.3em; color: white;"></i>
-                                                                    {% block writtenWorkTemplateButtonText %}{% endblock writtenWorkTemplateButtonText %}
+                                                                    {{ button_text }} Template
                                                                 </button>
                                                             </span>
                                                         </div>
@@ -86,12 +86,12 @@
 
                                             <div class="row">
                                                 <div class="col-xs-12">
-                                                    <a href="{% block urlToEditorWithProblemSetsTemplateParameter %}{% endblock urlToEditorWithProblemSetsTemplateParameter %}">
+                                                    <a href="{% url list_level problem_sets_policy_template.pk %}">
                                                         <div style="position: relative">
                                                             <span class="icon-input-btn">
                                                                 <button value="Choose Problem Sets Template" class="btn btn-primary btn-md pull-right" type="submit" name="commit">
                                                                     <i class="fa fa-file-powerpoint-o" style="font-size: 1.3em; color: white;"></i>
-                                                                    {% block problemSetsTemplateButtonText %}{% endblock problemSetsTemplateButtonText %}
+                                                                    {{ button_text }} Template
                                                                 </button>
                                                             </span>
                                                         </div>
@@ -112,7 +112,7 @@
 
                                             <div class="row">
                                                 <div class="col-xs-12">
-                                                    <a href="{% block urlToEditorWithCollaborationProhibitedTemplateParameter %}{% endblock urlToEditorWithCollaborationProhibitedTemplateParameter %}">
+                                                    <a href="{% url list_level collaboration_prohibited_policy_template.pk %}">
                                                         <div style="position: relative">
                                                             <span class="icon-input-btn">
                                                                 <button value="Choose Collaboration Prohibited Template" class="btn btn-primary btn-md pull-right" type="submit" name="commit">
@@ -120,7 +120,7 @@
                                                                         <i class="fa fa-file-o" style="font-size: 1.3em; color: white;"></i>
                                                                         <i class="fa fa-times" style="position: absolute; font-size: .75em; color: white; margin-left: -1.6em; margin-top: .68em;"></i>
                                                                     </span>
-                                                                    {% block collaborationProhibitedTemplateButtonText %}{% endblock collaborationProhibitedTemplateButtonText %}
+                                                                    {{ button_text }} Template
                                                                 </button>
                                                             </span>
                                                         </div>
