@@ -1,44 +1,27 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-        <title>Academic Integrity Policy Wizard</title>
+{% extends 'base.html' %}
 
-        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+{% block content %}
+  <div class="row">
+      <div class="col-xs-12" style="padding-right: 20px; padding-left: 30px">
+          <div class="row">
+              <div class="col-xs-12 page-header">
+                  <h1>Academic Integrity Policy Wizard</h1>
+              </div>
+          </div>
+      </div>
+  </div>
 
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <br>
+  <div class="row">
+      <div class="col-xs-12 col-md-6">
+          <div class="alert alert-info" role="alert">
+              <p><strong>Something is wrong.</strong></p>
+              <p>Your session may have timed out. Try refreshing your browser.</p>
+              <p>If that fails there may be an issue with the Consumer Key or Shared Secret
+                used to install this app.</p>
+              <p>Contact atg@fas.harvard.edu if issues persist.</p>
+          </div>
+      </div>
+  </div>
 
-</head>
-  <body>
-
-
-        <div class="row">
-
-            <div class="col-xs-12" style="padding-right: 20px; padding-left: 30px">
-
-                <div class="row">
-                    <div class="col-xs-12 page-header">
-                        <h1>Academic Integrity Policy Wizard</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <br>
-        <div class="row">
-            <div class="col-xs-12 col-md-6">
-                <div class="alert alert-info" role="alert">
-                    <p><strong>Something is wrong.</strong></p>
-                    <p>Your session may have timed out. Try refreshing your browser.</p>
-                    <p>If that fails there may be an issue with the Consumer Key or Shared Secret
-                     used to install this app.</p>
-                     <p>Contact atg@fas.harvard.edu if issues persist.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Bootstrap JS -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/docs.min.js"></script>
-  </body>
-</html>
+{% endblock content %}

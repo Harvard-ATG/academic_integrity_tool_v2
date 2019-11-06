@@ -10,51 +10,20 @@
     <h4>Instructions for Faculty</h4>
     <br />
     <ul>
-        <li>As stated in <a href="http://infoforfaculty.fas.harvard.edu/" target="_new" title="Information for Faculty">Information for Faculty</a>: “It is essential that instructors set out carefully in writing
+        <li>As stated in <a href="http://infoforfaculty.fas.harvard.edu/" target="_blank" title="Information for Faculty">Information for Faculty</a>: “It is essential that instructors set out carefully in writing
             and at the outset of a course or course assignment the extent of permissible student collaboration
             in the preparation of papers, computer programs, or examinations. Students must assume that collaboration
             in the completion of assignments is permitted unless explicitly prohibited by the instructor. Students
             should be reminded that they are expected to acknowledge any collaboration and its extent in all
             submitted work.”</li>
         <br />
-        <li>Reviewing the the <a href="http://honor.fas.harvard.edu/" target="_new">Honor Code website</a> may be of assistance as you determine your policy,
-            particularly the sections on the <a href="http://honor.fas.harvard.edu/affirmation" target="_new">Affirmation</a> and <a href="http://honor.fas.harvard.edu/teaching-integrity" target="_new">Teaching With Integrity</a>.</li>
+        <li>Reviewing the the <a href="http://honor.fas.harvard.edu/" target="_blank">Honor Code website</a> may be of assistance as you determine your policy,
+            particularly the sections on the <a href="http://honor.fas.harvard.edu/affirmation" target="_blank">Affirmation</a> and <a href="http://honor.fas.harvard.edu/teaching-integrity" target="_blank">Teaching With Integrity</a>.</li>
         <br />
         <li><strong>To prepare an academic integrity policy for this class, choose 1 of the templates provided below and edit as appropriate. Also provided is an option to
             write your own policy from scratch.</strong></li>
     </ul>
 {% endblock instructions %}
-
-
-{% block urlToEditorWithWrittenWorkTemplateParameter %}
-    {% url 'instructor_level_policy_edit' written_work_policy_template.pk %}
-{% endblock urlToEditorWithWrittenWorkTemplateParameter %}
-
-
-{% block writtenWorkTemplateButtonText %}
-    Choose Template
-{% endblock writtenWorkTemplateButtonText %}
-
-
-{% block urlToEditorWithProblemSetsTemplateParameter %}
-    {% url 'instructor_level_policy_edit' problem_sets_policy_template.pk %}
-{% endblock urlToEditorWithProblemSetsTemplateParameter %}
-
-
-{% block problemSetsTemplateButtonText %}
-    Choose Template
-{% endblock problemSetsTemplateButtonText %}
-
-
-{% block urlToEditorWithCollaborationProhibitedTemplateParameter %}
-    {% url 'instructor_level_policy_edit' collaboration_prohibited_policy_template.pk %}
-{% endblock urlToEditorWithCollaborationProhibitedTemplateParameter %}
-
-
-{% block collaborationProhibitedTemplateButtonText %}
-    Choose Template
-{% endblock collaborationProhibitedTemplateButtonText %}
-
 
 {% block customizePolicyBlock %}
     <div class="panel panel-default">
@@ -73,10 +42,10 @@
                                 You should outline explicitly what students may or may not discuss with their classmates outside the classroom and how best to capture those discussions on formal work submitted for course credit.
                             </li>
                             <li>
-                                You may want to include citation resources for students including the <a href="http://usingsources.fas.harvard.edu/" title="Harvard Guide to Using Sources">Harvard Guide to Using Sources</a>.
+                                You may want to include citation resources for students including the <a href="http://usingsources.fas.harvard.edu/" target="_blank" title="Harvard Guide to Using Sources">Harvard Guide to Using Sources</a>.
                             </li>
                             <li>
-                                You may want to include information about conforming to the College’s policies on academic integrity found in the <a href="http://handbook.fas.harvard.edu/" title="Harvard College Handbook for Students">Harvard College Handbook for Students</a>.
+                                You may want to include information about conforming to the College’s policies on academic integrity found in the <a href="http://handbook.fas.harvard.edu/" target="_blank" title="Harvard College Handbook for Students">Harvard College Handbook for Students</a>.
                             </li>
                         </ol>
                     </div>

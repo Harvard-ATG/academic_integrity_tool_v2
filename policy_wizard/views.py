@@ -95,9 +95,13 @@ def policy_templates_list_view(request):
         if role==roles.ADMINISTRATOR:
             #Django template to use
             template_to_use = 'admin_level_template_list.html'
+            list_level = 'admin_level_template_edit'
+            button_text = 'Update'
         else: #role=='Instructor'
             # Django template to use
             template_to_use = 'instructor_level_template_list.html'
+            list_level = 'instructor_level_policy_edit'
+            button_text = 'Choose'
 
         #Render the policy templates
         return render(
@@ -107,7 +111,9 @@ def policy_templates_list_view(request):
                 'written_work_policy_template': written_work_policy_template,
                 'problem_sets_policy_template': problem_sets_policy_template,
                 'collaboration_prohibited_policy_template': collaboration_prohibited_policy_template,
-                'custom_policy_template': custom_policy_template
+                'custom_policy_template': custom_policy_template,
+                'list_level': list_level,
+                'button_text': button_text
             })
 
     else: #i.e. 'Student'
