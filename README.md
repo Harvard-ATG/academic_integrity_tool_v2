@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/Harvard-ATG/academic_integrity_tool_v2.svg?branch=master)](https://travis-ci.org/Harvard-ATG/academic_integrity_tool_v2)
+![Coverage Status](./coverage.svg)
 
 # Academic Integrity Policy Tool (V2)
 
@@ -70,3 +71,12 @@ $ docker-compose run web python manage.py test
 ```
 $ python manage.py loaddata --app policy_wizard boilerplate_policy_templates.yml
 ```
+
+
+### Update the Coverage Badge ###
+
+```
+$ coverage run --source='.' manage.py test
+$ coverage-badge -f -o coverage.svg
+```
+- Then commit and push the changes!
