@@ -8,7 +8,7 @@ class NewPolicyForm(ModelForm):
         model = Policies
         fields = ['body']
         labels = {
-            'body': _(''),
+            'body': _('Policy Text'),
         }
         widgets = {
             'body': Textarea(attrs={'cols': 80, 'rows': 1000}),
@@ -19,7 +19,7 @@ class PolicyTemplateForm(ModelForm):
         model = PolicyTemplates
         fields = ['body']
         labels = {
-            'body': _(''),
+            'body': _('Policy Text'),
         }
         widgets = {
             'body': Textarea(attrs={'cols': 80, 'rows': 10}),
