@@ -1,4 +1,4 @@
-Django==2.0
+Django==2.2.13
 # Postgres
 psycopg2==2.7.3.2
 # Redis Cache
