@@ -8,7 +8,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, HttpResponseServerError
 from django.views.decorators.csrf import csrf_exempt
 from .models import PolicyTemplates, Policies
-from .utils import role_identifier, validate_request
+from .utils import role_identifier, validate_request, inactivate_active_policies
 from .forms import PolicyTemplateForm, NewPolicyForm
 from django.views.decorators.clickjacking import xframe_options_exempt
 from .decorators import require_role_administrator, require_role_instructor, require_role_student
@@ -82,8 +82,8 @@ def policy_templates_list_view(request):
                 return render(request, 'instructor_active_policy.html', {'active_policy': active_policy})
             except Policies.MultipleObjectsReturned: #If multiple active policies exist (which should never happen)...
                 # ... return the latest active policy
-                
-                return HttpResponseServerError("Something went wrong #@$%. Contact the site admin at " + settings.SECURE_SETTINGS['help_email_address'])
+                active_policy = Policies.objects.filter(course_id=request.session['course_id'], is_active=True).latest('created_at')
+                return render(request, 'instructor_active_policy.html', {'active_policy': active_policy})
             except Policies.DoesNotExist: #If no active policy exists ...
                 pass
 
@@ -179,6 +179,10 @@ def instructor_level_policy_edit_view(request, pk):
     if request.method == 'POST':
         form = NewPolicyForm(request.POST)
         if form.is_valid():
+            # First, inactivate any active policies for the course that may be present in the database ...
+            # (Ensures there is ever only one active policy for the course)
+            inactivate_active_policies(request)
+            # ... then create a new active policy for the course
             finalPolicy = Policies.objects.create(
                 course_id=request.session['course_id'],
                 context_id=request.session['context_id'],
@@ -213,7 +217,12 @@ def edit_active_policy(request, pk):
     if request.method == 'POST':
         form = NewPolicyForm(request.POST)
         if form.is_valid():
+            # First, inactivate any active policies for the course that may be present in the database ...
+            # (Ensures there is ever only one active policy for the course)
+            inactivate_active_policies(request)
+            # ... then mark the edited policy as active, and save
             policy_to_edit.body = form.cleaned_data.get('body')
+            policy_to_edit.is_active=True
             policy_to_edit.save()
             return redirect('instructor_active_policy', pk=policy_to_edit.pk)
     else:
@@ -222,16 +231,13 @@ def edit_active_policy(request, pk):
 
 @xframe_options_exempt
 @require_role_instructor
-def instructor_inactivate_old_prepare_new_view(request, pk):
+def instructor_inactivate_policies_view(request):
     '''
-    From the published policy page, this view enables an instructor to inactivate an already published policy and prepare
-    a new course policy from the list of policy templates.
+    Enables an instructor to inactivate an already published policy (including any other active policies that may 
+    be present) and redirects to the list of policy templates
     '''
-    policy_to_edit = Policies.objects.get(pk=pk)
-    #Inactivate old policy
-    policy_to_edit.is_active = False
-    policy_to_edit.save()
-    #Redirect to list of templates
+    inactivate_active_policies(request)
+    # Redirect to list of templates
     return redirect('policy_templates_list')
 
 @xframe_options_exempt
@@ -248,4 +254,6 @@ def student_active_policy_view(request):
     except Policies.DoesNotExist: #If no active policy exists ...
         return HttpResponse("There is no published academic integrity policy in record for this course.")
     except Policies.MultipleObjectsReturned: #If multiple active policies present (which should never happen) ...
-        return HttpResponseServerError("Something went wrong #@$%. Contact the site admin at " + settings.SECURE_SETTINGS['help_email_address'])
+        # ... return the latest active policy
+        active_policy = Policies.objects.filter(course_id=request.session['course_id'], is_active=True).latest('created_at')
+        return render(request, 'instructor_active_policy.html', {'active_policy': active_policy})

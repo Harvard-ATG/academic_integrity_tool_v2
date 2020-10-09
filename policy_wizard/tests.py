@@ -159,7 +159,7 @@ class RoleAndPermissionTests(TestCase):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.studentSession)
         with self.assertRaises(PermissionDenied):
-            views.instructor_inactivate_old_prepare_new_view(request, self.active_policy.pk)
+            views.instructor_inactivate_policies_view(request)
 
     def testStudentDeniedAdminTemplateEditView(self):
         request = self.factory.get('policy_templates_list')
@@ -224,7 +224,7 @@ class RoleAndPermissionTests(TestCase):
     def testInstructorAllowedInactivateOldPublishNewView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.instructorSession)
-        response = views.instructor_inactivate_old_prepare_new_view(request, self.active_policy.pk)
+        response = views.instructor_inactivate_policies_view(request)
         self.assertEquals(response.status_code, 302)
 
     def testInstructorDeniedAdminUpdatedTemplateView(self):
@@ -261,7 +261,7 @@ class RoleAndPermissionTests(TestCase):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.administratorSession)
         with self.assertRaises(PermissionDenied):
-            views.instructor_inactivate_old_prepare_new_view(request, self.active_policy.pk)
+            views.instructor_inactivate_policies_view(request)
 
     def testAdministratorDeniedStudentActivePolicyView(self):
         request = self.factory.get('policy_templates_list')
