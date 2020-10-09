@@ -56,7 +56,7 @@ def process_lti_launch_request_view(request):
         if role==roles.ADMINISTRATOR or role==roles.INSTRUCTOR:
             return redirect('policy_templates_list')
         elif role==roles.STUDENT:
-            return redirect('student_published_policy')
+            return redirect('student_active_policy')
     else: #if not typical lti launch or if request is not valid ...
         raise PermissionDenied
 
@@ -76,13 +76,15 @@ def policy_templates_list_view(request):
     if role==roles.INSTRUCTOR or role==roles.ADMINISTRATOR:
 
         if role==roles.INSTRUCTOR:
-            try: #If there is an active published policy for this course, get it. (Only 1 active published policy expected.)
-                published_policy = Policies.objects.get(course_id=request.session['course_id'], is_active=True)
-                # Render the active published policy
-                return render(request, 'instructor_published_policy.html', {'published_policy': published_policy})
-            except Policies.MultipleObjectsReturned: #If multiple active published policies exist (which should never happen)...
+            try: #If there is an active policy for this course, get it. (Only 1 active policy expected.)
+                active_policy = Policies.objects.get(course_id=request.session['course_id'], is_active=True)
+                # Render the active policy
+                return render(request, 'instructor_active_policy.html', {'active_policy': active_policy})
+            except Policies.MultipleObjectsReturned: #If multiple active policies exist (which should never happen)...
+                # ... return the latest active policy
+                
                 return HttpResponseServerError("Something went wrong #@$%. Contact the site admin at " + settings.SECURE_SETTINGS['help_email_address'])
-            except Policies.DoesNotExist: #If no active published policy exists ...
+            except Policies.DoesNotExist: #If no active policy exists ...
                 pass
 
 
@@ -187,23 +189,23 @@ def instructor_level_policy_edit_view(request, pk):
                 is_active=True,
             )
 
-            return redirect('instructor_published_policy', pk=finalPolicy.pk)
+            return redirect('instructor_active_policy', pk=finalPolicy.pk)
     else:
         form = NewPolicyForm(initial={'body': policy_template.body})
     return render(request, 'instructor_level_policy_edit.html', {'policy_template': policy_template, 'form': form})
 
 @xframe_options_exempt
 @require_role_instructor
-def instructor_published_policy(request, pk):
+def instructor_active_policy(request, pk):
     '''
     Displays to the instructor the policy they just prepared
     '''
     active_policy = Policies.objects.get(pk=pk)
-    return render(request, 'instructor_published_policy.html', {'active_policy': active_policy})
+    return render(request, 'instructor_active_policy.html', {'active_policy': active_policy})
 
 @xframe_options_exempt
 @require_role_instructor
-def edit_published_policy(request, pk):
+def edit_active_policy(request, pk):
     '''
     Provides an instructor the capability to edit a policy they already published
     '''
@@ -213,7 +215,7 @@ def edit_published_policy(request, pk):
         if form.is_valid():
             policy_to_edit.body = form.cleaned_data.get('body')
             policy_to_edit.save()
-            return redirect('instructor_published_policy', pk=policy_to_edit.pk)
+            return redirect('instructor_active_policy', pk=policy_to_edit.pk)
     else:
         form = NewPolicyForm(initial={'body': policy_to_edit.body})
     return render(request, 'instructor_level_policy_edit.html', {'policy_template': policy_to_edit, 'form': form})
@@ -234,7 +236,7 @@ def instructor_inactivate_old_prepare_new_view(request, pk):
 
 @xframe_options_exempt
 @require_role_student
-def student_published_policy_view(request):
+def student_active_policy_view(request):
     '''
     Displays to the student the policy for the course if one exists
     '''
@@ -242,7 +244,7 @@ def student_published_policy_view(request):
         # If an active policy exists (Only 1 expected)...
         active_policy = Policies.objects.get(course_id=request.session['course_id'], is_active=True)
         # Render the policy
-        return render(request, 'student_published_policy.html', {'active_policy': active_policy})
+        return render(request, 'student_active_policy.html', {'active_policy': active_policy})
     except Policies.DoesNotExist: #If no active policy exists ...
         return HttpResponse("There is no published academic integrity policy in record for this course.")
     except Policies.MultipleObjectsReturned: #If multiple active policies present (which should never happen) ...
