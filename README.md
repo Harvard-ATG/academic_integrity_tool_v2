@@ -36,7 +36,7 @@ This is a django application that enables instructors to prepare academic integr
 * On the form, on the "Configuration Type" drop down menu, select "Paste XML". The form structure will update accordingly.
 * In the ‘Name’ field, type "Academic Integrity Tool", without the quotation marks.
 * For the 'Consumer Key' and 'Shared Secret' fields, from a new CLI window, access and use the values in `academic_integrity_tool_v2/academic_integrity_tool_v2/settings/secure.py`
-* On a new browser tab, go to 'http://localhost:8000/lti/config.xml'
+* On a new browser tab, go to 'http://localhost:8000/lti/config'
 * Copy the XML output
 * Go back to your browser tab with the "Add App" form, In the ‘XML Configuration’ field, paste in the XML output you copied in the step above.
 * Change the 5th-to-last line of the XML you just pasted in from
