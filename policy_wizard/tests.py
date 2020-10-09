@@ -129,8 +129,8 @@ class RoleAndPermissionTests(TestCase):
             'role': 'Administrator',
             'course_id': 1
         }
-        self.policyTemplates = create_default_policy_templates()
-        self.publishedPolicy = Policies.objects.create(
+        self.policy_templates = create_default_policy_templates()
+        self.active_policy = Policies.objects.create(
             context_id=self.context_id,
             is_published=True,
             is_active=True,
@@ -140,8 +140,8 @@ class RoleAndPermissionTests(TestCase):
         )
 
     def tearDown(self):
-        for policyTemplate in self.policyTemplates:
-            policyTemplate.delete()
+        for policy_template in self.policy_templates:
+            policy_template.delete()
 
     def testStudentDeniedPolicyTemplatesListView(self):
         request = self.factory.get('policy_templates_list')
@@ -153,51 +153,51 @@ class RoleAndPermissionTests(TestCase):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.studentSession)
         with self.assertRaises(PermissionDenied):
-            views.instructor_level_policy_edit_view(request, self.policyTemplates[0].pk)
+            views.instructor_level_policy_edit_view(request, self.policy_templates[0].pk)
 
     def testStudentDeniedInactivatePolicyView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.studentSession)
         with self.assertRaises(PermissionDenied):
-            views.instructor_inactivate_old_prepare_new_view(request, self.publishedPolicy.pk)
+            views.instructor_inactivate_old_prepare_new_view(request, self.active_policy.pk)
 
     def testStudentDeniedAdminTemplateEditView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.studentSession)
         with self.assertRaises(PermissionDenied):
-            views.admin_level_template_edit_view(request, self.policyTemplates[0].pk)
+            views.admin_level_template_edit_view(request, self.policy_templates[0].pk)
 
-    def testStudentDeniedInstructorPublishedPolicyView(self):
+    def testStudentDeniedInstructorActivePolicyView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.studentSession)
         with self.assertRaises(PermissionDenied):
-            views.instructor_published_policy(request, self.publishedPolicy.pk)
+            views.instructor_published_policy(request, self.active_policy.pk)
 
-    def testStudentDeniedEditPublishedPolicyView(self):
+    def testStudentDeniedEditActivePolicyView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.studentSession)
         with self.assertRaises(PermissionDenied):
-            views.edit_published_policy(request, self.publishedPolicy.pk)
+            views.edit_published_policy(request, self.active_policy.pk)
 
     def testStudentDeniedAdminUpdatedTemplateView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.studentSession)
         with self.assertRaises(PermissionDenied):
-            views.admin_updated_template_view(request, self.policyTemplates[0].pk)
+            views.admin_updated_template_view(request, self.policy_templates[0].pk)
 
     def testStudentDeniedAdminEditUpdatedTemplateView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.studentSession)
         with self.assertRaises(PermissionDenied):
-            views.admin_edit_updated_template_view(request, self.policyTemplates[0].pk)
+            views.admin_edit_updated_template_view(request, self.policy_templates[0].pk)
 
     def testInstructorDeniedAdminTemplateEditView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.instructorSession)
         with self.assertRaises(PermissionDenied):
-            views.admin_level_template_edit_view(request, self.policyTemplates[0].pk)
+            views.admin_level_template_edit_view(request, self.policy_templates[0].pk)
 
-    def testInstructorDeniedStudentPublishedPolicyView(self):
+    def testInstructorDeniedStudentActivePolicyView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.instructorSession)
         with self.assertRaises(PermissionDenied):
@@ -209,61 +209,61 @@ class RoleAndPermissionTests(TestCase):
         response = views.policy_templates_list_view(request)
         self.assertEquals(response.status_code, 200)
 
-    def testInstructorAllowedInstructorPublishedPolicyView(self):
+    def testInstructorAllowedInstructorActivePolicyView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.instructorSession)
-        response = views.instructor_published_policy(request, self.publishedPolicy.pk)
+        response = views.instructor_published_policy(request, self.active_policy.pk)
         self.assertEquals(response.status_code, 200)
 
-    def testInstructorAllowedEditPublishedPolicyView(self):
+    def testInstructorAllowedEditActivePolicyView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.instructorSession)
-        response = views.edit_published_policy(request, self.publishedPolicy.pk)
+        response = views.edit_published_policy(request, self.active_policy.pk)
         self.assertEquals(response.status_code, 200)
 
     def testInstructorAllowedInactivateOldPublishNewView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.instructorSession)
-        response = views.instructor_inactivate_old_prepare_new_view(request, self.publishedPolicy.pk)
+        response = views.instructor_inactivate_old_prepare_new_view(request, self.active_policy.pk)
         self.assertEquals(response.status_code, 302)
 
     def testInstructorDeniedAdminUpdatedTemplateView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.instructorSession)
         with self.assertRaises(PermissionDenied):
-            views.admin_updated_template_view(request, self.policyTemplates[0].pk)
+            views.admin_updated_template_view(request, self.policy_templates[0].pk)
 
     def testInstructorDeniedAdminEditUpdatedTemplateView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.instructorSession)
         with self.assertRaises(PermissionDenied):
-            views.admin_edit_updated_template_view(request, self.policyTemplates[0].pk)
+            views.admin_edit_updated_template_view(request, self.policy_templates[0].pk)
 
     def testAdministratorDeniedInstructorPolicyEditView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.administratorSession)
         with self.assertRaises(PermissionDenied):
-            views.instructor_level_policy_edit_view(request, self.policyTemplates[0].pk)
+            views.instructor_level_policy_edit_view(request, self.policy_templates[0].pk)
 
-    def testAdministratorDeniedInstructorPublishedPolicyView(self):
+    def testAdministratorDeniedInstructorActivePolicyView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.administratorSession)
         with self.assertRaises(PermissionDenied):
-            views.instructor_published_policy(request, self.publishedPolicy.pk)
+            views.instructor_published_policy(request, self.active_policy.pk)
 
-    def testAdministratorDeniedEditPublishedPolicyView(self):
+    def testAdministratorDeniedEditActivePolicyView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.administratorSession)
         with self.assertRaises(PermissionDenied):
-            views.edit_published_policy(request, self.publishedPolicy.pk)
+            views.edit_published_policy(request, self.active_policy.pk)
 
     def testAdministratorDeniedInactivatePolicyView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.administratorSession)
         with self.assertRaises(PermissionDenied):
-            views.instructor_inactivate_old_prepare_new_view(request, self.publishedPolicy.pk)
+            views.instructor_inactivate_old_prepare_new_view(request, self.active_policy.pk)
 
-    def testAdministratorDeniedStudentPublishedPolicyView(self):
+    def testAdministratorDeniedStudentActivePolicyView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.administratorSession)
         with self.assertRaises(PermissionDenied):
@@ -272,18 +272,18 @@ class RoleAndPermissionTests(TestCase):
     def testAdministratorAllowedAdminTemplateEditView(self):
         request = self.factory.get('policy_templates_list')
         annotate_request_with_session(request, self.administratorSession)
-        response = views.admin_level_template_edit_view(request, self.policyTemplates[0].pk)
+        response = views.admin_level_template_edit_view(request, self.policy_templates[0].pk)
         self.assertEquals(response.status_code, 200)
 
 class AdministratorRoleTests(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
-        self.policyTemplates = create_default_policy_templates()
+        self.policy_templates = create_default_policy_templates()
 
     def tearDown(self):
-        for policyTemplate in self.policyTemplates:
-            policyTemplate.delete()
+        for policy_template in self.policy_templates:
+            policy_template.delete()
 
     def testPolicyTemplatesListView(self):
         request = self.factory.get('policy_templates_list')
@@ -298,7 +298,7 @@ class InstructorRoleTests(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
-        self.policyTemplates = create_default_policy_templates()
+        self.policy_templates = create_default_policy_templates()
         self.instructorSession = {
             'context_id': 'tlhzlqzolkhapmnoukgm',
             'lis_person_sourcedid': '123456789',
@@ -307,8 +307,8 @@ class InstructorRoleTests(TestCase):
         }
 
     def tearDown(self):
-        for policyTemplate in self.policyTemplates:
-            policyTemplate.delete()
+        for policy_template in self.policy_templates:
+            policy_template.delete()
 
     def testPolicyTemplatesListView(self):
         request = self.factory.get('policy_templates_list')
@@ -318,7 +318,7 @@ class InstructorRoleTests(TestCase):
 
     def testPublishNewPolicy(self):
         postparams = {'body': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean in volutpat purus.'}
-        policy_template_id = self.policyTemplates[3].pk
+        policy_template_id = self.policy_templates[3].pk
         request = self.factory.post('instructor_level_policy_edit', postparams)
         annotate_request_with_session(request, self.instructorSession)
         response = views.instructor_level_policy_edit_view(request, policy_template_id)
@@ -339,23 +339,23 @@ class StudentRoleTests(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
-        self.policyTemplates = create_default_policy_templates()
+        self.policy_templates = create_default_policy_templates()
 
         self.lis_person_sourcedid='123456789',
 
-        self.studentSessionWithPublishedPolicy = {
+        self.studentSessionWithActivePolicy = {
             'context_id': 'context123',
             'role': 'Student',
             'course_id': 1
         }
-        self.studentSessionNoPublishedPolicy = {
+        self.studentSessionNoActivePolicy = {
             'context_id': 'context456',
             'role': 'Student',
             'course_id': 2
         }
 
-        self.publishedPolicy = Policies.objects.create(
-            context_id=self.studentSessionWithPublishedPolicy['context_id'],
+        self.active_policy = Policies.objects.create(
+            context_id=self.studentSessionWithActivePolicy['context_id'],
             published_by=self.lis_person_sourcedid,
             is_published=True,
             is_active=True,
@@ -364,19 +364,19 @@ class StudentRoleTests(TestCase):
         )
 
     def tearDown(self):
-        for policyTemplate in self.policyTemplates:
-            policyTemplate.delete()
+        for policy_template in self.policy_templates:
+            policy_template.delete()
 
-    def testStudentPublishedPolicyView(self):
+    def testStudentActivePolicyView(self):
         request = self.factory.get('student_published_policy')
-        annotate_request_with_session(request, self.studentSessionWithPublishedPolicy)
+        annotate_request_with_session(request, self.studentSessionWithActivePolicy)
         response = views.student_published_policy_view(request)
         self.assertEquals(response.status_code, 200)
-        self.assertInHTML(self.publishedPolicy.body, response.content.decode("utf-8"))
+        self.assertInHTML(self.active_policy.body, response.content.decode("utf-8"))
 
-    def testStudentNoPublishedPolicyView(self):
+    def testStudentNoActivePolicyView(self):
         request = self.factory.get('student_published_policy')
-        annotate_request_with_session(request, self.studentSessionNoPublishedPolicy)
+        annotate_request_with_session(request, self.studentSessionNoActivePolicy)
         response = views.student_published_policy_view(request)
         self.assertEquals(response.status_code, 200)
         self.assertInHTML('There is no published academic integrity policy in record for this course.', response.content.decode("utf-8"))

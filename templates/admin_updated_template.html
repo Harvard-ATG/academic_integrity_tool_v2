@@ -35,13 +35,13 @@
                 <div class="col-xs-12">
                     <div class="row">
                         <div class="col-xs-12">
-                            <h3><span class="label label-primary">{{ updatedTemplate.name }}</span></h3>
+                            <h3><span class="label label-primary">{{ updated_template.name }}</span></h3>
                         </div>
                     </div>
                     <br />
                     <div class="row">
                         <div class="col-sm-12">
-                            {{ updatedTemplate.body|safe }}
+                            {{ updated_template.body|safe }}
                         </div>
                     </div>
 
@@ -58,7 +58,7 @@
                             </a>
                         </div>
                         <div class="col-xs-4">
-                            <a class="btn btn-primary pull-right" href="{% url 'admin_edit_updated_template' updatedTemplate.pk %}" role="button">
+                            <a class="btn btn-primary pull-right" href="{% url 'admin_edit_updated_template' updated_template.pk %}" role="button">
                                 <i class="fa fa-pencil-alt fa-flip-horizontal"></i>
                                 Edit
                             </a>

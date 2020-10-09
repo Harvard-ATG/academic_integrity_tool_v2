@@ -77,9 +77,9 @@ def policy_templates_list_view(request):
 
         if role==roles.INSTRUCTOR:
             try: #If there is an active published policy for this course, get it. (Only 1 active published policy expected.)
-                publishedPolicy = Policies.objects.get(course_id=request.session['course_id'], is_active=True)
+                published_policy = Policies.objects.get(course_id=request.session['course_id'], is_active=True)
                 # Render the active published policy
-                return render(request, 'instructor_published_policy.html', {'publishedPolicy': publishedPolicy})
+                return render(request, 'instructor_published_policy.html', {'published_policy': published_policy})
             except Policies.MultipleObjectsReturned: #If multiple active published policies exist (which should never happen)...
                 return HttpResponseServerError("Something went wrong #@$%. Contact the site admin at " + settings.SECURE_SETTINGS['help_email_address'])
             except Policies.DoesNotExist: #If no active published policy exists ...
@@ -126,17 +126,17 @@ def admin_level_template_edit_view(request, pk):
     '''
     Presents the text editor to an administrator so they can edit and update a policy template
     '''
-    templateToUpdate = get_object_or_404(PolicyTemplates, pk=pk)
+    template_to_update = get_object_or_404(PolicyTemplates, pk=pk)
 
     if request.method == 'POST':
         form = PolicyTemplateForm(request.POST)
         if form.is_valid():
-            templateToUpdate.body = form.cleaned_data.get('body')
-            templateToUpdate.save()
-            return redirect('admin_updated_template', pk=templateToUpdate.pk)
+            template_to_update.body = form.cleaned_data.get('body')
+            template_to_update.save()
+            return redirect('admin_updated_template', pk=template_to_update.pk)
     else:
-        form = PolicyTemplateForm(initial={'body': templateToUpdate.body})
-    return render(request, 'admin_level_template_edit.html', {'form': form, 'templateToUpdate': templateToUpdate})
+        form = PolicyTemplateForm(initial={'body': template_to_update.body})
+    return render(request, 'admin_level_template_edit.html', {'form': form, 'template_to_update': template_to_update})
 
 @xframe_options_exempt
 @require_role_administrator
@@ -144,8 +144,8 @@ def admin_updated_template_view(request, pk):
     '''
     Present the updated template to the administrator
     '''
-    updatedTemplate = PolicyTemplates.objects.get(pk=pk)
-    return render(request, 'admin_updated_template.html', {'updatedTemplate': updatedTemplate})
+    updated_template = PolicyTemplates.objects.get(pk=pk)
+    return render(request, 'admin_updated_template.html', {'updated_template': updated_template})
 
 @xframe_options_exempt
 @require_role_administrator
@@ -153,17 +153,17 @@ def admin_edit_updated_template_view(request, pk):
     '''
     Present administrator with editor so they can edit a template they just updated
     '''
-    templateToUpdate = get_object_or_404(PolicyTemplates, pk=pk)
+    template_to_update = get_object_or_404(PolicyTemplates, pk=pk)
 
     if request.method == 'POST':
         form = PolicyTemplateForm(request.POST)
         if form.is_valid():
-            templateToUpdate.body = form.cleaned_data.get('body')
-            templateToUpdate.save()
-            return redirect('admin_updated_template', pk=templateToUpdate.pk)
+            template_to_update.body = form.cleaned_data.get('body')
+            template_to_update.save()
+            return redirect('admin_updated_template', pk=template_to_update.pk)
     else:
-        form = PolicyTemplateForm(initial={'body': templateToUpdate.body})
-    return render(request, 'admin_edit_updated_template.html', {'form': form, 'templateToUpdate': templateToUpdate})
+        form = PolicyTemplateForm(initial={'body': template_to_update.body})
+    return render(request, 'admin_edit_updated_template.html', {'form': form, 'template_to_update': template_to_update})
 
 @xframe_options_exempt
 @require_role_instructor
@@ -172,7 +172,7 @@ def instructor_level_policy_edit_view(request, pk):
     Presents the text editor to an instructor so they can edit and publish a policy
     '''
 
-    policyTemplate = get_object_or_404(PolicyTemplates, pk=pk)
+    policy_template = get_object_or_404(PolicyTemplates, pk=pk)
 
     if request.method == 'POST':
         form = NewPolicyForm(request.POST)
@@ -181,7 +181,7 @@ def instructor_level_policy_edit_view(request, pk):
                 course_id=request.session['course_id'],
                 context_id=request.session['context_id'],
                 body=form.cleaned_data.get('body'),
-                related_template = policyTemplate,
+                related_template = policy_template,
                 published_by = request.session['lis_person_sourcedid'],
                 is_published = True,
                 is_active=True,
@@ -189,8 +189,8 @@ def instructor_level_policy_edit_view(request, pk):
 
             return redirect('instructor_published_policy', pk=finalPolicy.pk)
     else:
-        form = NewPolicyForm(initial={'body': policyTemplate.body})
-    return render(request, 'instructor_level_policy_edit.html', {'policyTemplate': policyTemplate, 'form': form})
+        form = NewPolicyForm(initial={'body': policy_template.body})
+    return render(request, 'instructor_level_policy_edit.html', {'policy_template': policy_template, 'form': form})
 
 @xframe_options_exempt
 @require_role_instructor
@@ -198,8 +198,8 @@ def instructor_published_policy(request, pk):
     '''
     Displays to the instructor the policy they just prepared
     '''
-    publishedPolicy = Policies.objects.get(pk=pk)
-    return render(request, 'instructor_published_policy.html', {'publishedPolicy': publishedPolicy})
+    active_policy = Policies.objects.get(pk=pk)
+    return render(request, 'instructor_published_policy.html', {'active_policy': active_policy})
 
 @xframe_options_exempt
 @require_role_instructor
@@ -207,16 +207,16 @@ def edit_published_policy(request, pk):
     '''
     Provides an instructor the capability to edit a policy they already published
     '''
-    policyToEdit = Policies.objects.get(pk=pk)
+    policy_to_edit = Policies.objects.get(pk=pk)
     if request.method == 'POST':
         form = NewPolicyForm(request.POST)
         if form.is_valid():
-            policyToEdit.body = form.cleaned_data.get('body')
-            policyToEdit.save()
-            return redirect('instructor_published_policy', pk=policyToEdit.pk)
+            policy_to_edit.body = form.cleaned_data.get('body')
+            policy_to_edit.save()
+            return redirect('instructor_published_policy', pk=policy_to_edit.pk)
     else:
-        form = NewPolicyForm(initial={'body': policyToEdit.body})
-    return render(request, 'instructor_level_policy_edit.html', {'policyTemplate': policyToEdit, 'form': form})
+        form = NewPolicyForm(initial={'body': policy_to_edit.body})
+    return render(request, 'instructor_level_policy_edit.html', {'policy_template': policy_to_edit, 'form': form})
 
 @xframe_options_exempt
 @require_role_instructor
@@ -225,10 +225,10 @@ def instructor_inactivate_old_prepare_new_view(request, pk):
     From the published policy page, this view enables an instructor to inactivate an already published policy and prepare
     a new course policy from the list of policy templates.
     '''
-    policyToEdit = Policies.objects.get(pk=pk)
+    policy_to_edit = Policies.objects.get(pk=pk)
     #Inactivate old policy
-    policyToEdit.is_active = False
-    policyToEdit.save()
+    policy_to_edit.is_active = False
+    policy_to_edit.save()
     #Redirect to list of templates
     return redirect('policy_templates_list')
 
@@ -239,11 +239,11 @@ def student_published_policy_view(request):
     Displays to the student the policy for the course if one exists
     '''
     try:
-        # If an active published policy exists (Only 1 expected)...
-        publishedPolicy = Policies.objects.get(course_id=request.session['course_id'], is_active=True)
+        # If an active policy exists (Only 1 expected)...
+        active_policy = Policies.objects.get(course_id=request.session['course_id'], is_active=True)
         # Render the policy
-        return render(request, 'student_published_policy.html', {'publishedPolicy': publishedPolicy})
-    except Policies.DoesNotExist: #If no active published policy exists ...
+        return render(request, 'student_published_policy.html', {'active_policy': active_policy})
+    except Policies.DoesNotExist: #If no active policy exists ...
         return HttpResponse("There is no published academic integrity policy in record for this course.")
-    except Policies.MultipleObjectsReturned: #If multiple active published policies present (which should never happen) ...
+    except Policies.MultipleObjectsReturned: #If multiple active policies present (which should never happen) ...
         return HttpResponseServerError("Something went wrong #@$%. Contact the site admin at " + settings.SECURE_SETTINGS['help_email_address'])
