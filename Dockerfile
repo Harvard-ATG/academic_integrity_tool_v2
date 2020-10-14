@@ -1,8 +1,6 @@
-FROM python:3-slim
+FROM python:3.6
 WORKDIR /app
 ADD . /app
-RUN apt-get update 
-RUN apt-get install -y build-essential
 RUN pip3 install -r academic_integrity_tool_v2/requirements/local.txt
 EXPOSE 8000
 ENV PYTHONUNBUFFERED 1
