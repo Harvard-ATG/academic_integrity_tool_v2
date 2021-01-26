@@ -20,5 +20,5 @@ class Policies(models.Model):
     is_active = models.SmallIntegerField()
     body = tinymce_models.HTMLField()
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 

@@ -81,7 +81,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': SECURE_SETTINGS.get('db_default_name', 'academic_integrity_tool_v2'),
-        'USER': SECURE_SETTINGS.get('db_default_user', 'postgres'),
+        'USER': SECURE_SETTINGS.get('db_default_user', 'academic_integrity_tool_v2'),
         'PASSWORD': SECURE_SETTINGS.get('db_default_password'),
         'HOST': SECURE_SETTINGS.get('db_default_host', '127.0.0.1'),
         'PORT': SECURE_SETTINGS.get('db_default_port', 5432),  # Default postgres port
