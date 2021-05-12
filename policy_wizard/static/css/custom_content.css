@@ -9,3 +9,39 @@
 .mce-top-part::before {
     box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 }
+
+.custom-label {
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+    background-color: #337ab7;
+}
+
+.custom-alert-info {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+
+#custom-card-header {
+    background-color: white;
+    border-bottom: none;
+    padding: 15px;
+}
+
+#custom-btn {
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
+
+#custom-card-body {
+    padding: none 1rem 1rem 1rem
+}
