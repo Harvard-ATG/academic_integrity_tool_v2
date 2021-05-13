@@ -30,18 +30,20 @@
     border-color: #bce8f1;
 }
 
+#custom-btn-default {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+
 #custom-card-header {
     background-color: white;
     border-bottom: none;
-    padding: 15px;
+    padding: 1em;
 }
 
 #custom-btn {
     color: #fff;
     background-color: #337ab7;
     border-color: #2e6da4;
-}
-
-#custom-card-body {
-    padding: none 1rem 1rem 1rem
 }
