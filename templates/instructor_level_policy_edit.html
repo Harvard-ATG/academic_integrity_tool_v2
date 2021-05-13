@@ -27,7 +27,7 @@
                         <form method="post">
                             {% csrf_token %}
                             {{ form.as_p }}
-                            <a href="{% url 'policy_templates_list' %}" class="btn btn-default btn-lg" role="button" id="custom-btn">Cancel</a>
+                            <a href="{% url 'policy_templates_list' %}" class="btn btn-default btn-lg" role="button" id="custom-btn-default">Cancel</a>
                             <input class="btn-primary pull-right btn-lg" type="submit" value="Publish" id="custom-btn"/>
                         </form>
                     </div>
