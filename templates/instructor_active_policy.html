@@ -59,8 +59,8 @@
                                   click ‘Cancel’ and then access the text editor via the ‘Edit’ button.
                               </div>
                               <div class="modal-footer" style="display: block;">
-                                  <button type="button" class="btn pull-left" data-bs-dismiss="modal" id="custom-btn-default">Cancel</button>
-                                  <a type="button" class="btn btn-primary pull-right" href="{% url 'instructor_inactivate_policies' %}" id="custom-btn">Yes, <strong>DELETE</strong> and start afresh</a>
+                                  <button type="button" class="btn custom-btn-default pull-left" data-bs-dismiss="modal" >Cancel</button>
+                                  <a type="button" class="btn btn-primary custom-btn pull-right" href="{% url 'instructor_inactivate_policies' %}" >Yes, <strong>DELETE</strong> and start afresh</a>
                               </div>
                             </div>
                           </div>
@@ -68,7 +68,7 @@
                     </div>
                 </div>
                 <div class="col-4">
-                    <a class="btn btn-primary pull-right" href="{% url 'edit_active_policy' active_policy.pk %}" role="button"id="custom-btn">
+                    <a class="btn btn-primary custom-btn pull-right" href="{% url 'edit_active_policy' active_policy.pk %}" role="button" >
                         <i class="fa fa-pencil-alt fa-flip-horizontal"></i>
                         Edit
                     </a>

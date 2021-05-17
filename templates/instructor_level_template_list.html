@@ -25,7 +25,7 @@
 
 {% block customizePolicyBlock %}
 <div class="card mb-3">
-    <div class="card-header" id="custom-card-header">
+    <div class="custom-card-header">
         <h3><span class="custom-label">Blank Template</span></h3>
         <div style="margin-top: 1.5em;">
             <p>
@@ -48,7 +48,7 @@
                 <a href="{% url 'instructor_level_policy_edit' custom_policy_template.pk %}">
                     <div style="position: relative">
                         <span class="icon-input-btn">
-                            <button value="Create A Custom Policy" class="btn btn-primary btn-md pull-right" type="submit" name="commit" id="custom-btn">
+                            <button value="Create A Custom Policy" class="btn btn-primary btn-md pull-right custom-btn" type="submit" name="commit" >
                                 <i class="fa fa-file-o" style="font-size: 1.3em; color: white;"></i>
                                 Write From Scratch
                             </button>
