@@ -16,7 +16,7 @@
 
                 <div class="row">
                     <div class="col-xs-12">
-                        <div class="alert alert-info" role="alert">
+                        <div class="alert custom-alert-info" role="alert">
                             <p><strong>Customize your policy on collaboration for this class</strong></p>
                         </div>
                     </div>
@@ -27,8 +27,8 @@
                         <form method="post">
                             {% csrf_token %}
                             {{ form.as_p }}
-                            <a href="{% url 'policy_templates_list' %}" class="btn btn-default btn-lg" role="button">Cancel</a>
-                            <input class="btn-primary pull-right btn-lg" type="submit" value="Publish" />
+                            <a href="{% url 'policy_templates_list' %}" class="btn custom-btn-default btn-lg" role="button" >Cancel</a>
+                            <input class="btn-primary pull-right btn-lg custom-btn" type="submit" value="Publish" />
                         </form>
                     </div>
                 </div>
