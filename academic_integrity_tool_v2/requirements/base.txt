@@ -1,9 +1,9 @@
-Django~=2.2.0
+Django~=3.0.0
 # Postgres
 psycopg2==2.8.6
 # Redis Cache
 redis==2.10.5
-django-redis-cache==1.7.1
+django-redis-cache==3.0.0
 hiredis==0.2.0
 # Django LTI Provider
 django-lti-provider==0.3.1
