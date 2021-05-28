@@ -2,11 +2,11 @@ Django~=3.0.0
 # Postgres
 psycopg2==2.8.6
 # Redis Cache
-redis==2.10.5
+redis==3.5.3
 django-redis-cache==3.0.0
-hiredis==0.2.0
+hiredis==1.1.0
 # Django LTI Provider
 django-lti-provider==0.3.1
 # Django-tinymce
 django-tinymce
-pyyaml==5.1
+pyyaml==5.3.1

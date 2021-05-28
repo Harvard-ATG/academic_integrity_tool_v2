@@ -14,5 +14,6 @@ SECURE_SETTINGS = {
     'db_default_password': 'academic_integrity_tool_v2',
     'CONSUMER_KEY': 'academic_integrity_tool_v2',
     'LTI_SECRET': 'secret',
-    'X_FRAME_OPTIONS': 'ALLOW-FROM https://canvas.dev.tlt.harvard.edu/'
+    'X_FRAME_OPTIONS': 'ALLOW-FROM https://canvas.dev.tlt.harvard.edu/',
+    'help_email_address': 'atg@fas.harvard.edu'
 }

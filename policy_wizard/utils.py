@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.exceptions import PermissionDenied
 from lti_provider.lti import LTI, LTIException
+from .models import Policies
 
 def role_identifier(ext_roles_text):
     """
@@ -51,7 +52,6 @@ def role_identifier(ext_roles_text):
 
     return policy_role
 
-
 # validates LTI request
 def validate_request(request):
 
@@ -65,3 +65,8 @@ def validate_request(request):
     lti_object = LTI('initial', 'any')
 
     return lti_object._verify_request(request)
+
+# Inactivates active policies for a particular course
+def inactivate_active_policies(request):
+    policies_to_inactivate = Policies.objects.filter(course_id=request.session['course_id'], is_active=True)
+    policies_to_inactivate.update(is_active=False)

@@ -30,8 +30,8 @@
             </div>
 
             <div class="row">
-                <div class="col-xs-12 text-justify">
-                    {{ publishedPolicy.body|safe }}
+                <div class="col-xs-12">
+                    {{ active_policy.body|safe }}
                 </div>
             </div>
 
@@ -48,7 +48,7 @@
                             <div class="modal-content">
                               <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="myModalLabel">Warning</h4>
+                                <h2 class="modal-title" id="myModalLabel">Warning</h2>
                               </div>
                               <div class="modal-body">
                                   <strong>Are you sure you want to delete your current published policy and customize a new one from the available templates?</strong>
@@ -59,7 +59,7 @@
                               </div>
                               <div class="modal-footer">
                                   <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-                                  <a type="button" class="btn btn-primary pull-right" href="{% url 'instructor_inactivate_old_prepare_new' publishedPolicy.pk %}">Yes, <strong>DELETE</strong> and start afresh</a>
+                                  <a type="button" class="btn btn-primary pull-right" href="{% url 'instructor_inactivate_policies' %}">Yes, <strong>DELETE</strong> and start afresh</a>
                               </div>
                             </div>
                           </div>
@@ -68,7 +68,7 @@
                 </div>
 
                 <div class="col-xs-4">
-                    <a class="btn btn-primary pull-right" href="{% url 'edit_published_policy' publishedPolicy.pk %}" role="button">
+                    <a class="btn btn-primary pull-right" href="{% url 'edit_active_policy' active_policy.pk %}" role="button">
                         <i class="fa fa-pencil-alt fa-flip-horizontal"></i>
                         Edit
                     </a>

@@ -5,6 +5,12 @@
 
 This is a django application that enables instructors to prepare academic integrity policies from templates made by instructional technologists and publish said policies for students to view. It is an LTI tool that is embedded into and launched from the Canvas LMS.
 
+## Demos of how the tool works
+- [Installation demo](https://harvard.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=36644539-1b68-4ce1-acba-acbe015a1930)
+- [Admin role demo](https://harvard.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=10b3dc66-21b9-4b14-8e18-acbe015a18c2)
+- [Instructor role demo](https://harvard.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=f0216922-3d38-4866-8eca-acbe015a1900)
+- [Student role demo](https://harvard.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=87f82679-774f-4b47-92ee-acbe015a188e)
+
 ## Steps to get it running locally
 
 ### With Vagrant
@@ -34,9 +40,9 @@ This is a django application that enables instructors to prepare academic integr
 * From top horizontal bar, click "Apps"
 * Click the blue "App" button. An "Add App" form should pop up.
 * On the form, on the "Configuration Type" drop down menu, select "Paste XML". The form structure will update accordingly.
-* In the ‘Name’ field, type "Academic Integrity Tool", without the quotation marks.
-* For the 'Consumer Key' and 'Shared Secret' fields, from a new CLI window, access and use the values in `academic_integrity_tool_v2/academic_integrity_tool_v2/settings/secure.py`
-* On a new browser tab, go to 'http://localhost:8000/lti/config.xml'
+* In the ‘Name’ field, enter "Academic Integrity Policy".
+* For the 'Consumer Key' and 'Shared Secret' fields, use the values in `academic_integrity_tool_v2/academic_integrity_tool_v2/settings/secure.py`
+* On a new browser tab, go to 'http://localhost:8000/lti/config'
 * Copy the XML output
 * Go back to your browser tab with the "Add App" form, In the ‘XML Configuration’ field, paste in the XML output you copied in the step above.
 * Change the 5th-to-last line of the XML you just pasted in from
