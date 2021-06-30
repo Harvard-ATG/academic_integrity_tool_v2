@@ -3,15 +3,63 @@
   <head>
     <meta charset="utf-8">
     <title>Academic Integrity Policy Wizard</title>
-
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
       .smaller-h2 {
           font-size: 18px;
       }
+      
       li {
           padding-bottom: 1em;
+      }
+
+      .page-header {
+        padding-bottom: 9px;
+        margin: 40px 0 20px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .custom-label {
+          display: inline;
+          padding: .2em .6em .3em;
+          font-size: 75%;
+          font-weight: 700;
+          line-height: 1;
+          color: #fff;
+          text-align: center;
+          white-space: nowrap;
+          vertical-align: baseline;
+          border-radius: .25em;
+          background-color: #337ab7;
+      }
+
+      .custom-alert-info {
+          color: #31708f;
+          background-color: #d9edf7;
+          border-color: #bce8f1;
+      }
+
+      .custom-btn-default {
+          color: #333;
+          background-color: #fff;
+          border-color: #ccc;
+      }
+
+      .custom-card-header {
+          background-color: white;
+          border-bottom: none;
+          padding: 1em;
+      }
+
+      .custom-btn {
+          color: #fff;
+          background-color: #337ab7;
+          border-color: #2e6da4;
+      }
+      /* for Policy Text Bold */
+      label[for="id_body"] {
+          font-weight: 700;
       }
     </style>
     {% block extra_head %}
@@ -27,9 +75,7 @@
       </main>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/docs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" ></script>
     {% block extra_script %}
     {% endblock extra_script %}
   </body>

@@ -36,19 +36,20 @@
             </div>
 
             <div class="row">
-                <div class="col-xs-8">
+                <div class="col-8">
                     <div>
-                        <a class="btn btn-default" role="button" data-toggle="modal" data-target="#myModal">
+                        <a class="btn btn-primary" role="button" data-bs-toggle="modal" data-bs-target="#myModal" style="background-color: white; color: #333; border-color: #ccc;">
                             <i class="fa fa-times-circle fa-flip-horizontal"></i>
                                 Delete and prepare new policy from templates
                         </a>
 
                         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                          <div class="modal-dialog" role="document">
+                          <div class="modal-dialog" role="document" style="max-width: 45em;">
                             <div class="modal-content">
                               <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 <h2 class="modal-title" id="myModalLabel">Warning</h2>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style=" margin: 0 0 .5em 0;
+                                font-size: .6em;"></button>
                               </div>
                               <div class="modal-body">
                                   <strong>Are you sure you want to delete your current published policy and customize a new one from the available templates?</strong>
@@ -57,33 +58,25 @@
                                   If you simply want to edit the current policy,
                                   click ‘Cancel’ and then access the text editor via the ‘Edit’ button.
                               </div>
-                              <div class="modal-footer">
-                                  <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-                                  <a type="button" class="btn btn-primary pull-right" href="{% url 'instructor_inactivate_policies' %}">Yes, <strong>DELETE</strong> and start afresh</a>
+                              <div class="modal-footer" style="display: block;">
+                                  <button type="button" class="btn custom-btn-default pull-left" data-bs-dismiss="modal" >Cancel</button>
+                                  <a type="button" class="btn btn-primary custom-btn pull-right" href="{% url 'instructor_inactivate_policies' %}" >Yes, <strong>DELETE</strong> and start afresh</a>
                               </div>
                             </div>
                           </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-xs-4">
-                    <a class="btn btn-primary pull-right" href="{% url 'edit_active_policy' active_policy.pk %}" role="button">
+                <div class="col-4">
+                    <a class="btn btn-primary custom-btn pull-right" href="{% url 'edit_active_policy' active_policy.pk %}" role="button" >
                         <i class="fa fa-pencil-alt fa-flip-horizontal"></i>
                         Edit
                     </a>
                 </div>
+
 
             </div>
         </div>
     </div>
 
 {% endblock content %}
-
-{% block extra_script %}
-    <script type="text/javascript">
-        $('#myModal').on('shown.bs.modal', function () {
-          $('#myInput').focus()
-        })
-    </script>
-{% endblock extra_script %}
