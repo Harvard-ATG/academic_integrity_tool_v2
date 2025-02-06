@@ -37,14 +37,14 @@
 
                             <div class="card mb-3">
                                 <div class="custom-card-header">
-                                    <h3 class="mt-4 mb-2"><span class="custom-label">Collaboration Permitted: Written Work</span></h3>
-                                    <p style="margin-top: 1.4em;">{{ written_work_policy_template.body|safe }}</p>
+                                    <h3 class="mt-4 mb-2"><span class="custom-label">{{ maximally_restrictive_policy_template.name|safe }}</span></h3>
+                                    <p style="margin-top: 1.4em;">{{ maximally_restrictive_policy_template.body|safe }}</p>
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <a href="{% url list_level written_work_policy_template.pk %}">
+                                            <a href="{% url list_level maximally_restrictive_policy_template.pk %}">
                                                 <div style="position: relative">
                                                     <span class="icon-input-btn">
-                                                        <button value="Choose Written Work Template" class="btn btn-primary btn-md pull-right custom-btn" type="submit" name="commit">
+                                                        <button value="Choose {{ maximally_restrictive_policy_template.name|safe }} Template" class="btn btn-primary btn-md pull-right custom-btn" type="submit" name="commit">
                                                             <i class="fa fa-file-word-o" style="font-size: 1.3em; color: white;"></i>
                                                             {{ button_text }} Template
                                                         </button>
@@ -59,14 +59,14 @@
 
                             <div class="card mb-3">
                                 <div class="custom-card-header">
-                                    <h3 class="mt-4 mb-2"><span class="custom-label">Collaboration Permitted: Problem Sets</span></h3>
-                                    <p style="margin-top: 1.4em;">{{ problem_sets_policy_template.body|safe }}</p>
+                                    <h3 class="mt-4 mb-2"><span class="custom-label">{{ mixed_policy_template.name|safe }}</span></h3>
+                                    <p style="margin-top: 1.4em;">{{ mixed_policy_template.body|safe }}</p>
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <a href="{% url list_level problem_sets_policy_template.pk %}">
+                                            <a href="{% url list_level mixed_policy_template.pk %}">
                                                 <div style="position: relative">
                                                     <span class="icon-input-btn">
-                                                        <button value="Choose Problem Sets Template" class="btn btn-primary btn-md pull-right custom-btn" type="submit" name="commit" >
+                                                        <button value="Choose {{ mixed_policy_template.body|safe }} Template" class="btn btn-primary btn-md pull-right custom-btn" type="submit" name="commit" >
                                                             <i class="fa fa-file-powerpoint-o" style="font-size: 1.3em; color: white;"></i>
                                                             {{ button_text }} Template
                                                         </button>
@@ -80,14 +80,14 @@
 
                             <div class="card mb-3">
                                 <div class="custom-card-header">
-                                    <h3 class="mt-4 mb-2"><span class="custom-label">Collaboration Prohibited</span></h3>
-                                    <p style="margin-top: 1.4em;">{{ collaboration_prohibited_policy_template.body|safe }}</p>
+                                    <h3 class="mt-4 mb-2"><span class="custom-label">{{ fully_encouraging_policy_template.name|safe }}</span></h3>
+                                    <p style="margin-top: 1.4em;">{{ fully_encouraging_policy_template.body|safe }}</p>
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <a href="{% url list_level collaboration_prohibited_policy_template.pk %}">
+                                            <a href="{% url list_level fully_encouraging_policy_template.pk %}">
                                                 <div style="position: relative">
                                                     <span class="icon-input-btn">
-                                                        <button value="Choose Collaboration Prohibited Template" class="btn btn-primary btn-md pull-right custom-btn" type="submit" name="commit">
+                                                        <button value="Choose {{ fully_encouraging_policy_template.name|safe }} Template" class="btn btn-primary btn-md pull-right custom-btn" type="submit" name="commit">
                                                             <span class="fa-layers fa-fw">
                                                                 <i class="fa fa-file-o" style="font-size: 1.3em; color: white;"></i>
                                                                 <i class="fa fa-times" style="position: absolute; font-size: .75em; color: white; margin-left: -1.6em; margin-top: .68em;"></i>
