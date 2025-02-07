@@ -89,9 +89,12 @@ def policy_templates_list_view(request):
 
 
         #Fetch each policy template from the `PolicyTemplates` table in the database and store as a variable
-        written_work_policy_template = PolicyTemplates.objects.get(name="Collaboration Permitted: Written Work")
-        problem_sets_policy_template = PolicyTemplates.objects.get(name="Collaboration Permitted: Problem Sets")
-        collaboration_prohibited_policy_template = PolicyTemplates.objects.get(name="Collaboration Prohibited")
+        maximally_restrictive_policy_template = PolicyTemplates.objects.get(name="Maximally Restrictive Policy")
+        mixed_policy_template = PolicyTemplates.objects.get(name="Mixed Policy")
+        fully_encouraging_policy_template = PolicyTemplates.objects.get(name="Fully-Encouraging Policy")
+        # written_work_policy_template = PolicyTemplates.objects.get(name="Collaboration Permitted: Written Work")
+        # problem_sets_policy_template = PolicyTemplates.objects.get(name="Collaboration Permitted: Problem Sets")
+        # collaboration_prohibited_policy_template = PolicyTemplates.objects.get(name="Collaboration Prohibited")
         custom_policy_template = PolicyTemplates.objects.get(name="Custom Policy")
 
         if role==roles.ADMINISTRATOR:
@@ -110,9 +113,12 @@ def policy_templates_list_view(request):
             request,
             template_to_use,
             {
-                'written_work_policy_template': written_work_policy_template,
-                'problem_sets_policy_template': problem_sets_policy_template,
-                'collaboration_prohibited_policy_template': collaboration_prohibited_policy_template,
+                # 'written_work_policy_template': written_work_policy_template,
+                # 'problem_sets_policy_template': problem_sets_policy_template,
+                # 'collaboration_prohibited_policy_template': collaboration_prohibited_policy_template,
+                'maximally_restrictive_policy_template': maximally_restrictive_policy_template,
+                'mixed_policy_template': mixed_policy_template,
+                'fully_encouraging_policy_template': fully_encouraging_policy_template,
                 'custom_policy_template': custom_policy_template,
                 'list_level': list_level,
                 'button_text': button_text
@@ -252,7 +258,7 @@ def student_active_policy_view(request):
         # Render the policy
         return render(request, 'student_active_policy.html', {'active_policy': active_policy})
     except Policies.DoesNotExist: #If no active policy exists ...
-        return HttpResponse("There is no published academic integrity policy in record for this course.")
+        return HttpResponse("There is no published AI policy in record for this course.")
     except Policies.MultipleObjectsReturned: #If multiple active policies present (which should never happen) ...
         # ... return the latest active policy
         active_policy = Policies.objects.filter(course_id=request.session['course_id'], is_active=True).latest('created_at')

@@ -379,4 +379,4 @@ class StudentRoleTests(TestCase):
         annotate_request_with_session(request, self.studentSessionNoActivePolicy)
         response = views.student_active_policy_view(request)
         self.assertEquals(response.status_code, 200)
-        self.assertInHTML('There is no published academic integrity policy in record for this course.', response.content.decode("utf-8"))
+        self.assertInHTML('There is no published AI policy in record for this course.', response.content.decode("utf-8"))
