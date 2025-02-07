@@ -27,3 +27,24 @@
     body: "Create your custom policy here ..."
     created_at: "2018-03-01T00:00:00+00:00"
     updated_at: "2018-03-01T00:00:00+00:00"
+- model: policy_wizard.PolicyTemplates
+  pk: 5
+  fields:
+    name: "Maximally Restrictive Policy"
+    body: "We expect that all work students submit for this course will be their own. In instances when collaborative work is assigned, we expect for the assignment to list all team members who participated. We specifically forbid the use of ChatGPT or any other generative artificial intelligence (AI) tools at all stages of the work process, including preliminary ones. Violations of this policy will be considered academic misconduct. We draw your attention to the fact that different classes at Harvard could implement different AI policies, and it is the student’s responsibility to conform to expectations for each course. "
+    created_at: "2025-02-07T00:00:00+00:00"
+    updated_at: "2025-02-07T00:00:00+00:00"
+- model: policy_wizard.PolicyTemplates
+  pk: 6
+  fields:
+    name: "Mixed Policy"
+    body: "Certain assignments in this course will permit or even encourage the use of generative artificial intelligence (GAI) tools such as ChatGPT. The default is that such use is disallowed unless otherwise stated. Any such use must be appropriately acknowledged and cited. It is each student’s responsibility to assess the validity and applicability of any GAI output that is submitted; you bear the final responsibility. Violations of this policy will be considered academic misconduct. We draw your attention to the fact that different classes at Harvard could implement different AI policies, and it is the student’s responsibility to conform to expectations for each course. "
+    created_at: "2025-02-07T00:00:00+00:00"
+    updated_at: "2025-02-07T00:00:00+00:00"
+- model: policy_wizard.PolicyTemplates
+  pk: 7
+  fields:
+    name: "Fully-Encouraging Policy"
+    body: "This course encourages students to explore the use of generative artificial intelligence (GAI) tools such as ChatGPT for all assignments and assessments. Any such use must be appropriately acknowledged and cited. It is each student’s responsibility to assess the validity and applicability of any GAI output that is submitted; you bear the final responsibility. Violations of this policy will be considered academic misconduct. We draw your attention to the fact that different classes at Harvard could implement different AI policies, and it is the student’s responsibility to conform to expectations for each course. "
+    created_at: "2025-02-07T00:00:00+00:00"
+    updated_at: "2025-02-07T00:00:00+00:00"
