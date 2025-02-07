@@ -204,7 +204,7 @@ LOGGING = {
 
 # Other project specific settings
 LTI_TOOL_CONFIGURATION = {
-    'title': 'Academic Integrity Policy',
+    'title': 'AI Policy',
     'description': 'An LTI-compliant tool that enables instructors and administrators to easily create, edit, and publish academic policies.',
     'launch_url': 'lti/launch/',
     'embed_url': '',

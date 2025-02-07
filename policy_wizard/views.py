@@ -258,7 +258,7 @@ def student_active_policy_view(request):
         # Render the policy
         return render(request, 'student_active_policy.html', {'active_policy': active_policy})
     except Policies.DoesNotExist: #If no active policy exists ...
-        return HttpResponse("There is no published academic integrity policy in record for this course.")
+        return HttpResponse("There is no published AI policy in record for this course.")
     except Policies.MultipleObjectsReturned: #If multiple active policies present (which should never happen) ...
         # ... return the latest active policy
         active_policy = Policies.objects.filter(course_id=request.session['course_id'], is_active=True).latest('created_at')

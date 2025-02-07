@@ -20,6 +20,7 @@ services:
     command: ["./docker-wait-for-it.sh", "db:5432", "--", "python3", "manage.py", "runserver", "0.0.0.0:8000"]
     environment:
       DJANGO_SETTINGS_MODULE: "academic_integrity_tool_v2.settings.local"
+      NGROK_DOMAIN: "${NGROK_DOMAIN}"
     volumes:
       - .:/app
     ports:

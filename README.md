@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/Harvard-ATG/academic_integrity_tool_v2.svg?branch=master)](https://travis-ci.org/Harvard-ATG/academic_integrity_tool_v2)
 ![Coverage Status](./coverage.svg)
 
-# Academic Integrity Policy Tool (V2)
+# AI Policy Tool (V2) (Formerly Academic Integrity Policy Tool)
 
 This is a django application that enables instructors to prepare academic integrity policies from templates made by instructional technologists and publish said policies for students to view. It is an LTI tool that is embedded into and launched from the Canvas LMS.
 
@@ -40,7 +40,7 @@ This is a django application that enables instructors to prepare academic integr
 * From top horizontal bar, click "Apps"
 * Click the blue "App" button. An "Add App" form should pop up.
 * On the form, on the "Configuration Type" drop down menu, select "Paste XML". The form structure will update accordingly.
-* In the ‘Name’ field, enter "Academic Integrity Policy".
+* In the ‘Name’ field, enter "AI Policy".
 * For the 'Consumer Key' and 'Shared Secret' fields, use the values in `academic_integrity_tool_v2/academic_integrity_tool_v2/settings/secure.py`
 * On a new browser tab, go to 'http://localhost:8000/lti/config'
 * Copy the XML output
