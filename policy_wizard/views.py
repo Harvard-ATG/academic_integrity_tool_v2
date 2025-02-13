@@ -239,7 +239,7 @@ def edit_active_policy(request, pk):
 @require_role_instructor
 def instructor_inactivate_policies_view(request):
     '''
-    Enables an instructor to inactivate an already published policy (including any other active policies that may 
+    Enables an instructor to inactivate an already published policy (including any other active policies that may
     be present) and redirects to the list of policy templates
     '''
     inactivate_active_policies(request)
@@ -258,7 +258,7 @@ def student_active_policy_view(request):
         # Render the policy
         return render(request, 'student_active_policy.html', {'active_policy': active_policy})
     except Policies.DoesNotExist: #If no active policy exists ...
-        return HttpResponse("There is no published AI policy in record for this course.")
+        return render(request, 'student_missing_policy.html')
     except Policies.MultipleObjectsReturned: #If multiple active policies present (which should never happen) ...
         # ... return the latest active policy
         active_policy = Policies.objects.filter(course_id=request.session['course_id'], is_active=True).latest('created_at')
