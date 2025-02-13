@@ -33,9 +33,9 @@ $ echo 'SECURE_SETTINGS["redis_host"] = "redis" # for docker' >> academic_integr
 Run the application:
 
 ```
-$ docker-compose up
-$ docker-compose run web python manage.py migrate
-$ docker-compose run web python manage.py loaddata --app policy_wizard boilerplate_policy_templates.yml
+$ docker compose up
+$ docker compose run web python manage.py migrate
+$ docker compose run web python manage.py loaddata --app policy_wizard boilerplate_policy_templates.yml
 ```
 
 Open the tool in your web browser to verify it is up and running:
@@ -47,7 +47,7 @@ open http://localhost:8000
 ### Testing
 
 ```
-$ docker-compose run web python manage.py test
+$ docker compose run web python manage.py test
 ```
 
 ### Update the Coverage Badge
