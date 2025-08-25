@@ -1,6 +1,6 @@
 FROM python:3.6
 WORKDIR /app
-RUN mkdir -p /var/opt/django/log
+RUN mkdir -p /var/opt/django/log/
 ADD . /app
 RUN pip3 install -r academic_integrity_tool_v2/requirements/local.txt
 EXPOSE 8000
