@@ -11,7 +11,7 @@ sqlnet.log
 *.sqlite3
 ignore-*.md
 # Generated files
-secure.py
+# secure.py
 gunicorn.py
 # Where static files are collected
 http_static
