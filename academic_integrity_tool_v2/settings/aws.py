@@ -8,7 +8,10 @@ SECRET_KEY = SECURE_SETTINGS['django_secret_key']
 DEBUG = SECURE_SETTINGS['enable_debug']
 
 # tlt hostnames
-ALLOWED_HOSTS = ['.tlt.harvard.edu']
+if SECURE_SETTINGS['enable_debug'] == 'True':
+    ALLOWED_HOSTS = ['.tlt.harvard.edu', 'localhost', '127.0.0.1', '0.0.0.0']
+else:
+    ALLOWED_HOSTS = ['.tlt.harvard.edu']
 
 # SSL is terminated at the ELB so look for this header to know that we should be in ssl mode
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
