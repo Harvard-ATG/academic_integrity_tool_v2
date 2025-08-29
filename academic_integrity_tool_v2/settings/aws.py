@@ -9,7 +9,7 @@ DEBUG = SECURE_SETTINGS['enable_debug']
 
 # tlt hostnames
 if SECURE_SETTINGS['enable_debug'] == 'True':
-    ALLOWED_HOSTS = ['.tlt.harvard.edu', 'localhost', '127.0.0.1', '0.0.0.0']
+    ALLOWED_HOSTS = ['.tlt.harvard.edu', 'localhost', '127.0.0.1', '0.0.0.0', 'localhost:8000']
 else:
     ALLOWED_HOSTS = ['.tlt.harvard.edu']
 
