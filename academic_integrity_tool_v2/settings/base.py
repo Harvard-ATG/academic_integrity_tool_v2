@@ -105,9 +105,14 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 REDIS_HOST = SECURE_SETTINGS.get('redis_host', '127.0.0.1')
 REDIS_PORT = SECURE_SETTINGS.get('redis_port', 6379)
 
+print("Using redis cache at:")
+print("redis_host", REDIS_HOST)
+print("redis_port", REDIS_PORT)
+
 CACHES = {
     'default': {
-        'BACKEND': 'redis_cache.RedisCache',
+        # 'BACKEND': 'redis_cache.RedisCache',
+        'BACKEND': "django.core.cache.backends.redis.RedisCache",
         'LOCATION': "redis://%s:%s/0" % (REDIS_HOST, REDIS_PORT),
         'OPTIONS': {
             'PARSER_CLASS': 'redis.connection.HiredisParser'

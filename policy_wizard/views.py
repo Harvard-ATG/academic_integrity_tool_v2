@@ -53,11 +53,14 @@ def process_lti_launch_request_view(request):
 
         #Using the role, e.g. 'Administrator', 'Instructor', or 'Student', determine route to take
         role = request.session.get('role')
+        print(f"role from session is {role}")
         if role==roles.ADMINISTRATOR or role==roles.INSTRUCTOR:
+            print(f"KG - role is {role}, directing to policy templates list")
             return redirect('policy_templates_list')
         elif role==roles.STUDENT:
             return redirect('student_active_policy')
     else: #if not typical lti launch or if request is not valid ...
+        print("KG - WE FAILED HERE")
         raise PermissionDenied
 
 @xframe_options_exempt
@@ -72,6 +75,7 @@ def policy_templates_list_view(request):
 
     #Fetch role from session attribute. It should be either 'Administrator' or 'Instructor'.
     role = request.session.get('role')
+    print(f"KG - Inside policy_templates_list_view - role from session is {role}")
 
     if role==roles.INSTRUCTOR or role==roles.ADMINISTRATOR:
 
@@ -125,6 +129,7 @@ def policy_templates_list_view(request):
             })
 
     else: #i.e. 'Student'
+        print("KG - Failed inside method policy tempaltes list view")
         raise PermissionDenied
 
 
