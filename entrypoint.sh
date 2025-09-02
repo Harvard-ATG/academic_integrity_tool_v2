@@ -7,24 +7,23 @@ set -e
 echo "DJANGO_SETTINGS_MODULE is set to: $DJANGO_SETTINGS_MODULE"
 # --- END DEBUGGING LINE ---
 
-# Wait for the database service to be available, but only in a local environment.
+# Local only: Wait for the database service to be available. Not needed in dev/prod using long running services.
 if [[ "$DJANGO_SETTINGS_MODULE" == *"local"* ]]; then
     echo "Waiting for database to be ready..."
     /usr/local/bin/docker-wait-for-it.sh db:5432 --timeout=60 --strict --
 fi
 
-# Always run database migrations. The --no-input flag prevents interactive prompts.
+# Run database migrations without interactive prompts (i.e --no-input)
 echo "Applying Django database migrations..."
 python manage.py migrate --no-input
 
-# Conditionally load initial data based on the Django settings module.
+# Local only: load initial data based on the Django settings module. Not needed in dev/prod.
 if [[ "$DJANGO_SETTINGS_MODULE" == *"local"* ]]; then
     echo "Loading initial data..."
     python manage.py loaddata --app policy_wizard boilerplate_policy_templates.yml
 fi
 
 # Execute the main command from the Dockerfile's CMD.
-# This ensures that our entrypoint script is a universal wrapper around the
-# real application startup command.
+# This passes control to the real application and executes the startup command.
 echo "Starting application..."
 exec "$@"
