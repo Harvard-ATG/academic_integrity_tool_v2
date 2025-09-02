@@ -99,6 +99,20 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 # which defaults to 2 weeks.
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
+# Because this is an LTI tool that will be launched from Canvas, the requests here are
+# will be cross-site by default, and need to be accounted for across environments.
+# For LTI apps, SameSite must be set to 'None' to allow the session cookie to
+# be sent on the cross-site GET redirect after the initial POST launch.
+SESSION_COOKIE_SAMESITE = 'None'
+CSRF_SAME_SITE = 'None'
+
+# The Secure flag must be True for cookies with SameSite=None. In production
+# environments with HTTPS, this must always be True. For local development
+# without HTTPS, it must be set to False.
+# We retrieve the value from an environment variable and default to False.
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
 # Cache
 # https://docs.djangoproject.com/en/1.9/ref/settings/#std:setting-CACHES
 
