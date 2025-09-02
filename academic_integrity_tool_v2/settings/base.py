@@ -125,8 +125,7 @@ print("redis_port", REDIS_PORT)
 
 CACHES = {
     'default': {
-        # 'BACKEND': 'redis_cache.RedisCache',
-        'BACKEND': "django.core.cache.backends.redis.RedisCache",
+        'BACKEND': 'redis_cache.RedisCache',
         'LOCATION': "redis://%s:%s/0" % (REDIS_HOST, REDIS_PORT),
         'OPTIONS': {
             'PARSER_CLASS': 'redis.connection.HiredisParser'
