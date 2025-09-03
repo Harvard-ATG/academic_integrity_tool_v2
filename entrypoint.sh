@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# This is a helpful script to initialize the Django application environment
+# It determines the environment (i.e. local or production) and sets up accordingly.
+# This includes waiting for services to be available and applying database migrations.
+# Additionally, for the local environment, it may load initial data or perform other
+# environment-specific tasks.
+
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
@@ -25,5 +31,5 @@ fi
 
 # Execute the main command from the Dockerfile's CMD.
 # This passes control to the real application and executes the startup command.
-echo "Starting application..."
-exec "$@"
+echo "Starting Django Server application..."
+exec "$@" # Replaces the shell with the Django server process
