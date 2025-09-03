@@ -119,10 +119,6 @@ CSRF_COOKIE_SECURE = SECURE_SETTINGS.get('session_cookie_secure', 'False') == 'T
 REDIS_HOST = SECURE_SETTINGS.get('redis_host', '127.0.0.1')
 REDIS_PORT = SECURE_SETTINGS.get('redis_port', 6379)
 
-print("Using redis cache at:")
-print("redis_host", REDIS_HOST)
-print("redis_port", REDIS_PORT)
-
 CACHES = {
     'default': {
         'BACKEND': 'redis_cache.RedisCache',
@@ -239,8 +235,3 @@ PYLTI_CONFIG = {
 }
 
 X_FRAME_OPTIONS = SECURE_SETTINGS.get('X_FRAME_OPTIONS', 'ALLOW-FROM https://canvas.harvard.edu')
-
-# The proxy server is expected to set the X-Forwarded-Proto header to https
-# For apps behind a load balancer, this configures the load balancer
-# to pass this header along to your Django app and treats any https requests as secure.
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

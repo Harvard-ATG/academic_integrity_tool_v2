@@ -7,11 +7,13 @@ SECRET_KEY = SECURE_SETTINGS['django_secret_key']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = SECURE_SETTINGS['enable_debug']
 
-# Allow only the harvard.edu domain and subdomains, where the LTI tool itself is hosted
-# i.e. academicintegritytoolv2.dev.tlt.harvard.edu
-# Add * to accommodate health checks from load balancers
-# This should be safe in a controlled environment
-ALLOWED_HOSTS = ['.tlt.harvard.edu', '*']
+# Because load balancer health checks will come from a different domain, 
+# rather than restricting to specific domains or subdomains, we explicitly
+# list the Application Load Balancer's (ALB) DNS name and the base domain. This allows
+# for health checks from the load balancer and user agents/traffic to succeed
+# while preventing host header attacks. This configuration is safe in
+# our controlled ECS environment and avoids security issues of a wildcard setting.
+ALLOWED_HOSTS = ['atg-dev-general-alb-1944621488.us-east-1.elb.amazonaws.com', '.tlt.harvard.edu']
 
 # SSL is terminated at the ELB so look for this header to know that we should be in ssl mode
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
