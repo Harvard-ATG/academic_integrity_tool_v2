@@ -9,14 +9,14 @@ EXPOSE 8000
 ENV PYTHONUNBUFFERED 1
 ENV DJANGO_SETTINGS_MODULE academic_integrity_tool_v2.settings.local
 
-# Add the entrypoint script to the container and make it executable.
+# Add the wait-for-it script and entrypoint script
 COPY docker-wait-for-it.sh /usr/local/bin/docker-wait-for-it.sh
 RUN chmod +x /usr/local/bin/docker-wait-for-it.sh
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Set the entrypoint to the new script. This command will run first when the container starts.
+# Sets the entrypoint script, this command will run first when the container starts.
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # The CMD is the command that the entrypoint script will execute after all the setup is complete.

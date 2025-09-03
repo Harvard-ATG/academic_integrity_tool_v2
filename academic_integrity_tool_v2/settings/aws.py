@@ -7,6 +7,8 @@ SECRET_KEY = SECURE_SETTINGS['django_secret_key']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = SECURE_SETTINGS['enable_debug']
 
+# Allow only the harvard.edu domain and subdomains, where the LTI tool itself is hosted
+# i.e. academicintegritytoolv2.dev.tlt.harvard.edu
 ALLOWED_HOSTS = ['.tlt.harvard.edu']
 
 # SSL is terminated at the ELB so look for this header to know that we should be in ssl mode
