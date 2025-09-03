@@ -21,9 +21,9 @@ SECURE_SETTINGS = {
     'default_cache_timeout_secs': os.environ['DEFAULT_CACHE_TIMEOUT_SECS'], # default 300
     'log_root': os.environ['LOG_ROOT'], # default /var/opt/django/log/
     'django_settings_module': os.environ['DJANGO_SETTINGS_MODULE'], # default academic_integrity_tool_v2.settings.aws
-    'ngrok_domain': os.environ['NGROK_DOMAIN'], # default .ngrok-free.app
-    'session_cookie_secure': os.environ['DJANGO_SESSION_COOKIE_SECURE'],
-    'session_cookie_samesite': os.environ['DJANGO_SESSION_COOKIE_SAMESITE']
+    'ngrok_domain': os.environ.get('NGROK_DOMAIN', ''), # default empty string
+    'session_cookie_secure': os.environ.get('DJANGO_SESSION_COOKIE_SECURE', True),
+    'session_cookie_samesite': os.environ.get('DJANGO_SESSION_COOKIE_SAMESITE', 'None')
 }
 
 
