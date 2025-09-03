@@ -1,3 +1,4 @@
+import socket
 from .base import *
 from logging.config import dictConfig
 
@@ -14,6 +15,9 @@ DEBUG = SECURE_SETTINGS['enable_debug']
 # while preventing host header attacks. This configuration is safe in
 # our controlled ECS environment and avoids security issues of a wildcard setting.
 ALLOWED_HOSTS = ['atg-dev-general-alb-1944621488.us-east-1.elb.amazonaws.com', '.tlt.harvard.edu']
+
+# Add the container's own internal IP address for health checks
+ALLOWED_HOSTS.append(socket.gethostbyname(socket.gethostname()))
 
 # SSL is terminated at the ELB so look for this header to know that we should be in ssl mode
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
