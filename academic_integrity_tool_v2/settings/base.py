@@ -110,8 +110,8 @@ CSRF_SAME_SITE = SECURE_SETTINGS.get('sesssion_same_site', 'None')
 # environments with HTTPS, this must always be True. For local development
 # without HTTP, it must be set to False.
 # We retrieve the value from an environment variable and default to True.
-SESSION_COOKIE_SECURE = SECURE_SETTINGS.get('session_cookie_secure', 'False') == 'True'
-CSRF_COOKIE_SECURE = SECURE_SETTINGS.get('session_cookie_secure', 'False') == 'True'
+SESSION_COOKIE_SECURE = SECURE_SETTINGS.get('session_cookie_secure', 'True') == 'True'
+CSRF_COOKIE_SECURE = SECURE_SETTINGS.get('session_cookie_secure', 'True') == 'True'
 
 # Cache
 # https://docs.djangoproject.com/en/1.9/ref/settings/#std:setting-CACHES
