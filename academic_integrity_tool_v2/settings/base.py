@@ -238,9 +238,9 @@ PYLTI_CONFIG = {
     }
 }
 
-
-
-
-
-
 X_FRAME_OPTIONS = SECURE_SETTINGS.get('X_FRAME_OPTIONS', 'ALLOW-FROM https://canvas.harvard.edu')
+
+# The proxy server is expected to set the X-Forwarded-Proto header to https
+# For apps behind a load balancer, this configures the load balancer
+# to pass this header along to your Django app and treats any https requests as secure.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
