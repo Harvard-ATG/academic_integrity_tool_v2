@@ -10,6 +10,7 @@ DEBUG = SECURE_SETTINGS['enable_debug']
 # Allow only the harvard.edu domain and subdomains, where the LTI tool itself is hosted
 # i.e. academicintegritytoolv2.dev.tlt.harvard.edu
 # Add * to accommodate health checks from load balancers
+# This should be safe in a controlled environment
 ALLOWED_HOSTS = ['.tlt.harvard.edu', '*']
 
 # SSL is terminated at the ELB so look for this header to know that we should be in ssl mode
