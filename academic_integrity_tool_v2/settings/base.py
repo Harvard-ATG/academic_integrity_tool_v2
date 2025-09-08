@@ -113,14 +113,14 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # For LTI apps, SameSite must be set to 'None' to allow the session cookie to
 # be sent on the cross-site GET redirect after the initial POST launch.
 SESSION_COOKIE_SAMESITE = SECURE_SETTINGS.get('session_cookie_samesite', 'None')
-CSRF_SAME_SITE = SECURE_SETTINGS.get('sesssion_same_site', 'None')
+# CSRF_SAME_SITE = SECURE_SETTINGS.get('sesssion_same_site', 'None')
 
 # The Secure flag must be True for cookies with SameSite=None. In production
 # environments with HTTPS, this must always be True. For local development
 # without HTTP, it must be set to False.
 # We retrieve the value from an environment variable and default to True.
 SESSION_COOKIE_SECURE = SECURE_SETTINGS.get('session_cookie_secure', 'True') == 'True'
-CSRF_COOKIE_SECURE = SECURE_SETTINGS.get('session_cookie_secure', 'True') == 'True'
+# CSRF_COOKIE_SECURE = SECURE_SETTINGS.get('session_cookie_secure', 'True') == 'True'
 
 # Cache
 # https://docs.djangoproject.com/en/1.9/ref/settings/#std:setting-CACHES
