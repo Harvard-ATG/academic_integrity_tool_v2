@@ -11,6 +11,15 @@ import os
 import logging
 from .secure import SECURE_SETTINGS
 from django.utils.log import DEFAULT_LOGGING
+from ..utils import get_ecs_task_ips, get_container_ip_from_socket
+
+logger = logging.getLogger(__name__)
+
+def log_allowed_hosts():
+    """Log the current ALLOWED_HOSTS for debugging purposes."""
+    logger.info(f"INFO-ALLOWED_HOSTS: {ALLOWED_HOSTS}")
+    print(f"PRINT-ALLOWED_HOSTS: {ALLOWED_HOSTS}")
+    logger.debug(f"DEBUG-ALLOWED_HOSTS: {ALLOWED_HOSTS}")
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 # NOTE: Since we have a settings module, we have to go one more directory up to get to
@@ -161,14 +170,13 @@ STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, 'http_static'))
 STATIC_URL = '/static/'
 
 # Logging
-# https://docs.djangoproject.com/en/1.9/topics/logging/#configuring-logging
+# https://docs.djangoproject.com/en/5.2/howto/logging/#how-to-configure-and-use-logging
 
 # Turn off default Django logging
 # https://docs.djangoproject.com/en/1.9/topics/logging/#disabling-logging-configuration
 LOGGING_CONFIG = None
 
 _DEFAULT_LOG_LEVEL = SECURE_SETTINGS.get('log_level', logging.DEBUG)
-_LOG_ROOT = SECURE_SETTINGS.get('log_root', '')
 
 LOGGING = {
     'version': 1,
@@ -184,24 +192,24 @@ LOGGING = {
         'django.server': DEFAULT_LOGGING['formatters']['django.server'],
     },
     'handlers': {
-        # By default, log to a file
-        'default': {
-            'class': 'logging.handlers.WatchedFileHandler',
+        # By default, log to sys.stdout for pickup by splunk
+        'console_stdout': {
+            'class': 'logging.StreamHandler',
+            'stream': 'ext://sys.stdout',
             'level': _DEFAULT_LOG_LEVEL,
-            'formatter': 'verbose',
-            'filename': os.path.join(_LOG_ROOT, 'django-academic_integrity_tool_v2.log'),
+            'formatter': 'verbose'
         },
         'django.server': DEFAULT_LOGGING['handlers']['django.server'],
     },
     # This is the default logger for any apps or libraries that use the logger
     # package, but are not represented in the `loggers` dict below.  A level
     # must be set and handlers defined.  Setting this logger is equivalent to
-    # setting and empty string logger in the loggers dict below, but the separation
+    # setting an empty string logger in the loggers dict below, but the separation
     # here is a bit more explicit.  See link for more details:
     # https://docs.python.org/2.7/library/logging.config.html#dictionary-schema-details
     'root': {
         'level': logging.WARNING,
-        'handlers': ['default'],
+        'handlers': ['console_stdout'],
     },
     'loggers': {
         # Add app specific loggers here, should look something like this:
@@ -212,6 +220,16 @@ LOGGING = {
         # },
         # Make sure that propagate is False so that the root logger doesn't get involved
         # after an app logger handles a log message.
+        'django': {
+            'level': 'WARNING',
+            'handlers': ['console_stdout'],
+            'propagate': False,
+        },
+        'academic_integrity_tool_v2': {
+            'level': _DEFAULT_LOG_LEVEL,
+            'handlers': ['console_stdout'],
+            'propagate': False,
+        },
         'django.server': DEFAULT_LOGGING['loggers']['django.server'],
     },
 }
@@ -225,7 +243,6 @@ LTI_TOOL_CONFIGURATION = {
     'navigation': True,
 }
 
-
 PYLTI_CONFIG = {
     'consumers': {
         SECURE_SETTINGS['CONSUMER_KEY']: {
@@ -235,3 +252,43 @@ PYLTI_CONFIG = {
 }
 
 X_FRAME_OPTIONS = SECURE_SETTINGS.get('X_FRAME_OPTIONS', 'ALLOW-FROM https://canvas.harvard.edu')
+
+# Dynamically update ALLOWED_HOSTS for the AWS ECS environment.
+#
+# Why: AWS Application Load Balancer (ALB) health checks target containers directly
+# by their private IP address. When the ALB sends a health check, the request's
+# 'Host' header contains this private IP. For the health check to succeed, Django
+# requires this IP to be present in the ALLOWED_HOSTS setting.
+#
+# How: This code block fetches the container's private IP from two sources for robustness:
+#   1. The official ECS Task Metadata Endpoint (`get_ecs_task_ips`), which is the
+#      authoritative source for the task's network information.
+#   2. The container's own network socket (`get_container_ip_from_socket`) as a fallback
+#      and for verification.
+#
+# Result: The discovered IP(s) are added to the existing ALLOWED_HOSTS list
+# (which should already contain public-facing domain names), and any duplicates are
+# removed. This configuration allows critical health checks to pass while maintaining
+# security by avoiding an insecure wildcard setting like ['*'].
+ALLOWED_HOSTS = SECURE_SETTINGS.get('ALLOWED_HOSTS', [])
+# Log the initial ALLOWED_HOSTS for debugging purposes
+logger.info(f"Initial ALLOWED_HOSTS: {ALLOWED_HOSTS}")
+
+# Get ECS task IPs and container IP from socket
+ecs_task_ips = get_ecs_task_ips()
+container_ip_from_socket = get_container_ip_from_socket()
+
+# Log the container IP for debugging purposes
+logger.info(f"ECS task IPs: {ecs_task_ips}")
+logger.info(f"Container IP from socket: {container_ip_from_socket}")
+
+# Update ALLOWED_HOSTS with ECS task IPs and container IP if not already present
+if ecs_task_ips:
+    ALLOWED_HOSTS.extend(ecs_task_ips)
+
+if container_ip_from_socket not in ALLOWED_HOSTS:
+    logger.info(f"Socket IP {container_ip_from_socket} not in ALLOWED_HOSTS, adding it.")
+    ALLOWED_HOSTS.append(container_ip_from_socket)
+
+# A set automatically and efficiently removes any duplicates
+ALLOWED_HOSTS = list(set(ALLOWED_HOSTS))
