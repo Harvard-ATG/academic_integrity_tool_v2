@@ -1,8 +1,12 @@
+import logging
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.exceptions import PermissionDenied
 from lti_provider.lti import LTI, LTIException
 from .models import Policies
+
+logger = logging.getLogger(__name__)
+
 
 def role_identifier(ext_roles_text):
     """
@@ -56,6 +60,7 @@ def role_identifier(ext_roles_text):
 def validate_request(request):
 
     consumer_key = settings.SECURE_SETTINGS['CONSUMER_KEY']
+    logger.debug('DEBUG_LOG_TEST: Consumer Key from settings: ' + consumer_key)
     shared_secret = settings.SECURE_SETTINGS['LTI_SECRET']
 
     if consumer_key is None or shared_secret is None:

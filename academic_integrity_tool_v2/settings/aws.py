@@ -14,9 +14,9 @@ SECRET_KEY = SECURE_SETTINGS['django_secret_key']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = SECURE_SETTINGS['enable_debug']
 
-# SSL is terminated at the ELB so look for this header to know that we should be in ssl mode
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SESSION_COOKIE_SECURE = True
+# # SSL is terminated at the ELB so look for this header to know that we should be in ssl mode
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SESSION_COOKIE_SECURE = True
 
 # AWS Email Settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

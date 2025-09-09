@@ -15,12 +15,6 @@ from ..utils import get_ecs_task_ips, get_container_ip_from_socket
 
 logger = logging.getLogger(__name__)
 
-def log_allowed_hosts():
-    """Log the current ALLOWED_HOSTS for debugging purposes."""
-    logger.info(f"INFO-ALLOWED_HOSTS: {ALLOWED_HOSTS}")
-    print(f"PRINT-ALLOWED_HOSTS: {ALLOWED_HOSTS}")
-    logger.debug(f"DEBUG-ALLOWED_HOSTS: {ALLOWED_HOSTS}")
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 # NOTE: Since we have a settings module, we have to go one more directory up to get to
 # the project root
@@ -28,6 +22,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 
 # Toggle for the Django Debug Toolbar
 DEBUG_TOOLBAR = False
+# Tells Django to use the 'X-Forwarded-Host' header for the domain name.
+USE_X_FORWARDED_HOST = True
+
+# Tells Django to trust the 'X-Forwarded-Proto' header to determine
+# if the connection's scheme is secure (https).
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 
@@ -113,14 +113,13 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # For LTI apps, SameSite must be set to 'None' to allow the session cookie to
 # be sent on the cross-site GET redirect after the initial POST launch.
 SESSION_COOKIE_SAMESITE = SECURE_SETTINGS.get('session_cookie_samesite', 'None')
-# CSRF_SAME_SITE = SECURE_SETTINGS.get('sesssion_same_site', 'None')
 
 # The Secure flag must be True for cookies with SameSite=None. In production
 # environments with HTTPS, this must always be True. For local development
 # without HTTP, it must be set to False.
 # We retrieve the value from an environment variable and default to True.
 SESSION_COOKIE_SECURE = SECURE_SETTINGS.get('session_cookie_secure', 'True') == 'True'
-# CSRF_COOKIE_SECURE = SECURE_SETTINGS.get('session_cookie_secure', 'True') == 'True'
+CSRF_COOKIE_SECURE=True
 
 # Cache
 # https://docs.djangoproject.com/en/1.9/ref/settings/#std:setting-CACHES
@@ -208,8 +207,8 @@ LOGGING = {
     # here is a bit more explicit.  See link for more details:
     # https://docs.python.org/2.7/library/logging.config.html#dictionary-schema-details
     'root': {
-        'level': logging.WARNING,
-        'handlers': ['console_stdout'],
+        'level': _DEFAULT_LOG_LEVEL,
+        'handlers': ['console_stdout']
     },
     'loggers': {
         # Add app specific loggers here, should look something like this:

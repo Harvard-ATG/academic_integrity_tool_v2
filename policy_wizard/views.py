@@ -13,6 +13,9 @@ from .forms import PolicyTemplateForm, NewPolicyForm
 from django.views.decorators.clickjacking import xframe_options_exempt
 from .decorators import require_role_administrator, require_role_instructor, require_role_student
 from . import roles
+from django.core.cache import cache
+from django.conf import settings
+
 logger = logging.getLogger(__name__)
 
 @csrf_exempt
@@ -21,6 +24,23 @@ def process_lti_launch_request_view(request):
     '''
     Processes launch request and redirects to appropriate view depending on the role of the launcher
     '''
+        # --- TEMPORARY DEBUGGING ---
+    print("--- LTI URL DEBUGGING ---")
+    print(f"Request Scheme: {request.scheme}")
+    print(f"Request Host: {request.get_host()}")
+    print(f"Absolute URI Django is using: {request.build_absolute_uri()}")
+    print("--------------------------")
+
+    import pprint
+    data = {
+      'scheme': request.scheme,
+      'is_secure': request.is_secure(),
+      'host': request.get_host(),
+      'X-Fwd-Proto': request.META.get('HTTP_X_FORWARDED_PROTO'),
+      'headers': {k: v for k, v in request.META.items() if k.startswith('HTTP_')},
+    }
+    print('<pre>' + pprint.pformat(data) + '</pre>')
+    # --- END DEBUGGING ---
 
     #True if this is a typical lti launch. False if not.
     is_basic_lti_launch = request.method == 'POST' and request.POST.get(
@@ -28,9 +48,7 @@ def process_lti_launch_request_view(request):
 
     try:
         request_is_valid = validate_request(request)
-    except LTIException as e: # oauth session may have timed out or the keys may be wrong
-        logger.error(f"LTIException occurred: {e}")
-        print(f"LTIException occurred: {e}")
+    except LTIException: # oauth session may have timed out or the keys may be wrong
         return redirect('lti_exception_view')
 
     if is_basic_lti_launch and request_is_valid: #if typical lti launch and request is valid ...
@@ -56,6 +74,8 @@ def process_lti_launch_request_view(request):
         #Using the role, e.g. 'Administrator', 'Instructor', or 'Student', determine route to take
         role = request.session.get('role')
         if role==roles.ADMINISTRATOR or role==roles.INSTRUCTOR:
+            test_result = cache.get('my_test_key')
+            print("test_result_from_cache_process_lti_method", test_result)
             return redirect('policy_templates_list')
         elif role==roles.STUDENT:
             return redirect('student_active_policy')
@@ -72,6 +92,9 @@ def policy_templates_list_view(request):
     Displays list of policy templates
     '''
 
+    test_result = cache.get('my_test_key')
+    print("test_result_from_cache_policy_templates_list_view_method", test_result)
+    
     #Fetch role from session attribute. It should be either 'Administrator' or 'Instructor'.
     role = request.session.get('role')
 
