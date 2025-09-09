@@ -73,7 +73,7 @@ To properly test the LTI flow locally, you must expose your local development se
 
 4.  **Update Environment Variables**: NGROK will provide a public URL (ex., `https://<random-string>.ngrok-free.app`).
 
-5.  **Update Canvas**: In your Canvas course settings, [add the LTI tool](https://developerdocs.instructure.com/services/canvas/external-tools/lti/file.tools_xml) using your new public NGROK URL XML page (ex., `https://<random-string>.ngrok-free.app/lti/config`). You can now launch the tool from Canvas to fully test the LTI flow against your local development server with behavior similar to production.
+5.  **Update Canvas**: In your Canvas course settings, add the LTI tool (see ***Original demos*** section below) using your new public NGROK URL XML page (ex., `https://<random-string>.ngrok-free.app/lti/config`). You can now launch the tool from Canvas to fully test the LTI flow against your local development server with behavior similar to production.
 
 
 ### Update the Coverage Badge
