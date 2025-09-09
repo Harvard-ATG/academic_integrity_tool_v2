@@ -53,14 +53,6 @@ def get_ecs_task_ips() -> List[str]:
     logger.debug(f"ECS task IP addresses: {ip_address_list}")
     return ip_address_list
 
-def get_container_ip_from_socket():
-    """
-    Get the internal IP address of the current container.
-    """
-    ip = socket.gethostbyname(socket.gethostname())
-    logger.debug(f"Container IP from socket {ip}")
-    return ip
-
 def parse_env_list(value, default=None):
     """
     Parse a comma-separated list from an environment variable.
