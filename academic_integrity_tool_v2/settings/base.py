@@ -12,6 +12,7 @@ import logging
 from .secure import SECURE_SETTINGS
 from django.utils.log import DEFAULT_LOGGING
 from ..utils import get_ecs_task_ips, get_container_ip_from_socket
+from logging.config import dictConfig
 
 logger = logging.getLogger(__name__)
 
@@ -119,7 +120,41 @@ SESSION_COOKIE_SAMESITE = SECURE_SETTINGS.get('session_cookie_samesite', 'None')
 # without HTTP, it must be set to False.
 # We retrieve the value from an environment variable and default to True.
 SESSION_COOKIE_SECURE = SECURE_SETTINGS.get('session_cookie_secure', 'True') == 'True'
-CSRF_COOKIE_SECURE=True
+
+# CSRF (Cross-Site Request Forgery)
+# https://docs.djangoproject.com/en/5.2/ref/csrf/#module-django.middleware.csrf
+# These are security settings to protect against CSRF attacks, tricking a user's
+# browser into making state-changing requests (i.e. POST, PUT, DELETE, etc.)
+# In the cross-site context of an LTI launch, the CSRF cookie must have the same SameSite and
+# Secure attributes as the session cookie. To ensure they stay aligned, we are
+# explicitly setting the CSRF settings to match the session settings.
+
+# CSRF_COOKIE_SAMESITE controls the SameSite attribute of the CSRF cookie, which is critical for
+# ensuring the cookie is sent with cross-site requests from an LMS like Canvas.
+# the Django default is 'Lax', but for LTI apps, requests are cross-site
+# and therefore this must be 'None', matching the session cookie.
+CSRF_COOKIE_SAMESITE = SESSION_COOKIE_SAMESITE
+
+# CSRF_COOKIE_SECURE controls the Secure attribute of the CSRF cookie.
+# It is important for ensuring that the CSRF cookie is only sent over HTTPS.
+# Django's default is False, but browsers **require this to be True** when
+# SameSite is 'None', just as with the session settings, to protect the CSRF cookie from
+# being intercepted by attackers. Here we match the session settings.
+CSRF_COOKIE_SECURE = SESSION_COOKIE_SECURE
+
+# @tags - For some views, the CSRF attributes set above may need to work in conjunction
+# with Django decorators that modify request behavior.
+
+# `@csrf_exempt` decorator is to exempt a view from CSRF verification. This is
+# used only for endpoints where we know CSRF verification is not needed, such as
+# the initial POST request for the LTI launch, but it must still adhere to the SameSite
+# and Secure cookie requirements.
+
+# `@ensure_csrf_cookie` decorator is used on the views a user sees *after* the
+# initial LTI launch. Because the launch view is `@csrf_exempt`, no CSRF cookie
+# is set on that initial request. This decorator forces Django to set the cookie
+# on the response, ensuring that any subsequent forms the user submits (e.g.,
+# updating the AI policy) will have the necessary token for CSRF validation.
 
 # Cache
 # https://docs.djangoproject.com/en/1.9/ref/settings/#std:setting-CACHES
@@ -179,7 +214,7 @@ _DEFAULT_LOG_LEVEL = SECURE_SETTINGS.get('log_level', logging.DEBUG)
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
     'formatters': {
         'verbose': {
             'format': '%(levelname)s\t%(asctime)s.%(msecs)03dZ\t%(name)s:%(lineno)s\t%(message)s',
@@ -220,7 +255,7 @@ LOGGING = {
         # Make sure that propagate is False so that the root logger doesn't get involved
         # after an app logger handles a log message.
         'django': {
-            'level': 'WARNING',
+            'level': logging.WARNING,
             'handlers': ['console_stdout'],
             'propagate': False,
         },
@@ -230,8 +265,11 @@ LOGGING = {
             'propagate': False,
         },
         'django.server': DEFAULT_LOGGING['loggers']['django.server'],
-    },
+    }
 }
+
+# Configure logging
+dictConfig(LOGGING)
 
 # Other project specific settings
 LTI_TOOL_CONFIGURATION = {
@@ -291,3 +329,4 @@ if container_ip_from_socket not in ALLOWED_HOSTS:
 
 # A set automatically and efficiently removes any duplicates
 ALLOWED_HOSTS = list(set(ALLOWED_HOSTS))
+logger.info(f"Final ALLOWED_HOSTS: {ALLOWED_HOSTS}")

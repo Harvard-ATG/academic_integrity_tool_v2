@@ -2,11 +2,10 @@ import socket
 import requests
 from .base import *
 from logging.config import dictConfig
+
 logger = logging.getLogger(__name__)
 
-# Testing to see which of these will get logged.
-logger.debug("DEBUG_LOG_TEST")
-logger.info("INFO_LOG_TEST")
+logger.info("Loading AWS settings")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = SECURE_SETTINGS['django_secret_key']

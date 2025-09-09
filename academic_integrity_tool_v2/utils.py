@@ -29,6 +29,7 @@ def get_ecs_task_ips() -> List[str]:
 
     # If the environment variable is not set, we're not in a V4-enabled ECS task.
     if not metadata_url:
+        logger.debug("ECS_CONTAINER_METADATA_URI_V4 not set; not running in ECS or not using V4 metadata.")
         return []
 
     try:
@@ -49,7 +50,7 @@ def get_ecs_task_ips() -> List[str]:
 
     # Return a list of unique IPs
     ip_address_list = list(set(ip_addresses))
-    logger.debug(f"DEBUG_LOG_TEST: ECS task IP addresses: {ip_address_list}")
+    logger.debug(f"ECS task IP addresses: {ip_address_list}")
     return ip_address_list
 
 def get_container_ip_from_socket():
@@ -57,7 +58,7 @@ def get_container_ip_from_socket():
     Get the internal IP address of the current container.
     """
     ip = socket.gethostbyname(socket.gethostname())
-    logger.debug(f"DEBUG_LOG_TEST: Getting container IP from socket {ip}")
+    logger.debug(f"Container IP from socket {ip}")
     return ip
 
 def parse_env_list(value, default=None):

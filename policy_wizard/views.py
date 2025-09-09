@@ -1,4 +1,5 @@
 import logging
+import pprint
 
 from pylti.common import LTIException
 
@@ -6,7 +7,7 @@ from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, HttpResponseServerError
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from .models import PolicyTemplates, Policies
 from .utils import role_identifier, validate_request, inactivate_active_policies
 from .forms import PolicyTemplateForm, NewPolicyForm
@@ -24,14 +25,8 @@ def process_lti_launch_request_view(request):
     '''
     Processes launch request and redirects to appropriate view depending on the role of the launcher
     '''
-        # --- TEMPORARY DEBUGGING ---
-    print("--- LTI URL DEBUGGING ---")
-    print(f"Request Scheme: {request.scheme}")
-    print(f"Request Host: {request.get_host()}")
-    print(f"Absolute URI Django is using: {request.build_absolute_uri()}")
-    print("--------------------------")
 
-    import pprint
+    # Logging the incoming request data for debugging
     data = {
       'scheme': request.scheme,
       'is_secure': request.is_secure(),
@@ -39,8 +34,8 @@ def process_lti_launch_request_view(request):
       'X-Fwd-Proto': request.META.get('HTTP_X_FORWARDED_PROTO'),
       'headers': {k: v for k, v in request.META.items() if k.startswith('HTTP_')},
     }
-    print('<pre>' + pprint.pformat(data) + '</pre>')
-    # --- END DEBUGGING ---
+    logger.debug('<pre>' + pprint.pformat(data) + '</pre>')
+
 
     #True if this is a typical lti launch. False if not.
     is_basic_lti_launch = request.method == 'POST' and request.POST.get(
@@ -86,6 +81,7 @@ def process_lti_launch_request_view(request):
 def lti_exception_view(request):
     return render(request, 'lti_exception.html', {})
 
+@ensure_csrf_cookie
 @xframe_options_exempt
 def policy_templates_list_view(request):
     '''
@@ -152,7 +148,7 @@ def policy_templates_list_view(request):
     else: #i.e. 'Student'
         raise PermissionDenied
 
-
+@ensure_csrf_cookie
 @xframe_options_exempt
 @require_role_administrator
 def admin_level_template_edit_view(request, pk):
@@ -171,6 +167,7 @@ def admin_level_template_edit_view(request, pk):
         form = PolicyTemplateForm(initial={'body': template_to_update.body})
     return render(request, 'admin_level_template_edit.html', {'form': form, 'template_to_update': template_to_update})
 
+@ensure_csrf_cookie
 @xframe_options_exempt
 @require_role_administrator
 def admin_updated_template_view(request, pk):
@@ -180,6 +177,7 @@ def admin_updated_template_view(request, pk):
     updated_template = PolicyTemplates.objects.get(pk=pk)
     return render(request, 'admin_updated_template.html', {'updated_template': updated_template})
 
+@ensure_csrf_cookie
 @xframe_options_exempt
 @require_role_administrator
 def admin_edit_updated_template_view(request, pk):
@@ -198,6 +196,7 @@ def admin_edit_updated_template_view(request, pk):
         form = PolicyTemplateForm(initial={'body': template_to_update.body})
     return render(request, 'admin_edit_updated_template.html', {'form': form, 'template_to_update': template_to_update})
 
+@ensure_csrf_cookie
 @xframe_options_exempt
 @require_role_instructor
 def instructor_level_policy_edit_view(request, pk):
@@ -229,6 +228,7 @@ def instructor_level_policy_edit_view(request, pk):
         form = NewPolicyForm(initial={'body': policy_template.body})
     return render(request, 'instructor_level_policy_edit.html', {'policy_template': policy_template, 'form': form})
 
+@ensure_csrf_cookie
 @xframe_options_exempt
 @require_role_instructor
 def instructor_active_policy(request, pk):
@@ -238,6 +238,8 @@ def instructor_active_policy(request, pk):
     active_policy = Policies.objects.get(pk=pk)
     return render(request, 'instructor_active_policy.html', {'active_policy': active_policy})
 
+
+@ensure_csrf_cookie
 @xframe_options_exempt
 @require_role_instructor
 def edit_active_policy(request, pk):
@@ -260,6 +262,7 @@ def edit_active_policy(request, pk):
         form = NewPolicyForm(initial={'body': policy_to_edit.body})
     return render(request, 'instructor_level_policy_edit.html', {'policy_template': policy_to_edit, 'form': form})
 
+@ensure_csrf_cookie
 @xframe_options_exempt
 @require_role_instructor
 def instructor_inactivate_policies_view(request):
@@ -271,6 +274,7 @@ def instructor_inactivate_policies_view(request):
     # Redirect to list of templates
     return redirect('policy_templates_list')
 
+@ensure_csrf_cookie
 @xframe_options_exempt
 @require_role_student
 def student_active_policy_view(request):
