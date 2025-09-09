@@ -233,6 +233,13 @@ LOGGING = {
             'level': _DEFAULT_LOG_LEVEL,
             'formatter': 'verbose'
         },
+        # Captures any logs going to the console
+        'console_stderr': {
+            'class': 'logging.StreamHandler',
+            'stream': 'ext://sys.stderr',
+            'level': 'WARNING',
+            'formatter': 'verbose'
+        },
         'django.server': DEFAULT_LOGGING['handlers']['django.server'],
     },
     # This is the default logger for any apps or libraries that use the logger
@@ -243,7 +250,7 @@ LOGGING = {
     # https://docs.python.org/2.7/library/logging.config.html#dictionary-schema-details
     'root': {
         'level': _DEFAULT_LOG_LEVEL,
-        'handlers': ['console_stdout']
+        'handlers': ['console_stdout', 'console_stderr']
     },
     'loggers': {
         # Add app specific loggers here, should look something like this:
@@ -256,12 +263,12 @@ LOGGING = {
         # after an app logger handles a log message.
         'django': {
             'level': logging.WARNING,
-            'handlers': ['console_stdout'],
+            'handlers': ['console_stdout', 'console_stderr'],
             'propagate': False,
         },
         'academic_integrity_tool_v2': {
             'level': _DEFAULT_LOG_LEVEL,
-            'handlers': ['console_stdout'],
+            'handlers': ['console_stdout', 'console_stderr'],
             'propagate': False,
         },
         'django.server': DEFAULT_LOGGING['loggers']['django.server'],
@@ -316,16 +323,18 @@ ecs_task_ips = get_ecs_task_ips()
 container_ip_from_socket = get_container_ip_from_socket()
 
 # Log the container IP for debugging purposes
-logger.info(f"ECS task IPs: {ecs_task_ips}")
-logger.info(f"Container IP from socket: {container_ip_from_socket}")
+logger.debug(f"ECS task IPs: {ecs_task_ips}")
+logger.debug(f"Container IP from socket: {container_ip_from_socket}")
 
 # Update ALLOWED_HOSTS with ECS task IPs and container IP if not already present
 if ecs_task_ips:
     ALLOWED_HOSTS.extend(ecs_task_ips)
 
 if container_ip_from_socket not in ALLOWED_HOSTS:
-    logger.info(f"Socket IP {container_ip_from_socket} not in ALLOWED_HOSTS, adding it.")
+    logger.debug(f"Socket IP {container_ip_from_socket} not in ALLOWED_HOSTS, adding it.")
     ALLOWED_HOSTS.append(container_ip_from_socket)
+else:
+    logger.debug(f"Socket IP {container_ip_from_socket} already in ALLOWED_HOSTS.")
 
 # A set automatically and efficiently removes any duplicates
 ALLOWED_HOSTS = list(set(ALLOWED_HOSTS))
