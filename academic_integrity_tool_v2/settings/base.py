@@ -11,7 +11,7 @@ import os
 import logging
 from .secure import SECURE_SETTINGS
 from django.utils.log import DEFAULT_LOGGING
-from ..utils import get_ecs_task_ips, get_container_ip_from_socket
+from ..utils import get_ecs_task_ips
 from logging.config import dictConfig
 
 logger = logging.getLogger(__name__)
@@ -318,23 +318,15 @@ ALLOWED_HOSTS = SECURE_SETTINGS.get('ALLOWED_HOSTS', [])
 # Log the initial ALLOWED_HOSTS for debugging purposes
 logger.info(f"Initial ALLOWED_HOSTS: {ALLOWED_HOSTS}")
 
-# Get ECS task IPs and container IP from socket
+# Get ECS task IPs
 ecs_task_ips = get_ecs_task_ips()
-container_ip_from_socket = get_container_ip_from_socket()
 
 # Log the container IP for debugging purposes
 logger.debug(f"ECS task IPs: {ecs_task_ips}")
-logger.debug(f"Container IP from socket: {container_ip_from_socket}")
 
 # Update ALLOWED_HOSTS with ECS task IPs and container IP if not already present
 if ecs_task_ips:
     ALLOWED_HOSTS.extend(ecs_task_ips)
-
-if container_ip_from_socket not in ALLOWED_HOSTS:
-    logger.debug(f"Socket IP {container_ip_from_socket} not in ALLOWED_HOSTS, adding it.")
-    ALLOWED_HOSTS.append(container_ip_from_socket)
-else:
-    logger.debug(f"Socket IP {container_ip_from_socket} already in ALLOWED_HOSTS.")
 
 # A set automatically and efficiently removes any duplicates
 ALLOWED_HOSTS = list(set(ALLOWED_HOSTS))
