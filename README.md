@@ -10,8 +10,8 @@ Follow the Canvas Admin Guide on [How do I configure an external app for an acco
 
 The key details you will need include:
 
-- **Consumer key**: obtain this from `academic_integrity_tool_v2/settings/.env`
-- **Shared secret**: obtain this from `academic_integrity_tool_v2/settings/.env`
+- **Consumer key**: obtain this from `academic_integrity_tool_v2/settings/.env.example`
+- **Shared secret**: obtain this from `academic_integrity_tool_v2/settings/.env.example`
 - **XML configuration**: obtain this from http://localhost:8000/lti/config. Or with ngrok, [https://<random-string>.ngrok-free.app/lti/config](https://ngrok.com/docs/universal-gateway/domains/#ngrok-managed-domains)
 
 Once installed, the tool should be displayed in the left-hand course navigation as **AI Policy**. Note that it may be disabled in the navigation by default, so you may need to manually enable it in the course settings navigation (drag and drop to move to the desired position).
