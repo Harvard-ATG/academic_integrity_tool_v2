@@ -1,5 +1,6 @@
 .idea
 .coverage
+.env
 *~
 .DS_Store
 sqlnet.log
@@ -11,7 +12,6 @@ sqlnet.log
 *.sqlite3
 ignore-*.md
 # Generated files
-secure.py
 gunicorn.py
 # Where static files are collected
 http_static

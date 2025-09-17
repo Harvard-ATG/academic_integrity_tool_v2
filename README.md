@@ -10,9 +10,9 @@ Follow the Canvas Admin Guide on [How do I configure an external app for an acco
 
 The key details you will need include:
 
-- **Consumer key**: obtain this from `academic_integrity_tool_v2/settings/secure.py`
-- **Shared secret**: obtain this from `academic_integrity_tool_v2/settings/secure.py`
-- **XML configuration**: obtain this from http://localhost:8000/lti/config
+- **Consumer key**: obtain this from `academic_integrity_tool_v2/settings/.env.example`
+- **Shared secret**: obtain this from `academic_integrity_tool_v2/settings/.env.example`
+- **XML configuration**: obtain this from http://localhost:8000/lti/config. Or with ngrok, [https://<random-string>.ngrok-free.app/lti/config](https://ngrok.com/docs/universal-gateway/domains/#ngrok-managed-domains)
 
 Once installed, the tool should be displayed in the left-hand course navigation as **AI Policy**. Note that it may be disabled in the navigation by default, so you may need to manually enable it in the course settings navigation (drag and drop to move to the desired position).
 
@@ -25,17 +25,15 @@ The instructions below assume you have [Docker](https://www.docker.com/) install
 Configure django settings:
 
 ```
-$ cp academic_integrity_tool_v2/settings/secure.py.example academic_integrity_tool_v2/settings/secure.py
-$ echo 'SECURE_SETTINGS["db_default_host"] = "db" # for docker' >> academic_integrity_tool_v2/settings/secure.py
-$ echo 'SECURE_SETTINGS["redis_host"] = "redis" # for docker' >> academic_integrity_tool_v2/settings/secure.py
+$ cp academic_integrity_tool_v2/.env.example academic_integrity_tool_v2/settings/.env
+
 ```
 
 Run the application:
 
 ```
 $ docker compose up
-$ docker compose run web python manage.py migrate
-$ docker compose run web python manage.py loaddata --app policy_wizard boilerplate_policy_templates.yml
+
 ```
 
 Open the tool in your web browser to verify it is up and running:
@@ -49,6 +47,34 @@ open http://localhost:8000
 ```
 $ docker compose run web python manage.py test
 ```
+
+#### Integrated Testing
+
+When this tool is launched from Canvas, it is embedded in an `iframe` from a secure (`https-` based) site. For the cross-domain session and CSRF cookies to function correctly, our Django settings are configured with `SESSION_COOKIE_SECURE = True` and `CSRF_COOKIE_SECURE = True`. These settings command the browser to only send cookies over a secure HTTPS connection.
+
+While local development on `http://localhost:8000` may appear to work for basic views, this is because modern browsers often treat `localhost` as a "secure context" and relax this policy. However, this does not accurately simulate the production LTI environment and will fail when trying to establish a valid cross-domain session.
+
+To properly test the LTI flow locally, you must expose your local development server on a public **HTTPS** URL. **NGROK** is a tool that provides this functionality.
+
+##### NGrok Configuration Steps
+
+1.  **Install NGROK**: Follow the [official instructions](https://ngrok.com/docs/getting-started/)
+
+2.  **Start the Django Server**: Run the local development server as usual.
+    ```bash
+    docker-compose up
+    ```
+
+3.  **Start NGROK**: In a separate terminal, run the following command to expose your local port 8000 on a public HTTPS URL.
+    ```bash
+    ngrok http --scheme=https 8000
+    ```
+    -   This command tells `ngrok` to forward traffic to your local `http://localhost:8000` but to set the forwarding scheme in the HTTP headers to `https`. This ensures Django recognizes the connection as secure, which is necessary for the secure cookie flags.
+
+4.  **Update Environment Variables**: NGROK will provide a public URL (ex., `https://<random-string>.ngrok-free.app`).
+
+5.  **Update Canvas**: In your Canvas course settings, add the LTI tool (see ***Original demos*** section below) using your new public NGROK URL XML page (ex., `https://<random-string>.ngrok-free.app/lti/config`). You can now launch the tool from Canvas to fully test the LTI flow against your local development server with behavior similar to production.
+
 
 ### Update the Coverage Badge
 

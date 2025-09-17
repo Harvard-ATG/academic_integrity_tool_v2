@@ -11,6 +11,10 @@ import os
 import logging
 from .secure import SECURE_SETTINGS
 from django.utils.log import DEFAULT_LOGGING
+from ..utils import get_ecs_task_ips
+from logging.config import dictConfig
+
+logger = logging.getLogger(__name__)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 # NOTE: Since we have a settings module, we have to go one more directory up to get to
@@ -19,6 +23,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 
 # Toggle for the Django Debug Toolbar
 DEBUG_TOOLBAR = False
+# Tells Django to use the 'X-Forwarded-Host' header for the domain name.
+USE_X_FORWARDED_HOST = True
+
+# Tells Django to trust the 'X-Forwarded-Proto' header to determine
+# if the connection's scheme is secure (https).
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 
@@ -99,6 +109,53 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 # which defaults to 2 weeks.
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
+# Because this is an LTI tool that will be launched from Canvas, the requests here
+# will be cross-site by default, and need to be accounted for across environments.
+# For LTI apps, SameSite must be set to 'None' to allow the session cookie to
+# be sent on the cross-site GET redirect after the initial POST launch.
+SESSION_COOKIE_SAMESITE = SECURE_SETTINGS.get('session_cookie_samesite', 'None')
+
+# The Secure flag must be True for cookies with SameSite=None. In production
+# environments with HTTPS, this must always be True. For local development
+# without HTTP, it must be set to False.
+# We retrieve the value from an environment variable and default to True.
+SESSION_COOKIE_SECURE = SECURE_SETTINGS.get('session_cookie_secure', 'True') == 'True'
+
+# CSRF (Cross-Site Request Forgery)
+# https://docs.djangoproject.com/en/5.2/ref/csrf/#module-django.middleware.csrf
+# These are security settings to protect against CSRF attacks, tricking a user's
+# browser into making state-changing requests (i.e. POST, PUT, DELETE, etc.)
+# In the cross-site context of an LTI launch, the CSRF cookie must have the same SameSite and
+# Secure attributes as the session cookie. To ensure they stay aligned, we are
+# explicitly setting the CSRF settings to match the session settings.
+
+# CSRF_COOKIE_SAMESITE controls the SameSite attribute of the CSRF cookie, which is critical for
+# ensuring the cookie is sent with cross-site requests from an LMS like Canvas.
+# the Django default is 'Lax', but for LTI apps, requests are cross-site
+# and therefore this must be 'None', matching the session cookie.
+CSRF_COOKIE_SAMESITE = SESSION_COOKIE_SAMESITE
+
+# CSRF_COOKIE_SECURE controls the Secure attribute of the CSRF cookie.
+# It is important for ensuring that the CSRF cookie is only sent over HTTPS.
+# Django's default is False, but browsers **require this to be True** when
+# SameSite is 'None', just as with the session settings, to protect the CSRF cookie from
+# being intercepted by attackers. Here we match the session settings.
+CSRF_COOKIE_SECURE = SESSION_COOKIE_SECURE
+
+# @tags - For some views, the CSRF attributes set above may need to work in conjunction
+# with Django decorators that modify request behavior.
+
+# `@csrf_exempt` decorator is to exempt a view from CSRF verification. This is
+# used only for endpoints where we know CSRF verification is not needed, such as
+# the initial POST request for the LTI launch, but it must still adhere to the SameSite
+# and Secure cookie requirements.
+
+# `@ensure_csrf_cookie` decorator is used on the views a user sees *after* the
+# initial LTI launch. Because the launch view is `@csrf_exempt`, no CSRF cookie
+# is set on that initial request. This decorator forces Django to set the cookie
+# on the response, ensuring that any subsequent forms the user submits (e.g.,
+# updating the AI policy) will have the necessary token for CSRF validation.
+
 # Cache
 # https://docs.djangoproject.com/en/1.9/ref/settings/#std:setting-CACHES
 
@@ -147,18 +204,17 @@ STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, 'http_static'))
 STATIC_URL = '/static/'
 
 # Logging
-# https://docs.djangoproject.com/en/1.9/topics/logging/#configuring-logging
+# https://docs.djangoproject.com/en/5.2/howto/logging/#how-to-configure-and-use-logging
 
 # Turn off default Django logging
 # https://docs.djangoproject.com/en/1.9/topics/logging/#disabling-logging-configuration
 LOGGING_CONFIG = None
 
 _DEFAULT_LOG_LEVEL = SECURE_SETTINGS.get('log_level', logging.DEBUG)
-_LOG_ROOT = SECURE_SETTINGS.get('log_root', '')
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
     'formatters': {
         'verbose': {
             'format': '%(levelname)s\t%(asctime)s.%(msecs)03dZ\t%(name)s:%(lineno)s\t%(message)s',
@@ -170,24 +226,31 @@ LOGGING = {
         'django.server': DEFAULT_LOGGING['formatters']['django.server'],
     },
     'handlers': {
-        # By default, log to a file
-        'default': {
-            'class': 'logging.handlers.WatchedFileHandler',
+        # By default, log to sys.stdout for pickup by splunk
+        'console_stdout': {
+            'class': 'logging.StreamHandler',
+            'stream': 'ext://sys.stdout',
             'level': _DEFAULT_LOG_LEVEL,
-            'formatter': 'verbose',
-            'filename': os.path.join(_LOG_ROOT, 'django-academic_integrity_tool_v2.log'),
+            'formatter': 'verbose'
+        },
+        # Captures any logs going to the console
+        'console_stderr': {
+            'class': 'logging.StreamHandler',
+            'stream': 'ext://sys.stderr',
+            'level': 'WARNING',
+            'formatter': 'verbose'
         },
         'django.server': DEFAULT_LOGGING['handlers']['django.server'],
     },
     # This is the default logger for any apps or libraries that use the logger
     # package, but are not represented in the `loggers` dict below.  A level
     # must be set and handlers defined.  Setting this logger is equivalent to
-    # setting and empty string logger in the loggers dict below, but the separation
+    # setting an empty string logger in the loggers dict below, but the separation
     # here is a bit more explicit.  See link for more details:
     # https://docs.python.org/2.7/library/logging.config.html#dictionary-schema-details
     'root': {
-        'level': logging.WARNING,
-        'handlers': ['default'],
+        'level': _DEFAULT_LOG_LEVEL,
+        'handlers': ['console_stdout', 'console_stderr']
     },
     'loggers': {
         # Add app specific loggers here, should look something like this:
@@ -198,9 +261,22 @@ LOGGING = {
         # },
         # Make sure that propagate is False so that the root logger doesn't get involved
         # after an app logger handles a log message.
+        'django': {
+            'level': logging.WARNING,
+            'handlers': ['console_stdout', 'console_stderr'],
+            'propagate': False,
+        },
+        'academic_integrity_tool_v2': {
+            'level': _DEFAULT_LOG_LEVEL,
+            'handlers': ['console_stdout', 'console_stderr'],
+            'propagate': False,
+        },
         'django.server': DEFAULT_LOGGING['loggers']['django.server'],
-    },
+    }
 }
+
+# Configure logging
+dictConfig(LOGGING)
 
 # Other project specific settings
 LTI_TOOL_CONFIGURATION = {
@@ -211,7 +287,6 @@ LTI_TOOL_CONFIGURATION = {
     'navigation': True,
 }
 
-
 PYLTI_CONFIG = {
     'consumers': {
         SECURE_SETTINGS['CONSUMER_KEY']: {
@@ -220,9 +295,39 @@ PYLTI_CONFIG = {
     }
 }
 
-
-
-
-
-
 X_FRAME_OPTIONS = SECURE_SETTINGS.get('X_FRAME_OPTIONS', 'ALLOW-FROM https://canvas.harvard.edu')
+
+# Dynamically update ALLOWED_HOSTS for the AWS ECS environment.
+#
+# Why: AWS Application Load Balancer (ALB) health checks target containers directly
+# by their private IP address. When the ALB sends a health check, the request's
+# 'Host' header contains this private IP. For the health check to succeed, Django
+# requires this IP to be present in the ALLOWED_HOSTS setting.
+#
+# How: This code block fetches the container's private IP from two sources for robustness:
+#   1. The official ECS Task Metadata Endpoint (`get_ecs_task_ips`), which is the
+#      authoritative source for the task's network information.
+#   2. The container's own network socket (`get_container_ip_from_socket`) as a fallback
+#      and for verification.
+#
+# Result: The discovered IP(s) are added to the existing ALLOWED_HOSTS list
+# (which should already contain public-facing domain names), and any duplicates are
+# removed. This configuration allows critical health checks to pass while maintaining
+# security by avoiding an insecure wildcard setting like ['*'].
+ALLOWED_HOSTS = SECURE_SETTINGS.get('ALLOWED_HOSTS', [])
+# Log the initial ALLOWED_HOSTS for debugging purposes
+logger.info(f"Initial ALLOWED_HOSTS: {ALLOWED_HOSTS}")
+
+# Get ECS task IPs
+ecs_task_ips = get_ecs_task_ips()
+
+# Log the container IP for debugging purposes
+logger.debug(f"ECS task IPs: {ecs_task_ips}")
+
+# Update ALLOWED_HOSTS with ECS task IPs and container IP if not already present
+if ecs_task_ips:
+    ALLOWED_HOSTS.extend(ecs_task_ips)
+
+# A set automatically and efficiently removes any duplicates
+ALLOWED_HOSTS = list(set(ALLOWED_HOSTS))
+logger.info(f"Final ALLOWED_HOSTS: {ALLOWED_HOSTS}")

@@ -6,17 +6,21 @@ services:
       - "6379:6379"
   db:
     image: postgres:13.0
+    env_file:
+      - .env
     restart: on-failure
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_PASSWORD: academic_integrity_tool_v2
-      POSTGRES_USER: academic_integrity_tool_v2
-      POSTGRES_DB: academic_integrity_tool_v2
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_USER: "${DB_USER}"
+      POSTGRES_DB: "${DB_NAME}"
   # Note: run "docker-compose run web python3 manage.py migrate" after the web service is up
   web:
     build: .
     image: academic_integrity_tool_v2
+    env_file:
+      - .env
     command: ["./docker-wait-for-it.sh", "db:5432", "--", "python3", "manage.py", "runserver", "0.0.0.0:8000"]
     environment:
       DJANGO_SETTINGS_MODULE: "academic_integrity_tool_v2.settings.local"

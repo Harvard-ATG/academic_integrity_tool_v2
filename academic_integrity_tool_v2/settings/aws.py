@@ -1,5 +1,11 @@
+import socket
+import requests
 from .base import *
 from logging.config import dictConfig
+
+logger = logging.getLogger(__name__)
+
+logger.info("Loading AWS settings")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = SECURE_SETTINGS['django_secret_key']
@@ -7,12 +13,9 @@ SECRET_KEY = SECURE_SETTINGS['django_secret_key']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = SECURE_SETTINGS['enable_debug']
 
-# tlt hostnames
-ALLOWED_HOSTS = ['.tlt.harvard.edu']
-
-# SSL is terminated at the ELB so look for this header to know that we should be in ssl mode
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SESSION_COOKIE_SECURE = True
+# # SSL is terminated at the ELB so look for this header to know that we should be in ssl mode
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SESSION_COOKIE_SECURE = True
 
 # AWS Email Settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

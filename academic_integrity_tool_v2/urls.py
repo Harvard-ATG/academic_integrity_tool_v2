@@ -16,9 +16,11 @@ from django.conf import settings
 from django.urls import include, path
 from django.contrib import admin
 from lti_provider import views as lti_views
+from .health_check_view import health_check_view
 
 
 urlpatterns = [
+    path('health', health_check_view, name='health_check'),
     path('admin/', admin.site.urls),
     path('lti/launch/', include('policy_wizard.urls')),
     path('lti/config', lti_views.LTIConfigView.as_view(), name="get_lti_xml"),
