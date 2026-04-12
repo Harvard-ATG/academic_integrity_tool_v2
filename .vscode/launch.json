@@ -2,11 +2,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Start Dev Environment",
+      "name": "Local + Dev Login",
       "type": "node-terminal",
       "request": "launch",
-      "command": "echo 'Dev environment started — docker compose and ngrok are running in the terminal panels below.'",
-      "preLaunchTask": "Start Dev Environment"
+      "command": "echo 'App is running — visit a dev login link: http://localhost:8000/dev/login/instructor/'",
+      "preLaunchTask": "Docker Compose Up"
+    },
+    {
+      "name": "Local + Canvas",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "echo 'Docker compose and ngrok are running — install the tool in Canvas using the ngrok URL.'",
+      "preLaunchTask": "Local + Canvas"
     }
   ]
 }

@@ -48,9 +48,16 @@ open http://localhost:8000
 $ docker compose run web python manage.py test
 ```
 
-### Local Dev Login (no Canvas / LTI required)
+### Development Workflows
 
-When `DEBUG=True`, you can bypass the LTI launch and view the app as any role by visiting one of the URLs below. This seeds the Django session with the chosen role and fake course identifiers, then redirects to that role's landing page.
+There are two workflows for local development, depending on whether you need Canvas integration.
+
+#### Local + Dev Login (no Canvas / LTI integration)
+
+For UI changes, template rendering, form behavior — anything that doesn't need a real LTI launch.
+
+1. `docker compose up` (or Run and Debug → **"Local + Dev Login"**)
+2. Visit a dev login link to seed your session with a role:
 
 | Role | URL |
 |------|-----|
@@ -58,53 +65,39 @@ When `DEBUG=True`, you can bypass the LTI launch and view the app as any role by
 | Student | http://localhost:8000/dev/login/student/ |
 | Admin | http://localhost:8000/dev/login/admin/ |
 
-Your session persists until you clear cookies or visit a different role link to switch.
+You'll be redirected to that role's landing page. Switch roles by clicking a different link. Session persists until you clear cookies.
 
 > **These routes are only registered when `DEBUG=True` and will 404 in production.**
 
-This is a convenience for quickly testing UI changes, template rendering, and form behavior without needing to set up Canvas, ngrok, or a full LTI handshake. It is **not** a replacement for integrated LTI testing — you should still verify the full LTI launch flow (Canvas → ngrok → LTI handshake → role identification → session) before considering work complete.
+#### Local + Canvas (integrated LTI testing)
+
+For testing the full LTI flow: Canvas launch → ngrok → LTI handshake → role identification → session. Use this to verify cross-domain cookies, secure context behavior, and the actual install/launch experience.
+
+1. Start both services — either manually or from VS Code:
+   - **Manual:** `docker compose up` in one terminal, `ngrok http --scheme=https 8000` in another
+   - **VS Code:** Run and Debug panel → **"Local + Canvas"** (launches both in parallel)
+2. Copy the ngrok HTTPS URL (e.g. `https://<random-string>.ngrok-free.app`)
+3. In Canvas course settings, install the LTI tool using the XML config URL: `https://<random-string>.ngrok-free.app/lti/config`
+4. Launch the tool from Canvas course navigation — it should appear as **AI Policy**
+
+**Why ngrok is required:** Canvas embeds the tool in an iframe from a secure (`https`) site. Django's `SESSION_COOKIE_SECURE = True` and `CSRF_COOKIE_SECURE = True` settings require HTTPS for cookies to work. While `localhost` may appear to work (browsers treat it as a secure context), it doesn't simulate the real cross-domain iframe behavior. ngrok's `--scheme=https` flag ensures Django sees a secure connection.
 
 ### VS Code Tasks
 
 Pre-configured tasks are available via **Terminal → Run Task** or the **Run and Debug** panel:
 
-| Task | What it does |
-|------|-------------|
-| **Start Dev Environment** | Runs `docker compose up` + `ngrok` in parallel — one click to get both running for LTI testing |
-| Docker Compose Up | `docker compose up` (just the app, no ngrok) |
-| Ngrok | `ngrok http --scheme=https 8000` |
-| Run All Tests | Runs the full test suite in Docker |
-| Run Validation Tests | Runs only `tests_validations.py` |
-| Docker Compose Down | `docker compose down` |
+| Task | What it does | Workflow |
+|------|-------------|----------|
+| **Local + Canvas** | `docker compose up` + `ngrok` in parallel | Local + Canvas |
+| Docker Compose Up | `docker compose up` (app only) | Local + Dev Login |
+| Ngrok | `ngrok http --scheme=https 8000` | Local + Canvas |
+| Run All Tests | Full test suite in Docker | — |
+| Run Validation Tests | Only `tests_validations.py` | — |
+| Docker Compose Down | `docker compose down` | — |
 
-From the **Run and Debug** panel (▶️), select **"Start Dev Environment"** to launch Docker Compose and ngrok together. The dev login URLs will be printed in the Docker terminal output.
-
-#### Integrated Testing
-
-When this tool is launched from Canvas, it is embedded in an `iframe` from a secure (`https-` based) site. For the cross-domain session and CSRF cookies to function correctly, our Django settings are configured with `SESSION_COOKIE_SECURE = True` and `CSRF_COOKIE_SECURE = True`. These settings command the browser to only send cookies over a secure HTTPS connection.
-
-While local development on `http://localhost:8000` may appear to work for basic views, this is because modern browsers often treat `localhost` as a "secure context" and relax this policy. However, this does not accurately simulate the production LTI environment and will fail when trying to establish a valid cross-domain session.
-
-To properly test the LTI flow locally, you must expose your local development server on a public **HTTPS** URL. **NGROK** is a tool that provides this functionality.
-
-##### NGrok Configuration Steps
-
-1.  **Install NGROK**: Follow the [official instructions](https://ngrok.com/docs/getting-started/)
-
-2.  **Start the Django Server**: Run the local development server as usual.
-    ```bash
-    docker-compose up
-    ```
-
-3.  **Start NGROK**: In a separate terminal, run the following command to expose your local port 8000 on a public HTTPS URL.
-    ```bash
-    ngrok http --scheme=https 8000
-    ```
-    -   This command tells `ngrok` to forward traffic to your local `http://localhost:8000` but to set the forwarding scheme in the HTTP headers to `https`. This ensures Django recognizes the connection as secure, which is necessary for the secure cookie flags.
-
-4.  **Update Environment Variables**: NGROK will provide a public URL (ex., `https://<random-string>.ngrok-free.app`).
-
-5.  **Update Canvas**: In your Canvas course settings, add the LTI tool (see ***Original demos*** section below) using your new public NGROK URL XML page (ex., `https://<random-string>.ngrok-free.app/lti/config`). You can now launch the tool from Canvas to fully test the LTI flow against your local development server with behavior similar to production.
+From the **Run and Debug** panel (▶️):
+- **"Local + Dev Login"** — starts Docker Compose, then visit a dev login link
+- **"Local + Canvas"** — starts Docker Compose + ngrok, then install the tool in Canvas
 
 
 ### Update the Coverage Badge

@@ -26,7 +26,7 @@
       }
     },
     {
-      "label": "Start Dev Environment",
+      "label": "Local + Canvas",
       "dependsOn": ["Docker Compose Up", "Ngrok"],
       "dependsOrder": "parallel",
       "problemMatcher": [],
