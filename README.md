@@ -48,6 +48,22 @@ open http://localhost:8000
 $ docker compose run web python manage.py test
 ```
 
+### Local Dev Login (no Canvas / LTI required)
+
+When `DEBUG=True`, you can bypass the LTI launch and view the app as any role by visiting one of the URLs below. This seeds the Django session with the chosen role and fake course identifiers, then redirects to that role's landing page.
+
+| Role | URL |
+|------|-----|
+| Instructor | http://localhost:8000/dev/login/instructor/ |
+| Student | http://localhost:8000/dev/login/student/ |
+| Admin | http://localhost:8000/dev/login/admin/ |
+
+Your session persists until you clear cookies or visit a different role link to switch.
+
+> **These routes are only registered when `DEBUG=True` and will 404 in production.**
+
+This is a convenience for quickly testing UI changes, template rendering, and form behavior without needing to set up Canvas, ngrok, or a full LTI handshake. It is **not** a replacement for integrated LTI testing — you should still verify the full LTI launch flow (Canvas → ngrok → LTI handshake → role identification → session) before considering work complete.
+
 #### Integrated Testing
 
 When this tool is launched from Canvas, it is embedded in an `iframe` from a secure (`https-` based) site. For the cross-domain session and CSRF cookies to function correctly, our Django settings are configured with `SESSION_COOKIE_SECURE = True` and `CSRF_COOKIE_SECURE = True`. These settings command the browser to only send cookies over a secure HTTPS connection.

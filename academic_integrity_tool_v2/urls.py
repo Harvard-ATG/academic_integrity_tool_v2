@@ -27,6 +27,12 @@ urlpatterns = [
     path('tinymce/', include('tinymce.urls')),
 ]
 
+if settings.DEBUG:
+    from policy_wizard.dev_views import dev_login_view
+    urlpatterns += [
+        path('dev/login/<str:role_slug>/', dev_login_view, name='dev_login'),
+    ]
+
 
 if settings.DEBUG_TOOLBAR:
     import debug_toolbar

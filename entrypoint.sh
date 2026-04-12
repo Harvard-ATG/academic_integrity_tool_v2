@@ -9,10 +9,6 @@
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
-# --- DEBUGGING LINE ---
-echo "DJANGO_SETTINGS_MODULE is set to: $DJANGO_SETTINGS_MODULE"
-# --- END DEBUGGING LINE ---
-
 # Local only: Wait for the database service to be available. Not needed in dev/prod using long running services.
 if [[ "$DJANGO_SETTINGS_MODULE" == *"local"* ]]; then
     echo "Waiting for database to be ready..."
@@ -32,4 +28,16 @@ fi
 # Execute the main command from the Dockerfile's CMD.
 # This passes control to the real application and executes the startup command.
 echo "Starting Django Server application..."
+
+# Local only: print dev login URLs for quick access without Canvas/LTI.
+if [[ "$DJANGO_SETTINGS_MODULE" == *"local"* ]]; then
+    echo ""
+    echo "App is up — migrations applied, fixtures loaded. Try these in your browser:"
+    echo ""
+    echo "  Instructor: http://localhost:8000/dev/login/instructor/"
+    echo "  Student:    http://localhost:8000/dev/login/student/"
+    echo "  Admin:      http://localhost:8000/dev/login/admin/"
+    echo ""
+fi
+
 exec "$@" # Replaces the shell with the Django server process
