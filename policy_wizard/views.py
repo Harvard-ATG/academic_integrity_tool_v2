@@ -1,9 +1,5 @@
-import logging
-import pprint
-
 from pylti.common import LTIException
 
-from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, HttpResponseServerError
@@ -14,10 +10,6 @@ from .forms import PolicyTemplateForm, NewPolicyForm
 from django.views.decorators.clickjacking import xframe_options_exempt
 from .decorators import require_role_administrator, require_role_instructor, require_role_student
 from . import roles
-from django.core.cache import cache
-from django.conf import settings
-
-logger = logging.getLogger(__name__)
 
 @csrf_exempt
 @xframe_options_exempt #Allows rendering in Canvas frame
@@ -25,17 +17,6 @@ def process_lti_launch_request_view(request):
     '''
     Processes launch request and redirects to appropriate view depending on the role of the launcher
     '''
-
-    # Logging the incoming request data for debugging
-    data = {
-      'scheme': request.scheme,
-      'is_secure': request.is_secure(),
-      'host': request.get_host(),
-      'X-Fwd-Proto': request.META.get('HTTP_X_FORWARDED_PROTO'),
-      'headers': {k: v for k, v in request.META.items() if k.startswith('HTTP_')},
-    }
-    logger.debug('<pre>' + pprint.pformat(data) + '</pre>')
-
 
     #True if this is a typical lti launch. False if not.
     is_basic_lti_launch = request.method == 'POST' and request.POST.get(
@@ -69,8 +50,6 @@ def process_lti_launch_request_view(request):
         #Using the role, e.g. 'Administrator', 'Instructor', or 'Student', determine route to take
         role = request.session.get('role')
         if role==roles.ADMINISTRATOR or role==roles.INSTRUCTOR:
-            test_result = cache.get('my_test_key')
-            print("test_result_from_cache_process_lti_method", test_result)
             return redirect('policy_templates_list')
         elif role==roles.STUDENT:
             return redirect('student_active_policy')
@@ -88,9 +67,6 @@ def policy_templates_list_view(request):
     Displays list of policy templates
     '''
 
-    test_result = cache.get('my_test_key')
-    print("test_result_from_cache_policy_templates_list_view_method", test_result)
-    
     #Fetch role from session attribute. It should be either 'Administrator' or 'Instructor'.
     role = request.session.get('role')
 
