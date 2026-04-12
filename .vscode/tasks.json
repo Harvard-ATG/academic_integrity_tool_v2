@@ -14,18 +14,6 @@
       }
     },
     {
-      "label": "Docker Compose Debug Up",
-      "type": "shell",
-      "command": "docker compose -f docker-compose.yml -f docker-compose.debug.yml up --build",
-      "isBackground": true,
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "group": "dev"
-      }
-    },
-    {
       "label": "Ngrok",
       "type": "shell",
       "command": "ngrok http --scheme=https 8000",
@@ -47,15 +35,6 @@
       }
     },
     {
-      "label": "Start Debug Environment",
-      "dependsOn": ["Docker Compose Debug Up", "Ngrok"],
-      "dependsOrder": "parallel",
-      "problemMatcher": [],
-      "runOptions": {
-        "runOn": "default"
-      }
-    },
-    {
       "label": "Run All Tests",
       "type": "shell",
       "command": "docker compose run --rm web python manage.py test policy_wizard --settings=academic_integrity_tool_v2.settings.test -v 2",
@@ -66,9 +45,9 @@
       }
     },
     {
-      "label": "Run Script Tag Validation Tests",
+      "label": "Run Validation Tests",
       "type": "shell",
-      "command": "docker compose run --rm web python manage.py test policy_wizard.tests_script_tag_validation --settings=academic_integrity_tool_v2.settings.test -v 2",
+      "command": "docker compose run --rm web python manage.py test policy_wizard.tests_validations --settings=academic_integrity_tool_v2.settings.test -v 2",
       "problemMatcher": [],
       "presentation": {
         "reveal": "always",

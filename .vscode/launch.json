@@ -2,27 +2,10 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug Django (Docker)",
-      "type": "debugpy",
-      "request": "attach",
-      "connect": {
-        "host": "localhost",
-        "port": 5678
-      },
-      "pathMappings": [
-        {
-          "localRoot": "${workspaceFolder}",
-          "remoteRoot": "/app"
-        }
-      ],
-      "django": true,
-      "preLaunchTask": "Start Debug Environment"
-    },
-    {
-      "name": "Start App (no debug)",
+      "name": "Start Dev Environment",
       "type": "node-terminal",
       "request": "launch",
-      "command": "echo 'Dev environment started — use the terminal panels to monitor docker compose and ngrok.'",
+      "command": "echo 'Dev environment started — docker compose and ngrok are running in the terminal panels below.'",
       "preLaunchTask": "Start Dev Environment"
     }
   ]

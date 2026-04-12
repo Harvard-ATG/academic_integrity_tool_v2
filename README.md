@@ -64,6 +64,21 @@ Your session persists until you clear cookies or visit a different role link to 
 
 This is a convenience for quickly testing UI changes, template rendering, and form behavior without needing to set up Canvas, ngrok, or a full LTI handshake. It is **not** a replacement for integrated LTI testing — you should still verify the full LTI launch flow (Canvas → ngrok → LTI handshake → role identification → session) before considering work complete.
 
+### VS Code Tasks
+
+Pre-configured tasks are available via **Terminal → Run Task** or the **Run and Debug** panel:
+
+| Task | What it does |
+|------|-------------|
+| **Start Dev Environment** | Runs `docker compose up` + `ngrok` in parallel — one click to get both running for LTI testing |
+| Docker Compose Up | `docker compose up` (just the app, no ngrok) |
+| Ngrok | `ngrok http --scheme=https 8000` |
+| Run All Tests | Runs the full test suite in Docker |
+| Run Validation Tests | Runs only `tests_validations.py` |
+| Docker Compose Down | `docker compose down` |
+
+From the **Run and Debug** panel (▶️), select **"Start Dev Environment"** to launch Docker Compose and ngrok together. The dev login URLs will be printed in the Docker terminal output.
+
 #### Integrated Testing
 
 When this tool is launched from Canvas, it is embedded in an `iframe` from a secure (`https-` based) site. For the cross-domain session and CSRF cookies to function correctly, our Django settings are configured with `SESSION_COOKIE_SECURE = True` and `CSRF_COOKIE_SECURE = True`. These settings command the browser to only send cookies over a secure HTTPS connection.
