@@ -1,12 +1,14 @@
 from django.db import models
 from tinymce import models as tinymce_models
+from .validators import validate_no_script_tags
 
 # Create your models here.
 
 #Policy Templates
 class PolicyTemplates(models.Model):
     name = models.CharField(max_length=255)
-    body = models.TextField()
+    body = tinymce_models.HTMLField()  # Use TinyMCE's HTMLField for rich text editing in the admin interface
+    body = models.TextField(validators=[validate_no_script_tags])
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
@@ -18,7 +20,7 @@ class Policies(models.Model):
     is_published = models.SmallIntegerField()
     published_by = models.CharField(max_length=255)
     is_active = models.SmallIntegerField()
-    body = tinymce_models.HTMLField()
+    body = tinymce_models.HTMLField(validators=[validate_no_script_tags])
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
