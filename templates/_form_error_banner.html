@@ -1,0 +1,22 @@
+{% comment %}
+    Error banner displayed when form validation fails (e.g. script tag rejection).
+    Included in editor templates after the page header, matching the position of
+    the success banner on instructor_active_policy.html.
+{% endcomment %}
+{% if form.errors %}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Your submission was not saved.</strong>
+            <ul class="mb-0 mt-1">
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+{% endif %}
