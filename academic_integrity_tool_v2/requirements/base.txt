@@ -8,6 +8,6 @@ hiredis==1.1.0
 # Django LTI Provider
 django-lti-provider==0.3.1
 # Django-tinymce
-django-tinymce
+django-tinymce==3.6.1
 pyyaml==5.3.1
 requests==2.25.1
