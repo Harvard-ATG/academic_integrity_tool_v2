@@ -1,0 +1,25 @@
+# Override for VS Code debugging — starts Django under debugpy so the
+# VS Code debugger can attach.  Used automatically by the "Debug Django
+# (Docker)" launch configuration.
+#
+# The ENTRYPOINT (entrypoint.sh) already waits for the DB, runs
+# migrations, and loads fixtures.  This override only replaces the CMD
+# so Django runs under debugpy.
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.debug.yml up --build
+services:
+  web:
+    command:
+      - "python3"
+      - "-m"
+      - "debugpy"
+      - "--listen"
+      - "0.0.0.0:5678"
+      - "manage.py"
+      - "runserver"
+      - "0.0.0.0:8000"
+      - "--noreload"
+    ports:
+      - "8000:8000"
+      - "5678:5678"

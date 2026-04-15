@@ -6,15 +6,41 @@ This is a [django](https://www.djangoproject.com/) application that enables inst
 
 ## Installing the tool in the Canvas LMS
 
-Follow the Canvas Admin Guide on [How do I configure an external app for an account using XML?](https://community.canvaslms.com/t5/Admin-Guide/How-do-I-configure-an-external-app-for-an-account-using-XML/ta-p/221). This can be done at either the sub-account level or in a specific canvas course by visiting that course's settings.
+The tool is installed in Canvas as an LTI External App. There are two installation methods:
 
-The key details you will need include:
+### Method 1: By URL (recommended)
 
-- **Consumer key**: obtain this from `academic_integrity_tool_v2/settings/.env.example`
-- **Shared secret**: obtain this from `academic_integrity_tool_v2/settings/.env.example`
-- **XML configuration**: obtain this from http://localhost:8000/lti/config. Or with ngrok, [https://<random-string>.ngrok-free.app/lti/config](https://ngrok.com/docs/universal-gateway/domains/#ngrok-managed-domains)
+Canvas fetches the tool's XML configuration from a URL you provide.
 
-Once installed, the tool should be displayed in the left-hand course navigation as **AI Policy**. Note that it may be disabled in the navigation by default, so you may need to manually enable it in the course settings navigation (drag and drop to move to the desired position).
+| Environment | Config URL |
+|-------------|-----------|
+| **Production** | `https://academicintegritytoolv2.tlt.harvard.edu/lti/config` |
+| **Local dev** (via ngrok) | `https://<ngrok-subdomain>.ngrok-free.app/lti/config` |
+
+In the Canvas "Add App" dialog, select **Configuration Type: By URL** and enter:
+
+| Field | Value |
+|-------|-------|
+| **Name** | AI Policy |
+| **Consumer Key** | `CONSUMER_KEY` from `.env` |
+| **Shared Secret** | `LTI_SECRET` from `.env` |
+| **Config URL** | The URL from the table above |
+
+### Method 2: Paste XML
+
+If "By URL" isn't available or you prefer manual configuration, you can paste the XML directly.
+
+1. Open the config URL in a browser (e.g. `https://<ngrok-subdomain>.ngrok-free.app/lti/config`)
+2. Copy the full XML response
+3. In the Canvas "Add App" dialog, select **Configuration Type: Paste XML**
+4. Enter the **Name**, **Consumer Key**, and **Shared Secret** (same values as above)
+5. Paste the XML into the **XML Configuration** field
+
+### After installation
+
+The tool should appear in the left-hand course navigation as **AI Policy**. If it doesn't, go to **Course Settings → Navigation**, drag **AI Policy** up from the hidden section, and click **Save**.
+
+> For the full step-by-step installation walkthrough with screenshots, see [AI Policy tool (ECS) - LTI Installation Instructions](https://docs.google.com/document/d/1w7QTOgFuvTAObeQUSVTK3HATDbeHLKNYLI72eytu8FM/edit?usp=drive_link) (AT Shared Drive: `FAS Service Team > Platform and Tools > Academic Integrity Policy Wizard > documentation`).
 
 ## Developer Notes
 
@@ -22,24 +48,30 @@ The instructions below assume you have [Docker](https://www.docker.com/) install
 
 ### Getting setup
 
-Configure django settings:
+Configure environment variables and start the app:
 
-```
-$ cp academic_integrity_tool_v2/.env.example academic_integrity_tool_v2/settings/.env
+```bash
+# Copy the example env file — all defaults work out of the box
+$ cp .env.example .env
 
-```
-
-Run the application:
-
-```
+# Start the app (Django + Postgres + Redis)
 $ docker compose up
-
 ```
 
-Open the tool in your web browser to verify it is up and running:
+In a separate terminal, run migrations and load the policy templates:
 
+```bash
+# Create database tables
+$ docker compose run --rm web python manage.py migrate
+
+# Load the 7 boilerplate policy templates
+$ docker compose run --rm web python manage.py loaddata boilerplate_policy_templates
 ```
-open http://localhost:8000
+
+Verify it's running — visit a dev login link to enter the app:
+
+```bash
+$ open http://localhost:8000/dev/login/instructor/  # macOS; use xdg-open on Linux
 ```
 
 ### Testing
@@ -48,32 +80,56 @@ open http://localhost:8000
 $ docker compose run web python manage.py test
 ```
 
-#### Integrated Testing
+### Development Workflows
 
-When this tool is launched from Canvas, it is embedded in an `iframe` from a secure (`https-` based) site. For the cross-domain session and CSRF cookies to function correctly, our Django settings are configured with `SESSION_COOKIE_SECURE = True` and `CSRF_COOKIE_SECURE = True`. These settings command the browser to only send cookies over a secure HTTPS connection.
+There are two workflows for local development, depending on whether you need Canvas integration.
 
-While local development on `http://localhost:8000` may appear to work for basic views, this is because modern browsers often treat `localhost` as a "secure context" and relax this policy. However, this does not accurately simulate the production LTI environment and will fail when trying to establish a valid cross-domain session.
+#### Local + Dev Login (no Canvas / LTI integration)
 
-To properly test the LTI flow locally, you must expose your local development server on a public **HTTPS** URL. **NGROK** is a tool that provides this functionality.
+For UI changes, template rendering, form behavior — anything that doesn't need a real LTI launch.
 
-##### NGrok Configuration Steps
+1. `docker compose up` (or Run and Debug → **"Local + Dev Login"**)
+2. Visit a dev login link to seed your session with a role:
 
-1.  **Install NGROK**: Follow the [official instructions](https://ngrok.com/docs/getting-started/)
+| Role | URL |
+|------|-----|
+| Instructor | http://localhost:8000/dev/login/instructor/ |
+| Student | http://localhost:8000/dev/login/student/ |
+| Admin | http://localhost:8000/dev/login/admin/ |
 
-2.  **Start the Django Server**: Run the local development server as usual.
-    ```bash
-    docker-compose up
-    ```
+You'll be redirected to that role's landing page. Switch roles by clicking a different link. Session persists until you clear cookies.
 
-3.  **Start NGROK**: In a separate terminal, run the following command to expose your local port 8000 on a public HTTPS URL.
-    ```bash
-    ngrok http --scheme=https 8000
-    ```
-    -   This command tells `ngrok` to forward traffic to your local `http://localhost:8000` but to set the forwarding scheme in the HTTP headers to `https`. This ensures Django recognizes the connection as secure, which is necessary for the secure cookie flags.
+> **These routes are only registered when `DEBUG=True` and will 404 in production.**
 
-4.  **Update Environment Variables**: NGROK will provide a public URL (ex., `https://<random-string>.ngrok-free.app`).
+#### Local + Canvas (integrated LTI testing)
 
-5.  **Update Canvas**: In your Canvas course settings, add the LTI tool (see ***Original demos*** section below) using your new public NGROK URL XML page (ex., `https://<random-string>.ngrok-free.app/lti/config`). You can now launch the tool from Canvas to fully test the LTI flow against your local development server with behavior similar to production.
+For testing the full LTI flow: Canvas launch → ngrok → LTI handshake → role identification → session. Use this to verify cross-domain cookies, secure context behavior, and the actual install/launch experience.
+
+1. Start both services — either manually or from VS Code:
+   - **Manual:** `docker compose up` in one terminal, `ngrok http --scheme=https 8000` in another
+   - **VS Code:** Run and Debug panel → **"Local + Canvas"** (launches both in parallel)
+2. Copy the ngrok HTTPS URL (e.g. `https://<random-string>.ngrok-free.app`)
+3. In Canvas course settings, install the LTI tool using the XML config URL: `https://<random-string>.ngrok-free.app/lti/config`
+4. Launch the tool from Canvas course navigation — it should appear as **AI Policy**
+
+**Why ngrok is required:** Canvas embeds the tool in an iframe from a secure (`https`) site. Django's `SESSION_COOKIE_SECURE = True` and `CSRF_COOKIE_SECURE = True` settings require HTTPS for cookies to work. While `localhost` may appear to work (browsers treat it as a secure context), it doesn't simulate the real cross-domain iframe behavior. ngrok's `--scheme=https` flag ensures Django sees a secure connection.
+
+### VS Code Tasks
+
+Pre-configured tasks are available via **Terminal → Run Task** or the **Run and Debug** panel:
+
+| Task | What it does | Workflow |
+|------|-------------|----------|
+| **Local + Canvas** | `docker compose up` + `ngrok` in parallel | Local + Canvas |
+| Docker Compose Up | `docker compose up` (app only) | Local + Dev Login |
+| Ngrok | `ngrok http --scheme=https 8000` | Local + Canvas |
+| Run All Tests | Full test suite in Docker | — |
+| Run Validation Tests | Only `tests_validations.py` | — |
+| Docker Compose Down | `docker compose down` | — |
+
+From the **Run and Debug** panel (▶️):
+- **"Local + Dev Login"** — starts Docker Compose, then visit a dev login link
+- **"Local + Canvas"** — starts Docker Compose + ngrok, then install the tool in Canvas
 
 
 ### Update the Coverage Badge

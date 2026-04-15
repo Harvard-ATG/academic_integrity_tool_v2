@@ -120,9 +120,9 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # be sent on the cross-site GET redirect after the initial POST launch.
 SESSION_COOKIE_SAMESITE = SECURE_SETTINGS.get('session_cookie_samesite', 'None')
 
-# The Secure flag must be True for cookies with SameSite=None. In production
-# environments with HTTPS, this must always be True. For local development
-# without HTTP, it must be set to False.
+# The Secure flag must be True for cookies with SameSite=None. This works across
+# all environments: production has real HTTPS, ngrok provides HTTPS for local Canvas
+# testing, and browsers treat localhost as a secure context even over plain HTTP.
 # We retrieve the value from an environment variable and default to True.
 SESSION_COOKIE_SECURE = SECURE_SETTINGS.get('session_cookie_secure', 'True') == 'True'
 

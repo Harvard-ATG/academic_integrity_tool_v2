@@ -16,12 +16,17 @@ services:
       POSTGRES_USER: "${DB_USER}"
       POSTGRES_DB: "${DB_NAME}"
   # Note: run "docker-compose run web python3 manage.py migrate" after the web service is up
+  #
+  # Dev login (no Canvas/LTI required, DEBUG=True only):
+  #   Instructor: http://localhost:8000/dev/login/instructor/
+  #   Student:    http://localhost:8000/dev/login/student/
+  #   Admin:      http://localhost:8000/dev/login/admin/
   web:
     build: .
     image: academic_integrity_tool_v2
     env_file:
       - .env
-    command: ["./docker-wait-for-it.sh", "db:5432", "--", "python3", "manage.py", "runserver", "0.0.0.0:8000"]
+    command: ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
     environment:
       DJANGO_SETTINGS_MODULE: "academic_integrity_tool_v2.settings.local"
       NGROK_DOMAIN: "${NGROK_DOMAIN}"

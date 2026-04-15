@@ -36,8 +36,13 @@ SECURE_SETTINGS = {
     'X_FRAME_OPTIONS': os.environ['X_FRAME_OPTIONS'], # Security header to prevent clickjacking
 
     # Session / cookie management
-    'session_cookie_secure': os.environ.get('DJANGO_SESSION_COOKIE_SECURE', 'True'), # Use secure cookies
-    'session_cookie_samesite': os.environ.get('DJANGO_SESSION_COOKIE_SAMESITE', 'None'), # SameSite attribute for cookies
+    # Defaults work for both local dev and production:
+    # - localhost is treated as a secure context by browsers (Secure=True works over HTTP)
+    # - ngrok provides actual HTTPS
+    # - production is HTTPS
+    # See base.py for full explanation of SameSite/Secure cookie requirements.
+    'session_cookie_secure': os.environ.get('DJANGO_SESSION_COOKIE_SECURE', 'True'),
+    'session_cookie_samesite': os.environ.get('DJANGO_SESSION_COOKIE_SAMESITE', 'None'),
 
     # Misc
     'help_email_address': os.environ.get('HELP_EMAIL_ADDRESS', 'help@example.com'),

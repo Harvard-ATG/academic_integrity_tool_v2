@@ -15,17 +15,32 @@ Including another URLconf
 from django.conf import settings
 from django.urls import include, path
 from django.contrib import admin
+from django.views.decorators.csrf import csrf_exempt
 from lti_provider import views as lti_views
 from .health_check_view import health_check_view
+
+
+# Canvas GETs /lti/config during "By URL" tool installation, but other LMS
+# implementations may POST.  Adding csrf_exempt + POST support ensures the
+# XML config endpoint works regardless of HTTP method.
+class LTIConfigViewWithPost(lti_views.LTIConfigView):
+    """Extend LTIConfigView to accept POST (some LMS send POST during 'By URL' install)."""
+    post = lti_views.LTIConfigView.get
 
 
 urlpatterns = [
     path('health', health_check_view, name='health_check'),
     path('admin/', admin.site.urls),
     path('lti/launch/', include('policy_wizard.urls')),
-    path('lti/config', lti_views.LTIConfigView.as_view(), name="get_lti_xml"),
+    path('lti/config', csrf_exempt(LTIConfigViewWithPost.as_view()), name="get_lti_xml"),
     path('tinymce/', include('tinymce.urls')),
 ]
+
+if settings.DEBUG:
+    from policy_wizard.dev_views import dev_login_view
+    urlpatterns += [
+        path('dev/login/<str:role_slug>/', dev_login_view, name='dev_login'),
+    ]
 
 
 if settings.DEBUG_TOOLBAR:
