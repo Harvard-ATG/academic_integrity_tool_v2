@@ -29,11 +29,11 @@ urlpatterns = [
 ]
 
 
-if settings.DEBUG:
-    from waf_testing.views import waf_test_endpoint
-    urlpatterns += [
-        path('waf-test/', waf_test_endpoint, name='waf_test'),
-    ]
+# if settings.DEBUG:
+#     from waf_testing.views import waf_test_endpoint
+#     urlpatterns += [
+#         path('waf-test/', waf_test_endpoint, name='waf_test'),
+#     ]
 
 if settings.DEBUG_TOOLBAR:
     import debug_toolbar
