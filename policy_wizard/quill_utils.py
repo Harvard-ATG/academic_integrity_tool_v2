@@ -216,7 +216,7 @@ def _render_one(kind, content, attrs):
     link = attrs.get('link')
     if link and _is_safe_url(link):
         href = escape(link, quote=True)
-        html = f'<a href="{href}" rel="noopener">{html}</a>'
+        html = f'<a href="{href}" target="_blank" rel="noopener">{html}</a>'
 
     return html
 

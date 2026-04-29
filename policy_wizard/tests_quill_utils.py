@@ -65,7 +65,7 @@ class DeltaToHtmlTests(TestCase):
         ]))
         self.assertEqual(
             result,
-            '<p><a href="https://harvard.edu" rel="noopener">Honor Code</a></p>'
+            '<p><a href="https://harvard.edu" target="_blank" rel="noopener">Honor Code</a></p>'
         )
 
     def test_javascript_uri_rejected(self):
