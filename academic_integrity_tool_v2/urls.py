@@ -19,14 +19,21 @@ from lti_provider import views as lti_views
 from .health_check_view import health_check_view
 
 
+# The path('tinymce/', include('tinymce.urls')) route was removed — TinyMCE has been
+# replaced by Quill (loaded via CDN, no server-side URL routes needed).
 urlpatterns = [
     path('health', health_check_view, name='health_check'),
     path('admin/', admin.site.urls),
     path('lti/launch/', include('policy_wizard.urls')),
     path('lti/config', lti_views.LTIConfigView.as_view(), name="get_lti_xml"),
-    path('tinymce/', include('tinymce.urls')),
 ]
 
+
+if settings.DEBUG:
+    from waf_testing.views import waf_test_endpoint
+    urlpatterns += [
+        path('waf-test/', waf_test_endpoint, name='waf_test'),
+    ]
 
 if settings.DEBUG_TOOLBAR:
     import debug_toolbar

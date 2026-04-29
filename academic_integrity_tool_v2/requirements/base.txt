@@ -7,7 +7,9 @@ django-redis-cache==3.0.0
 hiredis==1.1.0
 # Django LTI Provider
 django-lti-provider==0.3.1
-# Django-tinymce
-django-tinymce==3.6.1
+# django-tinymce==3.6.1 was removed — replaced by Quill 2.0.3 (slab/quill).
+# Quill JS/CSS are vendored in http_static/quill/ (not a pip package).
+# The Quill editor submits Delta JSON instead of raw HTML, bypassing the Fortinet
+# WAF's Cross-Site-Scripting-02 rule. See waf_testing/ for testing details.
 pyyaml==5.3.1
 requests==2.25.1

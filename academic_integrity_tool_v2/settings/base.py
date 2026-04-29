@@ -37,6 +37,8 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 
+# 'tinymce' was removed — replaced by Quill editor (loaded via CDN, no Django app needed).
+# See templates/quill_editor_base.html for the Quill integration.
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,7 +48,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'policy_wizard',
     'lti_provider',
-    'tinymce',
 ]
 
 MIDDLEWARE = [

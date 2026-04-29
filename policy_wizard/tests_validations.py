@@ -6,7 +6,11 @@ Verifies that validate_no_script_tags is enforced at the right layers:
 - View POST submissions — BLOCKED — when instructors/admins submit via the browser (calls is_valid internally)
 - Direct ORM save()/create() — NOT BLOCKED (by design) — management commands, shell, fixtures
 - QuerySet.update() — NOT BLOCKED (by design) — bulk operations that bypass save() entirely
+
+Tests both legacy HTML content and Quill Delta JSON content.
 """
+import json
+
 from django.test import TestCase, RequestFactory
 from django.core.exceptions import ValidationError
 from django.contrib.sessions.middleware import SessionMiddleware
@@ -17,7 +21,7 @@ from .validators import validate_no_script_tags
 from . import views
 
 
-# --- Test data ---
+# --- Legacy HTML test data ---
 
 SAFE_HTML = '<p>This policy requires <a href="http://example.com">academic honesty</a>.</p>'
 SCRIPT_INLINE = '<p>Hello</p><script>alert("xss")</script>'
@@ -29,6 +33,29 @@ SCRIPT_MIXED_CASE = '<p>Hello</p><ScRiPt>alert("xss")</sCrIpT>'
 SCRIPT_ENCODED = '<p>Hello</p>&lt;script&gt;alert("xss")&lt;/script&gt;'
 SCRIPT_ENCODED_WRAPPED = '<p>&lt;script&gt;alert("xss")&lt;/script&gt;</p>'
 SCRIPT_ENCODED_ATTRS = '&lt;script type="text/javascript"&gt;document.cookie&lt;/script&gt;'
+
+
+# --- Quill Delta test data ---
+
+def _delta(ops):
+    return json.dumps({'ops': ops})
+
+DELTA_SAFE_TEXT = _delta([{'insert': 'This is a simple policy.\n'}])
+DELTA_SAFE_BOLD = _delta([
+    {'insert': 'Important', 'attributes': {'bold': True}},
+    {'insert': ': all work must be original.\n'},
+])
+DELTA_SAFE_LINK = _delta([
+    {'insert': 'Honor Code', 'attributes': {'link': 'https://college.harvard.edu/honor-code'}},
+    {'insert': '\n'},
+])
+DELTA_SCRIPT_IN_TEXT = _delta([{'insert': '<script>alert(1)</script>\n'}])
+DELTA_ENCODED_SCRIPT = _delta([{'insert': '&lt;script&gt;alert(1)&lt;/script&gt;\n'}])
+DELTA_JS_URI_IN_LINK = _delta([
+    {'insert': 'click me', 'attributes': {'link': 'javascript:alert(1)'}},
+    {'insert': '\n'},
+])
+DELTA_JS_URI_IN_TEXT = _delta([{'insert': 'javascript:document.cookie\n'}])
 
 
 def annotate_request_with_session(request, params=None):
@@ -44,8 +71,7 @@ class ValidatorUnitTests(TestCase):
     """Direct tests of the validate_no_script_tags function."""
 
     def test_safe_html_passes(self):
-        """Normal HTML with links should not raise."""
-        validate_no_script_tags(SAFE_HTML)  # should not raise
+        validate_no_script_tags(SAFE_HTML)
 
     def test_plain_text_passes(self):
         validate_no_script_tags('No HTML here, just text.')
@@ -75,7 +101,6 @@ class ValidatorUnitTests(TestCase):
             validate_no_script_tags(SCRIPT_MIXED_CASE)
 
     def test_encoded_script_blocked(self):
-        """HTML-entity-encoded <script> tags (as sent by TinyMCE) are blocked."""
         with self.assertRaises(ValidationError):
             validate_no_script_tags(SCRIPT_ENCODED)
 
@@ -86,6 +111,42 @@ class ValidatorUnitTests(TestCase):
     def test_encoded_script_with_attrs_blocked(self):
         with self.assertRaises(ValidationError):
             validate_no_script_tags(SCRIPT_ENCODED_ATTRS)
+
+
+class QuillDeltaValidatorTests(TestCase):
+    """Tests for Quill Delta JSON validation."""
+
+    def test_safe_text_passes(self):
+        validate_no_script_tags(DELTA_SAFE_TEXT)
+
+    def test_safe_bold_passes(self):
+        validate_no_script_tags(DELTA_SAFE_BOLD)
+
+    def test_safe_link_passes(self):
+        validate_no_script_tags(DELTA_SAFE_LINK)
+
+    def test_script_in_text_blocked(self):
+        with self.assertRaises(ValidationError):
+            validate_no_script_tags(DELTA_SCRIPT_IN_TEXT)
+
+    def test_encoded_script_in_text_blocked(self):
+        with self.assertRaises(ValidationError):
+            validate_no_script_tags(DELTA_ENCODED_SCRIPT)
+
+    def test_javascript_uri_in_link_blocked(self):
+        with self.assertRaises(ValidationError):
+            validate_no_script_tags(DELTA_JS_URI_IN_LINK)
+
+    def test_javascript_uri_in_text_blocked(self):
+        with self.assertRaises(ValidationError):
+            validate_no_script_tags(DELTA_JS_URI_IN_TEXT)
+
+    def test_non_list_ops_treated_as_plain_text(self):
+        """JSON with ops that isn't a list falls through to HTML validation (no XSS = passes)."""
+        validate_no_script_tags('{"ops": "not a list"}')
+
+    def test_malformed_delta_treated_as_plain_text(self):
+        validate_no_script_tags('{"ops": "broken"}')
 
 
 class FormValidationTests(TestCase):
@@ -115,14 +176,26 @@ class FormValidationTests(TestCase):
         self.assertIn('Script tags are not allowed', form.errors['body'][0])
 
     def test_new_policy_form_rejects_encoded_script(self):
-        """Form rejects HTML-entity-encoded script tags (TinyMCE encoding)."""
         form = NewPolicyForm(data={'body': SCRIPT_ENCODED})
         self.assertFalse(form.is_valid())
         self.assertIn('body', form.errors)
 
     def test_policy_template_form_rejects_encoded_script(self):
-        """Form rejects HTML-entity-encoded script tags (TinyMCE encoding)."""
         form = PolicyTemplateForm(data={'body': SCRIPT_ENCODED})
+        self.assertFalse(form.is_valid())
+        self.assertIn('body', form.errors)
+
+    def test_form_accepts_quill_delta(self):
+        form = NewPolicyForm(data={'body': DELTA_SAFE_LINK})
+        self.assertTrue(form.is_valid())
+
+    def test_form_rejects_quill_delta_with_script(self):
+        form = NewPolicyForm(data={'body': DELTA_SCRIPT_IN_TEXT})
+        self.assertFalse(form.is_valid())
+        self.assertIn('body', form.errors)
+
+    def test_form_rejects_quill_delta_with_js_uri(self):
+        form = NewPolicyForm(data={'body': DELTA_JS_URI_IN_LINK})
         self.assertFalse(form.is_valid())
         self.assertIn('body', form.errors)
 
@@ -156,7 +229,7 @@ class ModelFullCleanTests(TestCase):
             body=SAFE_HTML,
             related_template=self.template,
         )
-        policy.full_clean()  # should not raise
+        policy.full_clean()
 
     def test_template_full_clean_rejects_script(self):
         template = PolicyTemplates(name='Test', body=SCRIPT_INLINE)
@@ -165,18 +238,38 @@ class ModelFullCleanTests(TestCase):
 
     def test_template_full_clean_accepts_safe_html(self):
         template = PolicyTemplates(name='Test', body=SAFE_HTML)
-        template.full_clean()  # should not raise
+        template.full_clean()
+
+    def test_policy_full_clean_accepts_quill_delta(self):
+        policy = Policies(
+            course_id=1,
+            context_id='ctx1',
+            is_published=1,
+            published_by='test_user',
+            is_active=1,
+            body=DELTA_SAFE_LINK,
+            related_template=self.template,
+        )
+        policy.full_clean()
+
+    def test_policy_full_clean_rejects_quill_delta_with_script(self):
+        policy = Policies(
+            course_id=1,
+            context_id='ctx1',
+            is_published=1,
+            published_by='test_user',
+            is_active=1,
+            body=DELTA_SCRIPT_IN_TEXT,
+            related_template=self.template,
+        )
+        with self.assertRaises(ValidationError):
+            policy.full_clean()
 
 
 class ORMBypassTests(TestCase):
-    """Confirms that direct ORM operations do NOT trigger the validator.
-
-    This is by Django's design — model.save() does not call full_clean().
-    These tests document and verify that the developer escape hatch works.
-    """
+    """Confirms that direct ORM operations do NOT trigger the validator."""
 
     def test_policy_save_allows_script(self):
-        """Direct .save() bypasses validators — script tags are stored."""
         policy = Policies(
             course_id=1,
             context_id='ctx1',
@@ -185,12 +278,11 @@ class ORMBypassTests(TestCase):
             is_active=1,
             body=SCRIPT_INLINE,
         )
-        policy.save()  # should NOT raise
+        policy.save()
         policy.refresh_from_db()
         self.assertIn('<script>', policy.body)
 
     def test_policy_create_allows_script(self):
-        """Direct .create() bypasses validators — script tags are stored."""
         policy = Policies.objects.create(
             course_id=2,
             context_id='ctx2',
@@ -203,7 +295,6 @@ class ORMBypassTests(TestCase):
         self.assertIn('<script>', policy.body)
 
     def test_queryset_update_allows_script(self):
-        """QuerySet.update() bypasses validators — script tags are stored."""
         policy = Policies.objects.create(
             course_id=3,
             context_id='ctx3',
@@ -217,9 +308,8 @@ class ORMBypassTests(TestCase):
         self.assertIn('<script>', policy.body)
 
     def test_template_save_allows_script(self):
-        """Direct .save() on template bypasses validators."""
         template = PolicyTemplates(name='Test', body=SCRIPT_INLINE)
-        template.save()  # should NOT raise
+        template.save()
         template.refresh_from_db()
         self.assertIn('<script>', template.body)
 
@@ -255,13 +345,11 @@ class ViewSubmissionTests(TestCase):
         }
 
     def _post_with_session(self, view_func, url_name, session_params, post_data, *args):
-        """Helper: POST to a view via RequestFactory."""
         request = self.factory.post(url_name, post_data)
         annotate_request_with_session(request, session_params)
         return view_func(request, *args)
 
     def test_instructor_new_policy_rejects_script(self):
-        """Instructor creating a new policy with script tags is rejected."""
         response = self._post_with_session(
             views.instructor_level_policy_edit_view,
             'instructor_level_policy_edit',
@@ -269,15 +357,12 @@ class ViewSubmissionTests(TestCase):
             {'body': SCRIPT_INLINE},
             self.template.pk,
         )
-        # Should re-render the form (200), not redirect (302)
         self.assertEqual(response.status_code, 200)
-        # The policy count should not increase
         self.assertFalse(
             Policies.objects.filter(body=SCRIPT_INLINE).exists()
         )
 
     def test_instructor_new_policy_accepts_safe_html(self):
-        """Instructor creating a new policy with safe HTML succeeds."""
         response = self._post_with_session(
             views.instructor_level_policy_edit_view,
             'instructor_level_policy_edit',
@@ -285,14 +370,38 @@ class ViewSubmissionTests(TestCase):
             {'body': SAFE_HTML},
             self.template.pk,
         )
-        # Should redirect (302) on success
         self.assertEqual(response.status_code, 302)
         self.assertTrue(
             Policies.objects.filter(body=SAFE_HTML).exists()
         )
 
+    def test_instructor_new_policy_accepts_quill_delta(self):
+        response = self._post_with_session(
+            views.instructor_level_policy_edit_view,
+            'instructor_level_policy_edit',
+            self.instructorSession,
+            {'body': DELTA_SAFE_LINK},
+            self.template.pk,
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(
+            Policies.objects.filter(body=DELTA_SAFE_LINK).exists()
+        )
+
+    def test_instructor_new_policy_rejects_quill_delta_with_script(self):
+        response = self._post_with_session(
+            views.instructor_level_policy_edit_view,
+            'instructor_level_policy_edit',
+            self.instructorSession,
+            {'body': DELTA_SCRIPT_IN_TEXT},
+            self.template.pk,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(
+            Policies.objects.filter(body=DELTA_SCRIPT_IN_TEXT).exists()
+        )
+
     def test_instructor_edit_policy_rejects_script(self):
-        """Instructor editing an active policy with script tags is rejected."""
         response = self._post_with_session(
             views.edit_active_policy,
             'edit_active_policy',
@@ -301,12 +410,10 @@ class ViewSubmissionTests(TestCase):
             self.policy.pk,
         )
         self.assertEqual(response.status_code, 200)
-        # Body should remain unchanged
         self.policy.refresh_from_db()
         self.assertEqual(self.policy.body, 'Original policy body')
 
     def test_admin_template_edit_rejects_script(self):
-        """Admin updating a template with script tags is rejected."""
         response = self._post_with_session(
             views.admin_level_template_edit_view,
             'admin_level_template_edit',
@@ -315,12 +422,10 @@ class ViewSubmissionTests(TestCase):
             self.template.pk,
         )
         self.assertEqual(response.status_code, 200)
-        # Template body should remain unchanged
         self.template.refresh_from_db()
         self.assertEqual(self.template.body, 'Default body')
 
     def test_admin_template_edit_rejects_encoded_script(self):
-        """Admin updating a template with TinyMCE-encoded script tags is rejected."""
         response = self._post_with_session(
             views.admin_level_template_edit_view,
             'admin_level_template_edit',
@@ -333,7 +438,6 @@ class ViewSubmissionTests(TestCase):
         self.assertEqual(self.template.body, 'Default body')
 
     def test_admin_template_edit_accepts_safe_html(self):
-        """Admin updating a template with safe HTML succeeds."""
         response = self._post_with_session(
             views.admin_level_template_edit_view,
             'admin_level_template_edit',
@@ -344,3 +448,15 @@ class ViewSubmissionTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.template.refresh_from_db()
         self.assertEqual(self.template.body, SAFE_HTML)
+
+    def test_admin_template_edit_accepts_quill_delta(self):
+        response = self._post_with_session(
+            views.admin_level_template_edit_view,
+            'admin_level_template_edit',
+            self.administratorSession,
+            {'body': DELTA_SAFE_LINK},
+            self.template.pk,
+        )
+        self.assertEqual(response.status_code, 302)
+        self.template.refresh_from_db()
+        self.assertEqual(self.template.body, DELTA_SAFE_LINK)

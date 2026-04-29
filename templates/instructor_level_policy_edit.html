@@ -1,7 +1,13 @@
-{% extends 'tinymce_editor_base.html' %}
+{% extends 'quill_editor_base.html' %}
 
 {% comment %}
-    Presents text editor to an instructor
+    Presents the Quill rich text editor to an instructor so they can customize
+    and publish a policy for their course. Used for both initial publish (from
+    a template) and editing an existing active policy.
+
+    The hidden {{ form.body }} textarea holds the serialized Quill Delta JSON.
+    The visible <div id="quill-editor"> is where instructors type/format.
+    See quill_editor_base.html for the full submission flow.
 {% endcomment %}
 
 {% block editorContent %}
@@ -29,6 +35,7 @@
                         <form method="post">
                             {% csrf_token %}
                             {{ form.body }}
+                            <div id="quill-editor"></div>
                             <a href="{% url 'policy_templates_list' %}" class="btn custom-btn-default btn-lg" role="button" >Cancel</a>
                             <input class="btn-primary pull-right btn-lg custom-btn" type="submit" value="Publish" />
                         </form>

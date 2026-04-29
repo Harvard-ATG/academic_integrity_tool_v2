@@ -1,18 +1,24 @@
 from django.db import models
-from tinymce import models as tinymce_models
 from .validators import validate_no_script_tags
 
-# Create your models here.
 
-#Policy Templates
+# Policy Templates — admin-managed templates that instructors select from when
+# creating a course policy. Editing a template does NOT update already-published
+# policies (Policies table); publishing copies the body at that point in time.
 class PolicyTemplates(models.Model):
     name = models.CharField(max_length=255)
-    body = tinymce_models.HTMLField()  # Use TinyMCE's HTMLField for rich text editing in the admin interface
+    # Stores Quill Delta JSON (new) or plain text/HTML (legacy).
+    # Replaced tinymce.models.HTMLField — both map to PostgreSQL TEXT.
+    # The previous version had a duplicate field definition that silently
+    # overrode HTMLField with TextField; this is now a single clean declaration.
     body = models.TextField(validators=[validate_no_script_tags])
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
-#Published policies
+
+# Published Policies — one active policy per course, created when an instructor
+# selects a template and clicks Publish. The body is a snapshot copied from the
+# template at publish time.
 class Policies(models.Model):
     course_id = models.IntegerField(null=True)
     context_id = models.CharField(max_length=255, null=True)
@@ -20,7 +26,9 @@ class Policies(models.Model):
     is_published = models.SmallIntegerField()
     published_by = models.CharField(max_length=255)
     is_active = models.SmallIntegerField()
-    body = tinymce_models.HTMLField(validators=[validate_no_script_tags])
+    # Stores Quill Delta JSON (new) or HTML (legacy). Rendered to HTML at
+    # display time via the |render_body template filter.
+    # Replaced tinymce.models.HTMLField — both map to PostgreSQL TEXT.
+    body = models.TextField(validators=[validate_no_script_tags])
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
