@@ -24,6 +24,12 @@
     6. Server-side: the validator checks for XSS, then saves the Delta JSON to the DB
     7. At display time: the |render_body filter converts Delta JSON back to safe HTML
 
+    WHY CDN INSTEAD OF VENDORED STATIC FILES:
+    This deployment has no static file serving layer (no whitenoise, nginx, or S3).
+    Django only serves app static files when DEBUG=True, so vendored files in
+    policy_wizard/static/quill/ return 404 in production. Quill is loaded from
+    jsDelivr (pinned to @2.0.3) — same pattern as Bootstrap and Font Awesome.
+
     CHILD TEMPLATES must:
     - Extend this template
     - Override {% block editorContent %} with their form
@@ -31,9 +37,6 @@
 {% endcomment %}
 
 {% block extra_head %}
-    {# Quill 2.0.3 "Snow" theme — loaded from CDN because this deployment has no
-       static file serving layer (no whitenoise/nginx/S3). Django only serves app
-       static files when DEBUG=True, so vendored files 404 in prod. #}
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
     <style>
         /* Size the editor to match the old TinyMCE editor height */
