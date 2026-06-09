@@ -30,11 +30,11 @@
     - Include <div id="quill-editor"></div> inside the form, after {{ form.body }}
 {% endcomment %}
 
-{% load static %}
-
 {% block extra_head %}
-    {# Quill 2.0.3 "Snow" theme — vendored in policy_wizard/static/quill/ #}
-    <link href="{% static 'quill/quill.snow.css' %}" rel="stylesheet">
+    {# Quill 2.0.3 "Snow" theme — loaded from CDN because this deployment has no
+       static file serving layer (no whitenoise/nginx/S3). Django only serves app
+       static files when DEBUG=True, so vendored files 404 in prod. #}
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
     <style>
         /* Size the editor to match the old TinyMCE editor height */
         #quill-editor {
@@ -59,7 +59,7 @@
 
 {% block extra_script %}
     {# Load Quill after the DOM is rendered (in extra_script, which is at end of <body>) #}
-    <script src="{% static 'quill/quill.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
     <script>
         (function() {
             // The hidden textarea that Django's form machinery reads on submit
