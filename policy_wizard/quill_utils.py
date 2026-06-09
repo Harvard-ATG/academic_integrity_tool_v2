@@ -215,7 +215,7 @@ def _render_one(kind, content, attrs):
     # Wrap in link if present and safe
     link = attrs.get('link')
     if link and _is_safe_url(link):
-        href = escape(link, quote=True)
+        href = escape(_normalize_url(link), quote=True)
         html = f'<a href="{href}" target="_blank" rel="noopener">{html}</a>'
 
     return html
@@ -236,6 +236,20 @@ def _render_embed(content):
         src = escape(str(content['video']), quote=True)
         return f'<iframe src="{src}" frameborder="0" allowfullscreen></iframe>'
     return ''
+
+
+def _normalize_url(url):
+    """Ensure URLs have a scheme so browsers don't treat them as relative paths.
+
+    Without a scheme, 'www.example.com' renders as a relative href and the
+    browser resolves it against the current page (e.g. localhost:8000/.../www.example.com).
+    """
+    stripped = url.strip()
+    if stripped.lower().startswith(('http://', 'https://', 'mailto:', '/', '#')):
+        return stripped
+    if stripped.lower().startswith('www.'):
+        return f'https://{stripped}'
+    return stripped
 
 
 def _is_safe_url(url):
