@@ -1,8 +1,12 @@
-{% extends 'tinymce_editor_base.html' %}
+{% extends 'quill_editor_base.html' %}
 
 {% comment %}
-    Presents the text editor to an administrator so they can re-edit a template they
-    just updated
+    Presents the Quill rich text editor to an administrator so they can re-edit
+    a template they just updated. Same editor setup as admin_level_template_edit.html.
+
+    The hidden {{ form.body }} textarea holds the serialized Quill Delta JSON.
+    The visible <div id="quill-editor"> is where admins type/format.
+    See quill_editor_base.html for the full submission flow.
 {% endcomment %}
 
 {% block editorContent %}
@@ -15,6 +19,8 @@
                         <h1>AI Policy Wizard</h1>
                     </div>
                 </div>
+
+                {% include '_form_error_banner.html' %}
 
                 <div class="row">
                     <div class="col-xs-12">
@@ -35,7 +41,8 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <form action="" method="post">{% csrf_token %}
-                            {{ form.as_p }}
+                            {{ form.body }}
+                            <div id="quill-editor"></div>
                             <a href="{% url 'admin_updated_template' template_to_update.pk %}" class="btn custom-btn-default btn-lg" role="button">Cancel</a>
                             <input class="btn-primary pull-right btn-lg custom-btn" type="submit" value="Update"/>
                         </form>

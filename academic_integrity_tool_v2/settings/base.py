@@ -23,6 +23,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 
 # Toggle for the Django Debug Toolbar
 DEBUG_TOOLBAR = False
+
+# Preserves the existing auto-increment integer PK behavior and silences
+# the models.W042 warning introduced in Django 3.2.
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 # Tells Django to use the 'X-Forwarded-Host' header for the domain name.
 USE_X_FORWARDED_HOST = True
 
@@ -41,7 +46,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'policy_wizard',
     'lti_provider',
-    'tinymce',
 ]
 
 MIDDLEWARE = [

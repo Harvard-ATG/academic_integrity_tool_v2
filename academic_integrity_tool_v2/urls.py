@@ -24,9 +24,23 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('lti/launch/', include('policy_wizard.urls')),
     path('lti/config', lti_views.LTIConfigView.as_view(), name="get_lti_xml"),
-    path('tinymce/', include('tinymce.urls')),
 ]
 
+if settings.DEBUG:
+    from django.shortcuts import redirect as _redirect
+
+    def _dev_login(request):
+        """Sets session to admin role and redirects to the template list.
+        GET /dev/login/ — no LTI required."""
+        request.session['role'] = 'Administrator'
+        request.session['context_id'] = 'dev-context'
+        request.session['course_id'] = 'dev-course'
+        request.session['lis_person_sourcedid'] = 'dev-user'
+        return _redirect('policy_templates_list')
+
+    urlpatterns += [
+        path('dev/login/', _dev_login, name='dev_login'),
+    ]
 
 if settings.DEBUG_TOOLBAR:
     import debug_toolbar

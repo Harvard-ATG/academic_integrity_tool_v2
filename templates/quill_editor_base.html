@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% comment %}
+    Base template for pages with the Quill rich text editor.
+    Replaces tinymce_editor_base.html.
+
+    WHY QUILL INSTEAD OF TINYMCE:
+    The Fortinet WAF (Cross-Site-Scripting-02 rule) on the shared ALB blocks
+    any POST body containing HTML tags — including legitimate rich text like
+    <a href>, <p>, <strong>. Since the WAF is ALB-scoped with no path-based
+    exceptions, we can't get a per-app exemption without disabling XSS protection
+    for ALL apps on the ALB.
+
+    Quill solves this by submitting content as Delta JSON (not raw HTML).
+    The WAF's XSS pattern matching doesn't trigger on JSON content.
+    See waf_testing/WAF_TESTING_PLAN.md for the full testing strategy.
+
+    HOW IT WORKS:
+    1. The Django form renders a hidden <textarea> ({{ form.body }}) with id="id_body"
+    2. Quill initializes on the visible <div id="quill-editor">
+    3. On page load: existing content (Delta JSON or legacy HTML) is loaded into Quill
+    4. On form submit: Quill's Delta is serialized to JSON and set as the textarea value
+    5. The POST body contains: body={"ops":[...]} (JSON string in form-urlencoded field)
+    6. Server-side: the validator checks for XSS, then saves the Delta JSON to the DB
+    7. At display time: the |render_body filter converts Delta JSON back to safe HTML
+
+    CHILD TEMPLATES must:
+    - Extend this template
+    - Override {% block editorContent %} with their form
+    - Include <div id="quill-editor"></div> inside the form, after {{ form.body }}
+{% endcomment %}
+
+{% load static %}
+
+{% block extra_head %}
+    {# Quill 2.0.3 "Snow" theme — vendored in policy_wizard/static/quill/ #}
+    <link href="{% static 'quill/quill.snow.css' %}" rel="stylesheet">
+    <style>
+        /* Size the editor to match the old TinyMCE editor height */
+        #quill-editor {
+            min-height: 20em;
+            font-size: 14px;
+        }
+        #quill-editor .ql-editor {
+            min-height: 20em;
+        }
+        /* Hide the Django textarea — Quill replaces it visually.
+           The textarea still participates in form submission. */
+        #id_body {
+            display: none;
+        }
+    </style>
+{% endblock extra_head %}
+
+{% block content %}
+    {% block editorContent %}
+    {% endblock editorContent %}
+{% endblock content %}
+
+{% block extra_script %}
+    {# Load Quill after the DOM is rendered (in extra_script, which is at end of <body>) #}
+    <script src="{% static 'quill/quill.js' %}"></script>
+    <script>
+        (function() {
+            // The hidden textarea that Django's form machinery reads on submit
+            var bodyField = document.getElementById('id_body');
+            // The visible Quill editor container (placed in child templates)
+            var editorDiv = document.getElementById('quill-editor');
+
+            // Toolbar configuration — matches the formatting options from the
+            // old TinyMCE setup (bold, italic, colors, lists, links, etc.)
+            var toolbarOptions = [
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'script': 'sub'}, { 'script': 'super' }],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'align': [] }],
+                [{ 'header': [1, 2, 3, false] }],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['blockquote'],
+                ['link', 'image'],
+                [{ 'indent': '-1'}, { 'indent': '+1' }],
+                [{ 'direction': 'rtl' }],
+                ['clean']
+            ];
+
+            var quill = new Quill('#quill-editor', {
+                theme: 'snow',
+                modules: {
+                    toolbar: toolbarOptions
+                },
+                placeholder: 'Enter policy text...'
+            });
+
+            // Load existing content into the editor.
+            // When editing an existing policy/template, the hidden textarea
+            // contains the saved body value. We detect the format and load
+            // accordingly:
+            //   - Delta JSON (new format) → setContents() for lossless round-trip
+            //   - Legacy HTML (TinyMCE era) → dangerouslyPasteHTML() to import
+            var existingContent = bodyField.value;
+            if (existingContent) {
+                try {
+                    var delta = JSON.parse(existingContent);
+                    if (delta && delta.ops) {
+                        // New format — load Delta directly for lossless editing
+                        quill.setContents(delta);
+                    } else {
+                        // Valid JSON but not a Delta — treat as HTML
+                        quill.clipboard.dangerouslyPasteHTML(existingContent);
+                    }
+                } catch (e) {
+                    // Not JSON — legacy HTML from TinyMCE era
+                    quill.clipboard.dangerouslyPasteHTML(existingContent);
+                }
+            }
+
+            // On form submit: serialize the editor content as Delta JSON into
+            // the hidden textarea, so it gets sent as a form-urlencoded field.
+            // This is the key WAF bypass — JSON in POST body instead of HTML.
+            var form = editorDiv.closest('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    var delta = quill.getContents();
+                    var deltaJson = JSON.stringify(delta);
+
+                    // Client-side script tag check (defense in depth — the server
+                    // validator is the authoritative check). This provides immediate
+                    // feedback without a round-trip.
+                    var plainText = quill.getText();
+                    if (/<script[\s>\/]/i.test(plainText)) {
+                        e.preventDefault();
+                        var banner = document.getElementById('client-error-banner');
+                        if (!banner) {
+                            banner = document.createElement('div');
+                            banner.id = 'client-error-banner';
+                            banner.className = 'alert alert-danger alert-dismissible fade show';
+                            banner.setAttribute('role', 'alert');
+                            banner.innerHTML = '<strong>Your submission was not saved.</strong>' +
+                                '<ul class="mb-0 mt-1"><li>Script tags are not allowed in policy text.</li></ul>' +
+                                '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+                            form.parentNode.insertBefore(banner, form);
+                        }
+                        banner.scrollIntoView({behavior: 'smooth'});
+                        return;
+                    }
+
+                    // Set the Delta JSON as the form field value.
+                    // The POST body will be: body={"ops":[...]}&csrfmiddlewaretoken=...
+                    bodyField.value = deltaJson;
+                });
+            }
+        })();
+    </script>
+{% endblock extra_script %}

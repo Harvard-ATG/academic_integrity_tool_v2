@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
+{% load policy_tags %}
 
 {% comment %}
-    Displays a course policy to a student of the course
+    Displays a course policy to a student of the course.
+
+    The |render_body filter (from policy_tags) converts the stored body to HTML:
+      - Quill Delta JSON (new) → rendered to safe HTML via delta_to_html()
+      - Legacy HTML (TinyMCE era) → passed through unchanged
+    This replaces the previous |safe filter.
 {% endcomment %}
 
 {% block content %}
@@ -16,7 +22,7 @@
 
             <div class="row">
                 <div class="col-xs-12">
-                    <p>{{ active_policy.body|safe }}</p>
+                    <p>{{ active_policy.body|render_body }}</p>
                 </div>
               </div>
 

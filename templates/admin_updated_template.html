@@ -1,8 +1,15 @@
 {% extends 'base.html' %}
+{% load policy_tags %}
 
 {% comment %}
     Displays the updated policy template to the administrator.
-    Also displayed are a button that takes them back to the tinymce editor and a link that takes them back to the list of policy templates.
+    Also displayed are a button that takes them back to the editor and a link
+    that takes them back to the list of policy templates.
+
+    The |render_body filter (from policy_tags) converts the stored body to HTML:
+      - Quill Delta JSON (new) → rendered to safe HTML via delta_to_html()
+      - Legacy HTML (TinyMCE era) → passed through unchanged
+    This replaces the previous |safe filter.
 {% endcomment %}
 
 {% block content %}
@@ -41,7 +48,7 @@
                     <br />
                     <div class="row">
                         <div class="col-sm-12">
-                            {{ updated_template.body|safe }}
+                            {{ updated_template.body|render_body }}
                         </div>
                     </div>
 

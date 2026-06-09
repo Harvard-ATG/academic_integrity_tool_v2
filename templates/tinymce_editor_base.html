@@ -31,7 +31,35 @@
             plugins: 'textcolor lists table media link image directionality',
             menubar: false,
             toolbar1: 'bold italic underline forecolor backcolor removeformat alignleft aligncenter alignright outdent indent superscript subscript bullist numlist',
-            toolbar2: 'table media link unlink image ltr rtl fontsizeselect formatselect'
+            toolbar2: 'table media link unlink image ltr rtl fontsizeselect formatselect',
+            setup: function(editor) {
+                editor.on('init', function() {
+                    var form = editor.getElement().closest('form');
+                    if (form) {
+                        form.addEventListener('submit', function(e) {
+                            var content = editor.getContent({format: 'raw'});
+                            var tmp = document.createElement('textarea');
+                            tmp.innerHTML = content;
+                            var decoded = tmp.value;
+                            if (/<script[\s>\/]/i.test(content) || /<script[\s>\/]/i.test(decoded)) {
+                                e.preventDefault();
+                                var banner = document.getElementById('client-error-banner');
+                                if (!banner) {
+                                    banner = document.createElement('div');
+                                    banner.id = 'client-error-banner';
+                                    banner.className = 'alert alert-danger alert-dismissible fade show';
+                                    banner.setAttribute('role', 'alert');
+                                    banner.innerHTML = '<strong>Your submission was not saved.</strong>' +
+                                        '<ul class="mb-0 mt-1"><li>Script tags are not allowed in policy text.</li></ul>' +
+                                        '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+                                    form.parentNode.insertBefore(banner, form);
+                                }
+                                banner.scrollIntoView({behavior: 'smooth'});
+                            }
+                        });
+                    }
+                });
+            }
         });
     </script>
 {% endblock extra_head %}

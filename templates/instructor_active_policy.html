@@ -1,9 +1,15 @@
 {% extends 'base.html' %}
+{% load policy_tags %}
 
 {% comment %}
     Displays the published policy to the instructor.
     Also displayed are 2 buttons: 1 to enable them prepare a new policy from the list of policy templates
     and another to edit the policy they just published.
+
+    The |render_body filter (from policy_tags) converts the stored body to HTML:
+      - Quill Delta JSON (new) → rendered to safe HTML via delta_to_html()
+      - Legacy HTML (TinyMCE era) → passed through unchanged
+    This replaces the previous |safe filter.
 {% endcomment %}
 
 {% block content %}
@@ -31,7 +37,7 @@
 
             <div class="row">
                 <div class="col-xs-12">
-                    {{ active_policy.body|safe }}
+                    {{ active_policy.body|render_body }}
                 </div>
             </div>
 
