@@ -1055,25 +1055,14 @@ plt.show()
 
 ## What to tell OUE
 
-**How many courses have a policy.** Solid — this comes from the publish date,
-which is never overwritten. As of the 2026-09-22 pull, 320 of 1,653 courses
-(19%).
+**Courses with a policy.** 320 of 1,653 (19%) as of the 2026-09-22 pull.
+Derived from the publish date, which is never overwritten.
 
-**How many faculty changed the wording.** Quote the adjusted figure: **179 of
-320, about 56%**. Said plainly: *a bit over half the faculty who published a
-policy changed the wording; the rest used a template exactly as given.*
+**Faculty who changed the wording.** 179 of 320 (56%). The other 141 published
+a template unchanged.
 
-**If someone quotes a higher number from an earlier report, it was wrong.**
-The August report said 82% of faculty had edited their policy. The real figure
-for that data was 50%. Nothing changed in what faculty did — the old method
-compared each policy against whatever the template said *on the day of the
-report*, and all three templates were rewritten on 2026-08-28. Every policy
-published before that date was counted as edited whether the instructor had
-touched it or not. That is the whole reason this notebook exists.
-
-**The yes/no answer is less useful than the breakdown.** "Wrote their own
-policy from scratch" and "changed two words" both count as *changed*, and they
-are not the same behaviour:
+**Breakdown behind that figure.** "Wrote their own policy" and "changed two
+words" both count as changed:
 
 | | 2026-09-22 |
 |---|---|
@@ -1082,13 +1071,28 @@ are not the same behaviour:
 | reworded the template | 67 |
 | wrote their own policy | 105 |
 
-**Do not compare course-published counts between two pulls.** Term began
-2026-09-02, so that number moves as instructors publish their courses. A jump
-is the calendar, not a finding.
+**Difference from the 2026-08-25 report.** That report gave 178 of 216 (82%)
+changed. The same data under this method gives 108 (50%).
 
-**Any figure you quote is a snapshot.** Neither source database keeps history,
-so this pull cannot be reproduced later by re-running it — only by replaying
-the CSVs it was built from. Keep the `data/` folder with the workbook.
+The August report compared each policy against the template text current on the
+day it ran. Maximally Restrictive had been rewritten four days earlier, on
+2026-08-21 at 15:13, from 617 characters to 1,111. Of the 94 courses on that
+template, 50 held the earlier 617-character text verbatim and were reported as
+faculty edits. The other two templates had not yet changed on 8/25, so their
+policies were classified correctly.
+
+All three templates were then rewritten on 2026-08-28, between 12:09 and 12:11.
+Any report run after that date using the original method is affected across all
+three: on the 2026-09-22 data it gives 286 of 320 (89%) against this method's
+179 (56%).
+
+**Course-published counts between two pulls.** Term began 2026-09-02, so this
+count rises as instructors publish their courses. It is not a measure of policy
+adoption.
+
+**Reproducing a figure later.** Neither source database keeps history. A pull
+cannot be reproduced by re-running it, only by replaying the CSVs it was built
+from. Keep the `data/` folder with the workbook.
 
 ## Known defects this notebook works around
 
