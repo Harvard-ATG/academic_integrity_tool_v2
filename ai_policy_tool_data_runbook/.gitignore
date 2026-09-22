@@ -1,0 +1,20 @@
+# This directory sits inside the git repo, and the report contains instructor
+# names and policy text. Nothing generated here should ever be committed.
+.venv/
+output/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Generated reports and their archived inputs.
+AIPolicyReport_*.xlsx
+AIPolicyReport_*.csv
+*.csv
+
+# ...but DO keep the Splunk template-edit snapshots. They are timestamps and
+# template ids only -- no names, no policy text -- and Splunk drops them after
+# ~35 days, so these files are the only durable record of when each template
+# version was written. Runbook 03 Step 6 refers to them.
+!data/
+data/*
+!data/template_edits_captured_*.csv
